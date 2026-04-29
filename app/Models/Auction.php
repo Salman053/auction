@@ -180,5 +180,7 @@ class Auction extends Model
         'view_count' => 'integer',
         'bidder_confirmed_at' => 'datetime',
         'admin_approved_at' => 'datetime',
+        'winner_user_id' => 'integer',
+        'winning_bid_id' => 'integer',
     ];
 }

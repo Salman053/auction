@@ -277,7 +277,7 @@ $carouselImages = array_slice($auction->image_urls ?: ($auction->thumbnail_url ?
                     class="rounded-3xl bg-zinc-50 p-12 text-center dark:bg-white/5 ring-1 ring-zinc-200 dark:ring-white/10">
                     <h3 class="text-lg font-bold text-zinc-400 uppercase tracking-widest">Bidding Conclusion</h3>
                     <p class="mt-2 text-sm text-zinc-500">
-                        @if ($auction->status === 'finished' && $auction->winner_user_id === auth()->id())
+                        @if ($auction->status === 'finished' && $auction->winner_user_id == auth('user')->id())
                             <div class="mt-6 rounded-2xl bg-brand-gold/10 p-8 border border-brand-gold/20">
                                 <h4 class="text-xl font-bold text-brand-navy dark:text-brand-gold uppercase tracking-tighter">Congratulations, You Won!</h4>
                                 <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
@@ -336,7 +336,7 @@ $carouselImages = array_slice($auction->image_urls ?: ($auction->thumbnail_url ?
                             </div>
                             <div>
                                 <p class="text-sm font-bold text-zinc-900 dark:text-white">
-                                    @if ($bid->user_id === auth()->id())
+                                    @if ($bid->user_id == auth('user')->id())
                                         <span class="text-brand-gold">You</span>
                                     @else
                                         @if ($bid->user)

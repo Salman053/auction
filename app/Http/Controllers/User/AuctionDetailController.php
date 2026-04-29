@@ -66,7 +66,7 @@ class AuctionDetailController extends Controller
 
         $biddingService->placeBid($user, $auction, (int) $validated['amount_yen'], $shippingRateId);
 
-        return back()->with('success', 'Your bid has been placed successfully!');
+        return back()->with('status', 'bid-placed');
     }
 
     public function confirmShipment(Auction $auction, Request $request): RedirectResponse

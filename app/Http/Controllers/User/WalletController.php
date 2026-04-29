@@ -106,7 +106,7 @@ class WalletController extends Controller
             }
         }
 
-        return back()->with('success', 'Deposit request submitted. An admin will review and approve it.');
+        return back()->with('success', 'Deposit request submitted. An admin must approve it.');
     }
 
     public function stripeSuccess(Request $request, WalletService $walletService): RedirectResponse
