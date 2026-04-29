@@ -1,0 +1,32 @@
+WATCHHUB PROJECT DETAILS
+========================
+
+1. PROJECT OVERVIEW
+WatchHub is a premium Yahoo Japan Auction proxy platform. It allows users to bid on Japanese auctions through a local interface.
+
+2. TECHNOLOGY
+- Framework: Laravel 12
+- Payments: Stripe & Stripe Connect
+- Logic: PHP 8.2, MySQL
+- Design: Tailwind CSS 4, Vanilla CSS
+
+3. KEY FEATURES
+- Scraping: Real-time search and data sync from Yahoo Japan.
+- Bidding: Proxy bidding system with automatic increments.
+- Wallet: Multi-currency (Yen) wallet with deposit/withdrawal flows.
+- Bidding Power: 500% bidding capacity based on balance.
+- Admin Panel: Manage users, audits, scrapers, and payments.
+
+4. SYSTEM FLOWS
+- Bidding: User bids -> Capacity checked -> Funds locked -> System updates highest bid.
+- Closing: Cron job runs -> Highest bidder wins -> Funds deducted -> Notification sent.
+- Withdrawal: User requests -> Admin approves -> Payout processed via Stripe Connect.
+
+5. CURRENT STATUS
+The project is in Late Beta. Core logic and UI are done. 
+Missing Link: The system currently only tracks internal bids. It needs a browser bot to actually place the bids on the real Yahoo Auctions site.
+
+6. IMPORTANT COMMANDS
+- Scrape: php artisan yahoo:scrape "keyword"
+- Close Auctions: php artisan auctions:close
+- Dev Server: npm run dev / php artisan serve

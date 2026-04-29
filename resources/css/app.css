@@ -1,0 +1,55 @@
+@import 'tailwindcss';
+
+[x-cloak] { display: none !important; }
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Facebook-like primary palette */
+     --color-brand-gold: #D4AF37;
+    --color-brand-gold-light: #F1D279;
+    --color-brand-gold-dark: #B8860B;
+    --color-brand-navy: #0F172A;
+    --color-brand-navy-light: #1E293B;
+    --sidebar-width: 280px;
+    --topbar-height: 64px;
+}
+
+@layer base {
+    body {
+        @apply bg-slate-50 text-slate-900 antialiased dark:bg-zinc-950 dark:text-zinc-100;
+    }
+}
+
+@layer components {
+    .dashboard-card {
+        @apply rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-zinc-900 dark:ring-white/10;
+    }
+    
+    .dashboard-stat-value {
+        @apply text-3xl font-bold tracking-tight text-slate-900 dark:text-white;
+    }
+    
+    .dashboard-stat-label {
+        @apply text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-zinc-400;
+    }
+}
+
+/* Hide scrollbar for Chrome, Safari, Edge, and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox, IE, and Edge */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
