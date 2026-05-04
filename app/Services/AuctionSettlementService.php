@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Auction;
 use App\Models\Bid;
-use App\Models\ShippingRate;
+use App\Notifications\AuctionWonNotification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -20,7 +20,7 @@ class AuctionSettlementService
                 $this->settleAuction($auction);
                 $count++;
             } catch (\Exception $e) {
-                Log::error("Failed to settle auction {$auction->id}: " . $e->getMessage());
+                Log::error("Failed to settle auction {$auction->id}: ".$e->getMessage());
             }
         }
 
@@ -31,7 +31,7 @@ class AuctionSettlementService
     {
         DB::transaction(function () use ($auction) {
             $auction = Auction::query()->lockForUpdate()->find($auction->id);
-            if (! $auction || $auction->status !== 'active') {
+            if (! $auction || ! in_array($auction->status, ['active', 'closed'])) {
                 return;
             }
 
@@ -54,9 +54,9 @@ class AuctionSettlementService
                     // Winner
                     $bid->update(['status' => 'won']);
 
-                    $shippingRate = $bid->user->shippingRate;
+                    $shippingRate = $bid->shippingRate ?? $bid->user->shippingRate;
                     $destinationFee = (int) ($shippingRate?->fee_yen ?? 0);
-                    $totalCost = $bid->amount_yen + $destinationFee + (int) ($auction->shipping_fee_yen ?? 0);
+                    $totalCost = $bid->amount_yen + $destinationFee;
 
                     // Unlock the EXACT amount they had locked
                     $wallet->decrement('locked_balance_yen', $bid->locked_amount_yen);
@@ -82,9 +82,9 @@ class AuctionSettlementService
 
                     // Notify winner
                     try {
-                        $user->notify(new \App\Notifications\AuctionWonNotification($auction, $bid->amount_yen));
+                        $user->notify(new AuctionWonNotification($auction, $bid->amount_yen));
                     } catch (\Exception $e) {
-                        Log::error("Failed to notify winner of auction {$auction->id}: " . $e->getMessage());
+                        Log::error("Failed to notify winner of auction {$auction->id}: ".$e->getMessage());
                     }
                 } else {
                     // Loser

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Auction;
+use App\Services\AuctionSettlementService;
 use Illuminate\Console\Command;
 
 class AuctionsClose extends Command
@@ -13,10 +14,10 @@ class AuctionsClose extends Command
 
     protected $description = 'Close auctions that have ended based on their end date';
 
-    public function handle(): int
+    public function handle(AuctionSettlementService $settlementService): int
     {
         $this->info('═══════════════════════════════════════════════════════');
-        $this->info('  CLOSING ENDED AUCTIONS');
+        $this->info('  SETTLING & CLOSING ENDED AUCTIONS');
         $this->info('═══════════════════════════════════════════════════════');
         $this->newLine();
 
@@ -32,7 +33,14 @@ class AuctionsClose extends Command
         $this->info("Current time: {$now->format('Y-m-d H:i:s')}");
         $this->newLine();
 
-        // Close auctions whose end date has passed
+        if (! $dryRun) {
+            $this->info('Running settlement engine...');
+            $settledCount = $settlementService->settleEndedAuctions();
+            $this->info("✅ Settled {$settledCount} auctions.");
+            $this->newLine();
+        }
+
+        // Close auctions whose end date has passed but might not have been settled (e.g. no our bids)
         $endedAuctions = Auction::where('status', 'active')
             ->whereNotNull('ends_at')
             ->where('ends_at', '<=', $now)

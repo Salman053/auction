@@ -105,13 +105,9 @@
                 <form id="logout-form" method="POST" action="{{ route('logout') }}" class="hidden">
                     @csrf
                 </form>
-                <button type="button"
-                    data-confirm
-                    data-confirm-title="Confirm Logout"
-                    data-confirm-message="Are you sure you want to end your current session?"
-                    data-confirm-text="Logout"
-                    data-confirm-type="danger"
-                    data-confirm-on-confirm="#logout-form"
+                <button type="button" data-confirm data-confirm-title="Confirm Logout"
+                    data-confirm-message="Are you sure you want to end your current session?" data-confirm-text="Logout"
+                    data-confirm-type="danger" data-confirm-on-confirm="#logout-form"
                     class="flex w-full items-center justify-center gap-2 rounded-2xl bg-rose-50 px-4 py-3 text-sm font-bold text-rose-600 transition hover:bg-rose-100 dark:bg-rose-500/10 dark:hover:bg-rose-500/20">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -140,7 +136,8 @@
                         </svg>
                     </button>
 
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white">{{ $title ?? 'Collector Console' }}
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white">
+                        {{ Str::limit($title ?? 'Collector Console', 40, '...') }}
                     </h2>
                 </div>
 
@@ -328,12 +325,9 @@
 
             {{-- Drawer logout button --}}
             <div class="border-t border-slate-200 p-6 dark:border-white/10">
-                <button type="button"
-                    data-confirm
-                    data-confirm-title="Confirm Logout"
+                <button type="button" data-confirm data-confirm-title="Confirm Logout"
                     data-confirm-message="Are you sure you want to end your current session?"
-                    data-confirm-text="Logout"
-                    data-confirm-type="danger"
+                    data-confirm-text="Logout" data-confirm-type="danger"
                     data-confirm-on-confirm="#mobile-logout-form"
                     class="flex w-full items-center justify-center gap-2 rounded-2xl bg-rose-50 px-4 py-3 text-sm font-bold text-rose-600 transition hover:bg-rose-100 dark:bg-rose-500/10 dark:hover:bg-rose-500/20">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -423,12 +417,7 @@
                 });
             });
 
-            // Bottom nav active highlight is already handled by blade classes, 
-            // but we add a small adjustment for dynamic route highlighting
-            // (works out of the box because of Laravel route conditions)
 
-            // Adjust bottom padding on main content when bottom nav is visible
-            // (prevents content being hidden behind the fixed bottom bar)
             function adjustMainPadding() {
                 const mainElement = document.querySelector('main');
                 const bottomNav = document.getElementById('mobileBottomNav');

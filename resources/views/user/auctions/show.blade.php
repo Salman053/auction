@@ -1,4 +1,5 @@
 <x-user-layout :title="'Placing Bid: ' . Str::limit($auction->title, 50)">
+
     <div class="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div>
             <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
@@ -11,12 +12,16 @@
                     class="rounded-full bg-brand-navy px-3 py-1 text-white dark:bg-brand-gold dark:text-brand-navy">{{ $auction->status }}</span>
                 <span class="flex items-center gap-1.5">
                     <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span>
-                    Current Price: ¥{{ number_format($auction->current_bid_yen) }}
+                    Current Bid: ¥{{ number_format($auction->current_bid_yen) }}
                 </span>
-                @if ($highestActiveBid && $highestActiveBid->max_amount_yen !== $auction->current_bid_yen)
+                @if (
+                    $userHighestActiveBid &&
+                        $highestActiveBid &&
+                        $userHighestActiveBid->id === $highestActiveBid->id &&
+                        $highestActiveBid->max_amount_yen > $auction->current_bid_yen)
                     <span class="flex items-center gap-1.5">
                         <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span>
-                        Highest Max Bid: ¥{{ number_format($highestActiveBid->max_amount_yen) }}
+                        Your Max Bid: ¥{{ number_format($highestActiveBid->max_amount_yen) }}
                     </span>
                 @endif
                 @if ($auction->ends_at)
@@ -31,14 +36,24 @@
                     </span>
                 @endif
             </div>
+
             @if ($highestActiveBid && $highestActiveBid->max_amount_yen > $auction->current_bid_yen)
                 <div class="mt-4 rounded-2xl bg-zinc-50 p-4 text-xs text-zinc-600 dark:bg-white/5 dark:text-zinc-300">
                     @if ($userHighestActiveBid && $highestActiveBid->id === $userHighestActiveBid->id)
-                        You are the current top bidder with a maximum proxy bid of ¥{{ number_format($highestActiveBid->max_amount_yen) }}.
-                    @else
-                        The current price is ¥{{ number_format($auction->current_bid_yen) }}, while the highest active proxy bid is ¥{{ number_format($highestActiveBid->max_amount_yen) }}.
+                        <div class="flex items-center gap-2">
+                            <svg class="h-4 w-4 text-brand-gold" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>You are the current top bidder with a maximum proxy bid of
+                                <strong
+                                    class="text-zinc-900 dark:text-white">¥{{ number_format($highestActiveBid->max_amount_yen) }}</strong>.</span>
+                        </div>
+                        <p class="mt-1 ml-6 opacity-70 italic">The public price is
+                            ¥{{ number_format($auction->current_bid_yen) }}. It will only increase if another bidder
+                            challenges your position.</p>
                     @endif
-                    The live price only increases when another bidder exceeds the current level.
                 </div>
             @endif
         </div>
@@ -91,32 +106,44 @@
             {{-- Bid Placement Card --}}
             {{-- Image Carousel --}}
             @php
-$carouselImages = array_slice($auction->image_urls ?: ($auction->thumbnail_url ? [$auction->thumbnail_url] : []), 2);
+                $carouselImages = $auction->image_urls ?: ($auction->thumbnail_url ? [$auction->thumbnail_url] : []);
             @endphp
             @if (count($carouselImages) > 0)
-                <div class="mb-8 overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10">
+                <div
+                    class="mb-8 overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10">
                     <div class="relative group h-[500px] bg-zinc-100 dark:bg-black/20">
                         <div id="carousel-container" class="flex h-full transition-transform duration-500 ease-out">
                             @foreach ($carouselImages as $image)
                                 <div class="w-full h-full shrink-0 flex items-center justify-center p-8">
-                                    <img src="{{ $image }}" alt="{{ $auction->title }}" class="max-h-full max-w-full object-contain drop-shadow-2xl">
+                                    <img src="{{ $image }}" alt="{{ $auction->title }}"
+                                        class="max-h-full max-w-full object-contain drop-shadow-2xl">
                                 </div>
                             @endforeach
                         </div>
 
                         {{-- Navigation Arrows --}}
                         @if (count($carouselImages) > 1)
-                            <button id="prev-slide" class="absolute left-6 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-3 text-zinc-900 shadow-lg opacity-0 group-hover:opacity-100 transition hover:bg-white dark:bg-zinc-800/80 dark:text-white">
-                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                            <button id="prev-slide"
+                                class="absolute left-6 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-3 text-zinc-900 shadow-lg opacity-0 group-hover:opacity-100 transition hover:bg-white dark:bg-zinc-800/80 dark:text-white">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 19l-7-7 7-7" />
+                                </svg>
                             </button>
-                            <button id="next-slide" class="absolute right-6 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-3 text-zinc-900 shadow-lg opacity-0 group-hover:opacity-100 transition hover:bg-white dark:bg-zinc-800/80 dark:text-white">
-                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            <button id="next-slide"
+                                class="absolute right-6 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-3 text-zinc-900 shadow-lg opacity-0 group-hover:opacity-100 transition hover:bg-white dark:bg-zinc-800/80 dark:text-white">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
                             </button>
 
                             {{-- Indicators --}}
                             <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
                                 @foreach ($carouselImages as $index => $image)
-                                    <button class="carousel-dot h-1.5 rounded-full transition-all duration-300 {{ $index === 0 ? 'w-8 bg-brand-gold' : 'w-2 bg-zinc-300 dark:bg-zinc-700' }}" data-index="{{ $index }}"></button>
+                                    <button
+                                        class="carousel-dot h-1.5 rounded-full transition-all duration-300 {{ $index === 0 ? 'w-8 bg-brand-gold' : 'w-2 bg-zinc-300 dark:bg-zinc-700' }}"
+                                        data-index="{{ $index }}"></button>
                                 @endforeach
                             </div>
                         @endif
@@ -146,14 +173,65 @@ $carouselImages = array_slice($auction->image_urls ?: ($auction->thumbnail_url ?
                                 });
                             }
 
-                            prev.onclick = () => { current = (current - 1 + total) % total; update(); };
-                            next.onclick = () => { current = (current + 1) % total; update(); };
+                            prev.onclick = () => {
+                                current = (current - 1 + total) % total;
+                                update();
+                            };
+                            next.onclick = () => {
+                                current = (current + 1) % total;
+                                update();
+                            };
                             dots.forEach(dot => {
-                                dot.onclick = () => { current = parseInt(dot.dataset.index); update(); };
+                                dot.onclick = () => {
+                                    current = parseInt(dot.dataset.index);
+                                    update();
+                                };
                             });
                         });
                     </script>
                 @endif
+            @endif
+
+            {{-- Winning Banner / Shipment Confirmation --}}
+            @if ($auction->status === 'finished' && auth('user')->id() === $auction->winner_user_id)
+                <div
+                    class="mb-8 overflow-hidden rounded-3xl bg-emerald-500/10 p-8 ring-1 ring-emerald-500/20 dark:bg-emerald-500/5">
+                    <div class="flex flex-col items-center text-center">
+                        <div
+                            class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+                            <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-black uppercase tracking-tight text-emerald-900 dark:text-emerald-400">
+                            Congratulations!</h2>
+                        <p class="mt-2 text-sm font-medium text-emerald-700/80 dark:text-emerald-500/60">
+                            You are the winning bidder for this exceptional timepiece.
+                        </p>
+
+                        @if ($auction->shipment_status === 'pending')
+                            <div class="mt-8 w-full max-w-sm">
+                                <form method="POST" action="{{ route('user.auctions.confirm-shipment', $auction) }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="w-full rounded-2xl bg-emerald-600 px-8 py-4 text-sm font-black uppercase tracking-[0.2em] text-white shadow-lg shadow-emerald-600/20 transition hover:scale-[1.02] hover:bg-emerald-700 active:scale-[0.98]">
+                                        Confirm Shipment Details
+                                    </button>
+                                </form>
+                                <p class="mt-4 text-[10px] font-bold uppercase tracking-widest text-emerald-600/40">
+                                    Finalizing your destination preferences
+                                </p>
+                            </div>
+                        @else
+                            <div
+                                class="mt-8 inline-flex items-center gap-3 rounded-full bg-emerald-100 px-6 py-2 text-xs font-black uppercase tracking-widest text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                Shipment: {{ str_replace('_', ' ', $auction->shipment_status) }}
+                            </div>
+                        @endif
+                    </div>
+                </div>
             @endif
 
             @if ($canBid)
@@ -167,8 +245,8 @@ $carouselImages = array_slice($auction->image_urls ?: ($auction->thumbnail_url ?
                             input...</span>
                     </div>
                     <div class="p-8">
-                        <form id="bid-form" method="POST" action="{{ route('user.auctions.bids.store', $auction) }}"
-                            class="space-y-8">
+                        <form id="bid-form" method="POST"
+                            action="{{ route('user.auctions.bids.store', $auction) }}" class="space-y-8">
                             @csrf
                             <div class="grid grid-cols-1 gap-8 sm:grid-cols-2">
                                 <div>
@@ -189,44 +267,53 @@ $carouselImages = array_slice($auction->image_urls ?: ($auction->thumbnail_url ?
                                     @enderror
 
                                     <div class="mt-6">
-                                        <label for="shipping_rate_id" class="block text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-2">Shipping Destination</label>
-                                        <select id="shipping_rate_id" name="shipping_rate_id" class="w-full rounded-2xl border-none bg-zinc-50 px-4 py-3 text-sm font-bold shadow-inner ring-1 ring-zinc-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white">
-                                            @foreach($shippingRates as $rate)
-                                                <option value="{{ $rate->id }}" data-fee="{{ $rate->fee_yen }}" {{ (old('shipping_rate_id', $userShippingRate?->id) == $rate->id) ? 'selected' : '' }}>
+                                        <label for="shipping_rate_id"
+                                            class="block text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-2">Shipping
+                                            Destination</label>
+                                        <select id="shipping_rate_id" name="shipping_rate_id"
+                                            class="w-full rounded-2xl border-none bg-zinc-50 px-4 py-3 text-sm font-bold shadow-inner ring-1 ring-zinc-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white">
+                                            @foreach ($shippingRates as $rate)
+                                                <option value="{{ $rate->id }}" data-fee="{{ $rate->fee_yen }}"
+                                                    {{ old('shipping_rate_id', $userShippingRate?->id) == $rate->id ? 'selected' : '' }}>
                                                     {{ $rate->name }} (¥{{ number_format($rate->fee_yen) }})
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
 
-                                    <div class="mt-4 flex flex-col gap-2 rounded-2xl bg-zinc-50 p-4 dark:bg-black/20 border border-zinc-100 dark:border-white/5">
-                                        <div class="flex justify-between text-xs font-bold uppercase tracking-widest text-zinc-500">
+                                    <div
+                                        class="mt-4 flex flex-col gap-2 rounded-2xl bg-zinc-50 p-4 dark:bg-black/20 border border-zinc-100 dark:border-white/5">
+                                        <div
+                                            class="flex justify-between text-xs font-bold uppercase tracking-widest text-zinc-500">
                                             <span>Your Bid</span>
-                                            <span class="text-zinc-900 dark:text-white">¥<span id="summary_bid_amount">{{ number_format(old('amount_yen', $auction->current_bid_yen + 500)) }}</span></span>
+                                            <span class="text-zinc-900 dark:text-white">¥<span
+                                                    id="summary_bid_amount">{{ number_format(old('amount_yen', $auction->current_bid_yen + 500)) }}</span></span>
                                         </div>
-                                        <div class="flex justify-between text-xs font-bold uppercase tracking-widest text-zinc-500">
+                                        <div
+                                            class="flex justify-between text-xs font-bold uppercase tracking-widest text-zinc-500">
                                             <span>Destination Fee</span>
-                                            <span class="text-zinc-900 dark:text-white">¥<span id="destination_fee_display">{{ number_format($userShippingRate?->fee_yen ?? 0) }}</span></span>
+                                            <span class="text-zinc-900 dark:text-white">¥<span
+                                                    id="destination_fee_display">{{ number_format($userShippingRate?->fee_yen ?? 0) }}</span></span>
                                         </div>
-                                        <div class="mt-2 flex justify-between border-t border-zinc-200 pt-2 dark:border-white/10">
-                                            <span class="text-xs font-black uppercase tracking-widest text-brand-gold">Total Estimated</span>
+                                        <div
+                                            class="mt-2 flex justify-between border-t border-zinc-200 pt-2 dark:border-white/10">
+                                            <span
+                                                class="text-xs font-black uppercase tracking-widest text-brand-gold">Total
+                                                Estimated</span>
                                             <span class="text-sm font-black text-brand-navy dark:text-brand-gold">
-                                                ¥<span id="total_estimated_display">{{ number_format(old('amount_yen', $auction->current_bid_yen + 500) + ($userShippingRate?->fee_yen ?? 0)) }}</span>
+                                                ¥<span
+                                                    id="total_estimated_display">{{ number_format(old('amount_yen', $auction->current_bid_yen + 500) + ($userShippingRate?->fee_yen ?? 0)) }}</span>
                                             </span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="flex flex-col justify-end">
-                                    <button type="button"
-                                        data-confirm
-                                        data-confirm-title="Confirm Bid Placement"
-                                        data-confirm-text="Place Bid"
-                                        data-confirm-type="info"
+                                    <button type="button" data-confirm data-confirm-title="Confirm Bid Placement"
+                                        data-confirm-text="Place Bid" data-confirm-type="info"
                                         data-confirm-on-confirm="#bid-form"
                                         data-confirm-message="You are about to place a bid of ¥{amount} for this timepiece. This action will lock your wallet balance and cannot be undone."
                                         data-confirm-amount-selector="#amount_yen"
-                                        data-confirm-shipping="{{ $auction->shipping_fee_yen ?? 0 }}"
                                         class="w-full rounded-2xl bg-brand-navy px-8 py-4 text-center text-sm font-bold uppercase tracking-widest text-brand-gold transition hover:scale-[1.02] hover:bg-black dark:bg-brand-gold dark:text-brand-navy dark:hover:bg-brand-gold-light">
                                         Confirm & Place Bid
                                     </button>
@@ -257,7 +344,7 @@ $carouselImages = array_slice($auction->image_urls ?: ($auction->thumbnail_url ?
                             const amount = parseInt(amountInput.value) || 0;
                             const selectedOption = rateSelect.options[rateSelect.selectedIndex];
                             const fee = selectedOption ? (parseInt(selectedOption.dataset.fee) || 0) : 0;
-                            
+
                             if (bidDisplay) bidDisplay.textContent = amount.toLocaleString();
                             if (feeDisplay) feeDisplay.textContent = fee.toLocaleString();
                             if (totalDisplay) totalDisplay.textContent = (amount + fee).toLocaleString();
@@ -266,7 +353,7 @@ $carouselImages = array_slice($auction->image_urls ?: ($auction->thumbnail_url ?
                         if (amountInput && rateSelect && totalDisplay) {
                             amountInput.addEventListener('input', updateTotals);
                             rateSelect.addEventListener('change', updateTotals);
-                            
+
                             // Initialize on load
                             updateTotals();
                         }
@@ -279,27 +366,34 @@ $carouselImages = array_slice($auction->image_urls ?: ($auction->thumbnail_url ?
                     <p class="mt-2 text-sm text-zinc-500">
                         @if ($auction->status === 'finished' && $auction->winner_user_id == auth('user')->id())
                             <div class="mt-6 rounded-2xl bg-brand-gold/10 p-8 border border-brand-gold/20">
-                                <h4 class="text-xl font-bold text-brand-navy dark:text-brand-gold uppercase tracking-tighter">Congratulations, You Won!</h4>
+                                <h4
+                                    class="text-xl font-bold text-brand-navy dark:text-brand-gold uppercase tracking-tighter">
+                                    Congratulations, You Won!</h4>
                                 <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
                                     Please confirm your shipping details to proceed with the delivery.
                                 </p>
-                                
+
                                 <div class="mt-6 flex flex-col gap-4">
-                                    <div class="flex justify-between text-xs font-bold uppercase tracking-widest text-zinc-500">
+                                    <div
+                                        class="flex justify-between text-xs font-bold uppercase tracking-widest text-zinc-500">
                                         <span>Current Status</span>
-                                        <span class="text-brand-gold font-black">{{ strtoupper($auction->shipment_status) }}</span>
+                                        <span
+                                            class="text-brand-gold font-black">{{ strtoupper($auction->shipment_status) }}</span>
                                     </div>
 
-                                    @if($auction->shipment_status === 'pending')
-                                        <form method="POST" action="{{ route('user.auctions.confirm-shipment', $auction) }}">
+                                    @if ($auction->shipment_status === 'pending')
+                                        <form method="POST"
+                                            action="{{ route('user.auctions.confirm-shipment', $auction) }}">
                                             @csrf
-                                            <button type="submit" class="w-full rounded-2xl bg-brand-navy px-8 py-4 text-center text-sm font-bold uppercase tracking-widest text-brand-gold transition hover:scale-[1.02] hover:bg-black dark:bg-brand-gold dark:text-brand-navy">
+                                            <button type="submit"
+                                                class="w-full rounded-2xl bg-brand-navy px-8 py-4 text-center text-sm font-bold uppercase tracking-widest text-brand-gold transition hover:scale-[1.02] hover:bg-black dark:bg-brand-gold dark:text-brand-navy">
                                                 Confirm Shipment Details
                                             </button>
                                         </form>
                                     @elseif($auction->shipment_status === 'bidder_confirmed')
                                         <div class="rounded-xl bg-zinc-100 p-4 text-center dark:bg-white/5">
-                                            <span class="text-xs font-bold text-zinc-500 italic">Awaiting Admin Approval</span>
+                                            <span class="text-xs font-bold text-zinc-500 italic">Awaiting Admin
+                                                Approval</span>
                                         </div>
                                     @endif
                                 </div>
@@ -332,7 +426,7 @@ $carouselImages = array_slice($auction->image_urls ?: ($auction->thumbnail_url ?
                         class="flex items-center justify-between gap-4 px-8 py-5 transition hover:bg-zinc-50 dark:hover:bg-white/5">
                         <div class="flex items-center gap-4">
                             <div
-                                class="h-2 w-2 rounded-full {{ $bid->status === 'active' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-red-500' }}">
+                                class="h-2 w-2 rounded-full @if ($bid->status === 'active') bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] @elseif($bid->status === 'outbid') bg-zinc-300 @elseif($bid->status === 'superseded') bg-brand-gold/40 @else bg-red-500 @endif">
                             </div>
                             <div>
                                 <p class="text-sm font-bold text-zinc-900 dark:text-white">
@@ -353,7 +447,13 @@ $carouselImages = array_slice($auction->image_urls ?: ($auction->thumbnail_url ?
                         </div>
                         <div class="text-right">
                             <p class="text-lg font-black text-zinc-900 dark:text-white">
-                                ¥{{ number_format($bid->amount_yen) }}</p>
+                                ¥{{ number_format($bid->amount_yen) }}
+                            </p>
+                            @if ($bid->user_id == auth('user')->id() && $bid->max_amount_yen > $bid->amount_yen)
+                                <p class="text-[9px] font-bold uppercase tracking-widest text-brand-gold">
+                                    Max: ¥{{ number_format($bid->max_amount_yen) }}
+                                </p>
+                            @endif
                         </div>
                     </div>
                 @empty
@@ -374,9 +474,14 @@ $carouselImages = array_slice($auction->image_urls ?: ($auction->thumbnail_url ?
                         <p class="mt-1 font-mono text-xs text-zinc-900 dark:text-white">
                             {{ $auction->yahoo_auction_id }}
                         </p>
-                        <a href="https://page.auctions.yahoo.co.jp/jp/auction/{{ $auction->yahoo_auction_id }}" target="_blank" class="mt-2 inline-flex items-center text-[10px] font-black uppercase tracking-widest text-brand-gold hover:text-brand-gold-light transition">
+                        <a href="https://page.auctions.yahoo.co.jp/jp/auction/{{ $auction->yahoo_auction_id }}"
+                            target="_blank"
+                            class="mt-2 inline-flex items-center text-[10px] font-black uppercase tracking-widest text-brand-gold hover:text-brand-gold-light transition">
                             View Original on Yahoo
-                            <svg class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                            <svg class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
                         </a>
                     </div>
                     <div>

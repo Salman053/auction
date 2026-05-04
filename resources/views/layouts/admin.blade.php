@@ -136,20 +136,17 @@
             <div class="border-t border-slate-200 p-8 dark:border-white/10">
                 <form id="admin-logout-form" method="POST" action="{{ route('admin.logout') }}">
                     @csrf
-                <button type="button"
-                    data-confirm
-                    data-confirm-title="Confirm Logout"
-                    data-confirm-message="Are you sure you want to end your current session?"
-                    data-confirm-text="Logout"
-                    data-confirm-type="danger"
-                    data-confirm-on-confirm="#admin-logout-form"
-                    class="flex w-full items-center justify-center gap-2 rounded-2xl bg-rose-50 px-4 py-3 text-sm font-bold text-rose-600 transition hover:bg-rose-100 dark:bg-rose-500/10 dark:hover:bg-rose-500/20">
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                    Admin Logout
-                </button>
+                    <button type="button" data-confirm data-confirm-title="Confirm Logout"
+                        data-confirm-message="Are you sure you want to end your current session?"
+                        data-confirm-text="Logout" data-confirm-type="danger"
+                        data-confirm-on-confirm="#admin-logout-form"
+                        class="flex w-full items-center justify-center gap-2 rounded-2xl bg-rose-50 px-4 py-3 text-sm font-bold text-rose-600 transition hover:bg-rose-100 dark:bg-rose-500/10 dark:hover:bg-rose-500/20">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        Admin Logout
+                    </button>
                 </form>
             </div>
         </aside>
@@ -172,7 +169,8 @@
                         </svg>
                     </button>
 
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white">{{ $title ?? 'Admin Control' }}</h2>
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white">
+                        {{ Str::limit($title ?? 'Admin Control', 40, '...') }}</h2>
                 </div>
 
                 <div class="flex items-center gap-4 sm:gap-6">
@@ -384,20 +382,17 @@
             <div class="border-t border-slate-200 p-6 dark:border-white/10">
                 <form id="admin-mobile-logout-form" method="POST" action="{{ route('admin.logout') }}">
                     @csrf
-                <button type="button"
-                    data-confirm
-                    data-confirm-title="Confirm Logout"
-                    data-confirm-message="Are you sure you want to end your current session?"
-                    data-confirm-text="Logout"
-                    data-confirm-type="danger"
-                    data-confirm-on-confirm="#admin-mobile-logout-form"
-                    class="flex w-full items-center justify-center gap-2 rounded-2xl bg-rose-50 px-4 py-3 text-sm font-bold text-rose-600 transition hover:bg-rose-100 dark:bg-rose-500/10 dark:hover:bg-rose-500/20">
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                    Admin Logout
-                </button>
+                    <button type="button" data-confirm data-confirm-title="Confirm Logout"
+                        data-confirm-message="Are you sure you want to end your current session?"
+                        data-confirm-text="Logout" data-confirm-type="danger"
+                        data-confirm-on-confirm="#admin-mobile-logout-form"
+                        class="flex w-full items-center justify-center gap-2 rounded-2xl bg-rose-50 px-4 py-3 text-sm font-bold text-rose-600 transition hover:bg-rose-100 dark:bg-rose-500/10 dark:hover:bg-rose-500/20">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        Admin Logout
+                    </button>
                 </form>
             </div>
         </div>

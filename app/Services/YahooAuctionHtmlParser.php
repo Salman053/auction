@@ -142,7 +142,6 @@ class YahooAuctionHtmlParser
             'yahoo_auction_id' => $auctionId,
             'title' => $title ? $this->cleanText($title) : null,
             'current_bid_yen' => $price ?: null,
-            'shipping_fee_yen' => $this->extractShippingFee($xpath, $html),
             'ends_at' => $endsAt,
             'seller_name' => $sellerData['name'] ?? null,
             'yahoo_seller_id' => $sellerData['id'] ?? null,

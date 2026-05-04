@@ -60,12 +60,7 @@
                             <p class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Current Bid</p>
                             <p class="mt-1 text-lg font-bold text-zinc-900 dark:text-brand-gold-light">
                                 ¥{{ number_format($auction->current_bid_yen) }}</p>
-                            @if ($auction->shipping_fee_yen === 0)
-                                {{-- <p class="text-[9px] font-bold text-green-500 uppercase tracking-tighter">+ Free Shipping</p>/ --}}
-                            @elseif($auction->shipping_fee_yen > 0)
-                                <p class="text-[9px] font-bold text-zinc-500 uppercase tracking-tighter">+
-                                    ¥{{ number_format($auction->shipping_fee_yen) }} Shipping</p>
-                            @endif
+
                         </div>
                         <div class="text-right">
                             <p class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Intensity</p>

@@ -14,7 +14,7 @@ test('user can place a standard bid and it locks the max amount', function () {
     $auction = Auction::factory()->create([
         'status' => 'active',
         'starting_bid_yen' => 1000,
-        'current_bid_yen' => 0,
+        'current_bid_yen' => 1000,
         'bid_count' => 0,
     ]);
 
@@ -40,7 +40,7 @@ test('proxy bidding automatically increments when a second user bids', function 
     $user2 = User::factory()->create();
     $user2->wallet->update(['balance_yen' => 100000]);
 
-    $auction = Auction::factory()->create(['status' => 'active', 'starting_bid_yen' => 1000, 'current_bid_yen' => 0]);
+    $auction = Auction::factory()->create(['status' => 'active', 'starting_bid_yen' => 1000, 'current_bid_yen' => 1000]);
 
     $biddingService = app(BiddingService::class);
 
@@ -72,7 +72,7 @@ test('user can outbid a proxy bid if their max is higher', function () {
     $user2 = User::factory()->create();
     $user2->wallet->update(['balance_yen' => 100000]);
 
-    $auction = Auction::factory()->create(['status' => 'active', 'starting_bid_yen' => 1000]);
+    $auction = Auction::factory()->create(['status' => 'active', 'starting_bid_yen' => 1000, 'current_bid_yen' => 1000]);
 
     $biddingService = app(BiddingService::class);
 

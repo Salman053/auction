@@ -17,7 +17,7 @@ test('user auction detail shows image carousel fallback and proxy bid summary', 
     $auction = Auction::factory()->create([
         'status' => 'active',
         'starting_bid_yen' => 1000,
-        'current_bid_yen' => 0,
+        'current_bid_yen' => 1000,
         'thumbnail_url' => 'https://example.com/image.jpg',
         'image_urls' => [],
     ]);
@@ -28,8 +28,8 @@ test('user auction detail shows image carousel fallback and proxy bid summary', 
     $response = $this->actingAs($user, 'user')->get(route('user.auctions.show', $auction));
 
     $response->assertOk();
-    $response->assertSeeText('Current Price: ¥');
-    $response->assertSeeText('Highest Max Bid: ¥');
+    $response->assertSeeText('Current Bid');
+    $response->assertSeeText('Your Max Bid');
     $response->assertSee('https://example.com/image.jpg');
-    $response->assertSeeText('You are the current top bidder with a maximum proxy bid');
+    $response->assertSeeText('You are the current top bidder');
 });

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\UserRole;
 use App\Models\Auction;
 use App\Models\Bid;
 use App\Models\ShippingRate;
@@ -11,10 +12,8 @@ use App\Notifications\BidPlacedNotification;
 use App\Notifications\LowBalanceNotification;
 use App\Notifications\OutbidNotification;
 use Illuminate\Support\Facades\DB;
-use App\Enums\UserRole;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use App\Services\SettingService;
 
 class BiddingService
 {
@@ -79,7 +78,7 @@ class BiddingService
 
             $previouslyLockedForThisAuction = $existingBid ? $existingBid->locked_amount_yen : 0;
 
-            $totalCommitmentYen = $maxAmountYen + $destinationFee + (int) ($auction->shipping_fee_yen ?? 0);
+            $totalCommitmentYen = $maxAmountYen + $destinationFee;
             $newAdditionalLockNeeded = $totalCommitmentYen - $previouslyLockedForThisAuction;
 
             $availableCapacityYen = max(0, $capacityYen - (int) $wallet->locked_balance_yen - (int) $wallet->withdrawal_locked_yen);
@@ -91,7 +90,7 @@ class BiddingService
             }
 
             // Call Proxy Bidding Logic
-            $result = $this->proxyBiddingService->process($auction, $user, $maxAmountYen);
+            $result = $this->proxyBiddingService->process($auction, $user, $maxAmountYen, $shippingRateId);
 
             if ($result['status'] === 'no_change') {
                 return $result;
@@ -104,6 +103,7 @@ class BiddingService
                     'current_bid_yen' => $result['bid']->amount_yen,
                     'bid_count' => $auction->bids()->count(),
                 ]);
+
                 return $result;
             }
 
@@ -115,6 +115,11 @@ class BiddingService
             // Sync locked amount in the bid record
             if ($result['bid']) {
                 $result['bid']->update(['locked_amount_yen' => $totalCommitmentYen]);
+
+                // If it was an update, clear the lock from the superseded bid
+                if ($result['status'] === 'updated' && $existingBid) {
+                    $existingBid->update(['locked_amount_yen' => 0]);
+                }
             }
 
             // If we outbid someone, unlock their balance and notify them
@@ -123,14 +128,25 @@ class BiddingService
                 $outbidBid = $result['previous_bid'];
 
                 $outbidUser->wallet()->increment('locked_balance_yen', -$outbidBid->locked_amount_yen);
+                $outbidBid->update(['locked_amount_yen' => 0]);
                 $outbidUser->notify(new OutbidNotification($auction, $result['bid']->amount_yen));
             }
 
             // Sync auction stats
-            $auction->update([
+            $updateData = [
                 'current_bid_yen' => $result['bid']->amount_yen,
                 'bid_count' => $auction->bids()->count(),
-            ]);
+            ];
+
+            // Auto-extension logic
+            if ($auction->auto_extension && $auction->ends_at) {
+                $secondsRemaining = now()->diffInSeconds($auction->ends_at, false);
+                if ($secondsRemaining > 0 && $secondsRemaining <= 300) {
+                    $updateData['ends_at'] = $auction->ends_at->addMinutes(5);
+                }
+            }
+
+            $auction->update($updateData);
 
             // Notify the bidder
             $user->notify(new BidPlacedNotification($auction, $result['bid']));
@@ -227,9 +243,6 @@ class BiddingService
                 return $bid;
             }
 
-            // Promote the best remaining max-bid back to active and recompute current price.
-            $nextBid->forceFill(['status' => 'active'])->save();
-
             /** @var Bid|null $secondBest */
             $secondBest = Bid::query()
                 ->where('auction_id', $auction->id)
@@ -240,14 +253,26 @@ class BiddingService
                 ->orderBy('created_at')
                 ->first();
 
-            $increment = 100;
             $starting = max((int) $auction->starting_bid_yen, (int) $auction->current_bid_yen);
+            $increment = $this->proxyBiddingService->getIncrement($starting);
             $target = $secondBest ? ((int) $secondBest->max_amount_yen + $increment) : $starting;
             $newAmount = min((int) $nextBid->max_amount_yen, max($starting, $target));
 
             $nextBid->forceFill([
                 'amount_yen' => $newAmount,
+                'status' => 'active',
             ])->save();
+
+            // Reconcile Wallet Lock for the promoted bidder
+            $nextUserWallet = $nextBid->user->wallet()->lockForUpdate()->first();
+            if ($nextUserWallet) {
+                $shippingRate = $nextBid->shippingRate ?? $nextBid->user->shippingRate;
+                $fee = (int) ($shippingRate?->fee_yen ?? 0);
+                $lockAmount = (int) $nextBid->max_amount_yen + $fee;
+
+                $nextUserWallet->increment('locked_balance_yen', $lockAmount);
+                $nextBid->update(['locked_amount_yen' => $lockAmount]);
+            }
 
             $auction->forceFill([
                 'current_bid_yen' => $newAmount,

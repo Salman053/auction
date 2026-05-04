@@ -23,15 +23,17 @@
             </div>
         </div>
 
-        {{-- Sort --}}
+        @php
+            $currentSort = $filters['sort'] ?? 'newest';
+        @endphp
         <div>
             <label for="sort" class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Sort by</label>
             <select name="sort" id="sort" class="w-full rounded-xl border-none bg-slate-50 dark:bg-black/20 px-5 py-3 text-xs font-bold focus:ring-2 focus:ring-brand-gold dark:text-white appearance-none">
-                <option value="ends_soon" {{ ($filters['sort'] ?? '') === 'ends_soon' ? 'selected' : '' }}>Ending Soon</option>
-                <option value="price_asc" {{ ($filters['sort'] ?? '') === 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
-                <option value="price_desc" {{ ($filters['sort'] ?? '') === 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
-                <option value="newest" {{ ($filters['sort'] ?? '') === 'newest' ? 'selected' : '' }}>Recently Added</option>
-                <option value="bid_count" {{ ($filters['sort'] ?? '') === 'bid_count' ? 'selected' : '' }}>Most Bids</option>
+                <option value="newest" {{ $currentSort === 'newest' ? 'selected' : '' }}>Recently Added</option>
+                <option value="ends_soon" {{ $currentSort === 'ends_soon' ? 'selected' : '' }}>Ending Soon</option>
+                <option value="price_asc" {{ $currentSort === 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
+                <option value="price_desc" {{ $currentSort === 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
+                <option value="bid_count" {{ $currentSort === 'bid_count' ? 'selected' : '' }}>Most Bids</option>
             </select>
         </div>
 

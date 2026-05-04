@@ -24,7 +24,6 @@ class Auction extends Model
         'condition',
         'starting_bid_yen',
         'current_bid_yen',
-        'shipping_fee_yen',
         'bid_count',
         'status',
         'starts_at',
@@ -42,11 +41,12 @@ class Auction extends Model
         'admin_approved_at',
         'winner_user_id',
         'winning_bid_id',
+        'auto_extension',
     ];
 
     public function getTotalEstimatedYenAttribute(): int
     {
-        return (int) $this->current_bid_yen + (int) ($this->shipping_fee_yen ?? 0);
+        return (int) $this->current_bid_yen;
     }
 
     public function bids(): HasMany
@@ -89,7 +89,7 @@ class Auction extends Model
                 'ends_soon' => $query->orderBy('ends_at', 'asc'),
                 'newest' => $query->orderBy('created_at', 'desc'),
                 'bid_count' => $query->orderBy('bid_count', 'desc'),
-                default => $query->orderBy('ends_at', 'asc'),
+                default => $query->orderBy('created_at', 'desc'),
             };
         });
 
@@ -103,7 +103,7 @@ class Auction extends Model
         });
 
         if (! isset($filters['sort'])) {
-            $query->orderBy('ends_at', 'asc');
+            $query->orderBy('created_at', 'desc');
         }
 
         return $query;
@@ -126,7 +126,7 @@ class Auction extends Model
      */
     public function scopeShouldClose($query)
     {
-        return $query->where('status', 'active')
+        return $query->whereIn('status', ['active', 'closed'])
             ->whereNotNull('ends_at')
             ->where('ends_at', '<=', now());
     }
@@ -174,7 +174,6 @@ class Auction extends Model
         'last_synced_at' => 'datetime',
         'starting_bid_yen' => 'integer',
         'current_bid_yen' => 'integer',
-        'shipping_fee_yen' => 'integer',
         'bid_count' => 'integer',
         'seller_rating' => 'float',
         'view_count' => 'integer',
@@ -182,5 +181,6 @@ class Auction extends Model
         'admin_approved_at' => 'datetime',
         'winner_user_id' => 'integer',
         'winning_bid_id' => 'integer',
+        'auto_extension' => 'boolean',
     ];
 }

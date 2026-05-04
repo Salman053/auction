@@ -22,6 +22,7 @@ class Bid extends Model
         'locked_amount_yen',
         'status',
         'placed_via',
+        'shipping_rate_id',
         'canceled_at',
     ];
 
@@ -33,6 +34,11 @@ class Bid extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function shippingRate(): BelongsTo
+    {
+        return $this->belongsTo(ShippingRate::class);
     }
 
     protected $casts = [
