@@ -20,6 +20,7 @@
 </head>
 
 <body class="h-full bg-slate-50 antialiased dark:bg-zinc-950">
+    <x-page-loader />
     <div class="flex h-full overflow-hidden">
         {{-- ============================================= --}}
         {{-- DESKTOP SIDEBAR (hidden on mobile) --}}
@@ -120,6 +121,16 @@
                         </svg>
                     </x-slot>
                     Shipping Rates
+                </x-dashboard.sidebar-item>
+
+                <x-dashboard.sidebar-item href="{{ route('admin.support-tickets.index') }}" :active="request()->routeIs('admin.support-tickets.*')">
+                    <x-slot name="icon">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                    </x-slot>
+                    Support Tickets
                 </x-dashboard.sidebar-item>
 
                 <x-dashboard.sidebar-item href="{{ route('admin.profile.edit') }}" :active="request()->routeIs('admin.profile.*')">
@@ -365,6 +376,15 @@
                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         Scraping Health
+                    </a>
+
+                    <a href="{{ route('admin.support-tickets.index') }}"
+                        class="drawer-nav-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all {{ request()->routeIs('admin.support-tickets.*') ? 'bg-rose-50 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10' }}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        Support Tickets
                     </a>
 
                     <a href="{{ route('admin.profile.edit') }}"

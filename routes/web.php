@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ProxyController as AdminProxyController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\ScrapingLogController as AdminScrapingLogController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+use App\Http\Controllers\Admin\ShippingRateController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\WithdrawalController as AdminWithdrawalController;
@@ -29,6 +30,7 @@ use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\NotificationController as UserNotificationController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\SettingsController as UserSettingsController;
+use App\Http\Controllers\User\SupportTicketController;
 use App\Http\Controllers\User\WalletController as UserWalletController;
 use App\Http\Controllers\User\WatchlistController as UserWatchlistController;
 use App\Http\Controllers\User\WithdrawalController as UserWithdrawalController;
@@ -78,6 +80,10 @@ Route::middleware('auth:user')->group(function () {
         Route::post('/wallet/deposits', [UserWalletController::class, 'storeDeposit'])->name('wallet.deposits.store');
         Route::get('/wallet/deposits/stripe/success', [UserWalletController::class, 'stripeSuccess'])->name('wallet.deposits.stripe.success');
         Route::get('/wallet/deposits/stripe/cancel', [UserWalletController::class, 'stripeCancel'])->name('wallet.deposits.stripe.cancel');
+
+        Route::get('/support', [SupportTicketController::class, 'index'])->name('support.index');
+        Route::get('/support/{supportTicket}', [SupportTicketController::class, 'show'])->name('support.show');
+        Route::post('/support/{supportTicket}/reply', [SupportTicketController::class, 'reply'])->name('support.reply');
 
         Route::get('/withdrawals', [UserWithdrawalController::class, 'index'])->name('withdrawals.index');
         Route::post('/withdrawals', [UserWithdrawalController::class, 'store'])->name('withdrawals.store');
@@ -131,7 +137,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/auctions/{auction}/reject-shipment', [AuctionController::class, 'rejectShipment'])->name('auctions.reject-shipment');
         Route::get('/proxies', [AdminProxyController::class, 'index'])->name('proxies.index');
         Route::get('/scraping-logs', [AdminScrapingLogController::class, 'index'])->name('scraping-logs.index');
-        Route::resource('shipping_rates', \App\Http\Controllers\Admin\ShippingRateController::class);
+        Route::resource('shipping_rates', ShippingRateController::class);
 
         Route::get('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');

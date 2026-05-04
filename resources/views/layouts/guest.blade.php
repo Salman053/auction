@@ -19,6 +19,7 @@
 </head>
 
 <body class="min-h-full bg-slate-50 antialiased dark:bg-zinc-950">
+    <x-page-loader />
     <header class="sticky top-0 z-50 border-b border-white/10 bg-brand-navy/95 backdrop-blur-md dark:bg-zinc-900/95">
         <div class="mx-auto flex max-w-7xl  flex-wrap gap-3 items-center justify-between px-6 py-4">
             <a href="{{ route('home') }}" class="flex items-center gap-2.5">

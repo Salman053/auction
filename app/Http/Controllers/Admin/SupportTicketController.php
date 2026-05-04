@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SupportTicketReplyRequest;
 use App\Models\SupportTicket;
+use App\Notifications\SupportTicketRepliedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\View\View;
 
 class SupportTicketController extends Controller
@@ -46,11 +48,20 @@ class SupportTicketController extends Controller
 
         $validated = $request->validated();
 
-        $supportTicket->messages()->create([
+        $message = $supportTicket->messages()->create([
             'author_user_id' => $admin?->id,
             'body' => $validated['body'],
             'is_internal' => (bool) ($validated['is_internal'] ?? false),
         ]);
+
+        if (! $message->is_internal) {
+            if ($supportTicket->user) {
+                $supportTicket->user->notify(new SupportTicketRepliedNotification($supportTicket, $message));
+            } elseif ($supportTicket->requester_email) {
+                Notification::route('mail', $supportTicket->requester_email)
+                    ->notify(new SupportTicketRepliedNotification($supportTicket, $message));
+            }
+        }
 
         return back()->with('success', 'Support ticket status updated.');
     }
