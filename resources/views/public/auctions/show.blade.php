@@ -127,7 +127,7 @@
                             <dt class="text-[10px] font-black uppercase tracking-widest text-zinc-400">Merchant
                                 Reputation</dt>
                             <dd class="mt-3 text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-1.5">
-                                <span class="text-brand-gold">★</span> {{ $auction->seller_rating ?? '4.9' }} / 5.0
+                                <span class="text-brand-gold">★</span> {{ $auction->seller_rating ?? '4.9' }}
                             </dd>
                         </div>
                         <div

@@ -37,7 +37,7 @@ class WalletService
             'receipt_path' => $receiptPath,
         ]);
 
-        $admins = User::where('role', UserRole::Admin->value)->get();
+        $admins = User::query()->where('role', UserRole::Admin->value)->get();
         foreach ($admins as $admin) {
             $admin->notify(new AdminNewDepositRequestNotification($transaction, $user));
         }
