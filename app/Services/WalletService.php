@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use App\Models\WalletTransaction;
 use App\Models\WithdrawalRequest;
 use App\Notifications\AdminNewDepositRequestNotification;
 use App\Notifications\DepositApprovedNotification;
 use App\Notifications\WithdrawalProcessedNotification;
-use App\Enums\UserRole;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -37,7 +37,6 @@ class WalletService
             'receipt_path' => $receiptPath,
         ]);
 
-        // Notify admins
         $admins = User::where('role', UserRole::Admin->value)->get();
         foreach ($admins as $admin) {
             $admin->notify(new AdminNewDepositRequestNotification($transaction, $user));
