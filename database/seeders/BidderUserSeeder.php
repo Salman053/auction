@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class BidderUserSeeder extends Seeder
 {
@@ -29,7 +30,7 @@ class BidderUserSeeder extends Seeder
                 ['email' => $bidder['email']],
                 [
                     'name' => $bidder['name'],
-                    'password' => $password,
+                    'password' => Hash::make($password),
                     'role' => UserRole::User->value,
                 ]
             );

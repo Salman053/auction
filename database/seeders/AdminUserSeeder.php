@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class AdminUserSeeder extends Seeder
 {
@@ -18,7 +19,7 @@ class AdminUserSeeder extends Seeder
 
         $admin = User::query()->updateOrCreate(
             ['email' => $email],
-            ['name' => 'Admin', 'password' => $password],
+            ['name' => 'Admin', 'password' => Hash::make($password)],
         );
 
         $admin->forceFill([
