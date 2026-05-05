@@ -82,6 +82,7 @@ class ImportYahooHtml extends Command
                     'ends_at' => $parsed['ends_at'],
                     'seller_name' => $parsed['seller_name'],
                     'seller_rating' => $parsed['seller_rating'],
+                    'yahoo_watcher_count' => $parsed['watcher_count'] ?? 0,
                     'thumbnail_url' => $parsed['thumbnail_url'],
                     'image_urls' => $parsed['image_urls'],
                     'raw' => $parsed['raw'],

@@ -1,6 +1,6 @@
 @props(['auction'])
 
-<div x-show="tab === 'images'" x-cloak class="mt-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
+<div x-show="tab === 'images'" class="mt-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
     @if (!empty($auction->image_urls) && count($auction->image_urls) > 0)
         <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             @foreach ($auction->image_urls as $idx => $imageUrl)

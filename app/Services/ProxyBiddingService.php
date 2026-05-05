@@ -100,13 +100,25 @@ class ProxyBiddingService
 
         $dynamicIncrement = $this->getIncrement($maxAmountYen);
         $newAmount = min((int) $currentHighestBid->max_amount_yen, $maxAmountYen + $dynamicIncrement);
-        $currentHighestBid->update(['amount_yen' => $newAmount]);
+
+        // Mark old bid as superseded to keep history clean and chronological
+        $currentHighestBid->update(['status' => 'superseded']);
+
+        // Create a fresh "active" bid record for the current high bidder at the new price
+        $newActiveBid = $this->createBid(
+            $auction,
+            $currentHighestBid->user,
+            $newAmount,
+            $currentHighestBid->max_amount_yen,
+            $currentHighestBid->shipping_rate_id
+        );
 
         return [
             'status' => 'failed_outbid',
-            'bid' => $currentHighestBid,
+            'bid' => $newActiveBid,
             'outbid_user' => null,
             'new_bid' => $outbidBid,
+            'previous_bid' => $currentHighestBid,
         ];
     }
 

@@ -12,7 +12,7 @@
                     class="rounded-full bg-brand-navy px-3 py-1 text-white dark:bg-brand-gold dark:text-brand-navy">{{ $auction->status }}</span>
                 <span class="flex items-center gap-1.5">
                     <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span>
-                    Current Bid: ¥{{ number_format($auction->current_bid_yen) }}
+                    Current Bid: <span id="current-bid-display">¥{{ number_format($auction->current_bid_yen) }}</span>
                 </span>
                 @if (
                     $userHighestActiveBid &&
@@ -27,7 +27,7 @@
                 @if ($auction->ends_at)
                     <span class="flex items-center gap-1.5">
                         <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span>
-                        Ends: {{ $auction->ends_at->diffForHumans() }}
+                        Ends: <span id="ends-at-display">{{ $auction->ends_at->diffForHumans() }}</span>
                     </span>
                 @else
                     <span class="flex items-center gap-1.5">
@@ -210,23 +210,60 @@
                             You are the winning bidder for this exceptional timepiece.
                         </p>
 
+                        @php
+                            $sColor = match($auction->shipment_status) {
+                                'bidder_confirmed' => 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+                                'bidder_rejected' => 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400',
+                                'admin_approved' => 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+                                default => 'bg-zinc-100 text-zinc-700 dark:bg-white/5 dark:text-zinc-400',
+                            };
+                            $dotColor = match($auction->shipment_status) {
+                                'bidder_confirmed' => 'text-emerald-500',
+                                'bidder_rejected' => 'text-rose-500',
+                                'admin_approved' => 'text-blue-500',
+                                default => 'text-zinc-500',
+                            };
+                            $dotBgColor = match($auction->shipment_status) {
+                                'bidder_confirmed' => 'bg-emerald-500',
+                                'bidder_rejected' => 'bg-rose-500',
+                                'admin_approved' => 'bg-blue-500',
+                                default => 'bg-zinc-500',
+                            };
+                        @endphp
+
                         @if ($auction->shipment_status === 'pending')
-                            <div class="mt-8 w-full max-w-sm">
-                                <form method="POST" action="{{ route('user.auctions.confirm-shipment', $auction) }}">
+                            <div class="mt-8 flex w-full max-w-md flex-col gap-4 sm:flex-row">
+                                <form id="confirm-shipment-form" method="POST"
+                                    action="{{ route('user.auctions.confirm-shipment', $auction) }}" class="flex-1">
                                     @csrf
-                                    <button type="submit"
-                                        class="w-full rounded-2xl bg-emerald-600 px-8 py-4 text-sm font-black uppercase tracking-[0.2em] text-white shadow-lg shadow-emerald-600/20 transition hover:scale-[1.02] hover:bg-emerald-700 active:scale-[0.98]">
-                                        Confirm Shipment Details
+                                    <button type="button" data-confirm data-confirm-title="Confirm Shipment"
+                                        data-confirm-text="Confirm Now" data-confirm-type="success"
+                                        data-confirm-on-confirm="#confirm-shipment-form"
+                                        data-confirm-message="Are you sure you want to confirm the shipment details for this item? This will notify the administration to begin processing your delivery."
+                                        class="w-full rounded-2xl bg-emerald-600 px-8 py-4 text-xs font-black uppercase tracking-[0.2em] text-white shadow-lg shadow-emerald-600/20 transition hover:scale-[1.02] hover:bg-emerald-700 active:scale-[0.98]">
+                                        Confirm Shipment
                                     </button>
                                 </form>
-                                <p class="mt-4 text-[10px] font-bold uppercase tracking-widest text-emerald-600/40">
-                                    Finalizing your destination preferences
-                                </p>
+
+                                <form id="reject-shipment-form" method="POST"
+                                    action="{{ route('user.auctions.reject-shipment', $auction) }}" class="flex-1">
+                                    @csrf
+                                    <button type="button" data-confirm data-confirm-title="Reject Shipment"
+                                        data-confirm-text="Reject Now" data-confirm-type="danger"
+                                        data-confirm-on-confirm="#reject-shipment-form"
+                                        data-confirm-message="Are you sure you want to reject this shipment request? This action is final and cannot be undone."
+                                        class="w-full rounded-2xl bg-zinc-200 px-8 py-4 text-xs font-black uppercase tracking-[0.2em] text-zinc-600 transition hover:scale-[1.02] hover:bg-zinc-300 active:scale-[0.98] dark:bg-white/10 dark:text-zinc-400 dark:hover:bg-white/20">
+                                        Reject/Cancel
+                                    </button>
+                                </form>
                             </div>
+                            <p class="mt-4 text-[10px] font-bold uppercase tracking-widest text-emerald-600/40">
+                                Finalizing your destination preferences
+                            </p>
                         @else
                             <div
-                                class="mt-8 inline-flex items-center gap-3 rounded-full bg-emerald-100 px-6 py-2 text-xs font-black uppercase tracking-widest text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                                <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                class="mt-8 inline-flex items-center gap-3 rounded-full {{ $sColor }} px-6 py-2 text-xs font-black uppercase tracking-widest">
+                                <span class="h-2 w-2 rounded-full {{ $dotBgColor }} {{ $auction->shipment_status === 'bidder_confirmed' ? 'animate-pulse' : '' }}"></span>
                                 Shipment: {{ str_replace('_', ' ', $auction->shipment_status) }}
                             </div>
                         @endif
@@ -378,18 +415,35 @@
                                         class="flex justify-between text-xs font-bold uppercase tracking-widest text-zinc-500">
                                         <span>Current Status</span>
                                         <span
-                                            class="text-brand-gold font-black">{{ strtoupper($auction->shipment_status) }}</span>
+                                            class="{{ $dotColor }} {{ $auction->shipment_status === 'bidder_confirmed' ? 'animate-pulse' : '' }} font-black">{{ strtoupper(str_replace('_', ' ', $auction->shipment_status)) }}</span>
                                     </div>
 
                                     @if ($auction->shipment_status === 'pending')
-                                        <form method="POST"
-                                            action="{{ route('user.auctions.confirm-shipment', $auction) }}">
-                                            @csrf
-                                            <button type="submit"
-                                                class="w-full rounded-2xl bg-brand-navy px-8 py-4 text-center text-sm font-bold uppercase tracking-widest text-brand-gold transition hover:scale-[1.02] hover:bg-black dark:bg-brand-gold dark:text-brand-navy">
-                                                Confirm Shipment Details
-                                            </button>
-                                        </form>
+                                        <div class="flex flex-col gap-3">
+                                            <form id="confirm-shipment-footer-form" method="POST"
+                                                action="{{ route('user.auctions.confirm-shipment', $auction) }}">
+                                                @csrf
+                                                <button type="button" data-confirm data-confirm-title="Confirm Shipment"
+                                                    data-confirm-text="Confirm Now" data-confirm-type="success"
+                                                    data-confirm-on-confirm="#confirm-shipment-footer-form"
+                                                    data-confirm-message="Are you sure you want to confirm the shipment details for this item?"
+                                                    class="w-full rounded-2xl bg-brand-navy px-8 py-4 text-center text-sm font-bold uppercase tracking-widest text-brand-gold transition hover:scale-[1.02] hover:bg-black dark:bg-brand-gold dark:text-brand-navy">
+                                                    Confirm Shipment
+                                                </button>
+                                            </form>
+
+                                            <form id="reject-shipment-footer-form" method="POST"
+                                                action="{{ route('user.auctions.reject-shipment', $auction) }}">
+                                                @csrf
+                                                <button type="button" data-confirm data-confirm-title="Reject Shipment"
+                                                    data-confirm-text="Reject Now" data-confirm-type="danger"
+                                                    data-confirm-on-confirm="#reject-shipment-footer-form"
+                                                    data-confirm-message="Are you sure you want to reject this shipment request? This action is final."
+                                                    class="w-full rounded-2xl bg-zinc-100 px-8 py-3 text-center text-[10px] font-bold uppercase tracking-widest text-zinc-500 transition hover:bg-zinc-200 dark:bg-white/5 dark:hover:bg-white/10">
+                                                    Reject/Cancel
+                                                </button>
+                                            </form>
+                                        </div>
                                     @elseif($auction->shipment_status === 'bidder_confirmed')
                                         <div class="rounded-xl bg-zinc-100 p-4 text-center dark:bg-white/5">
                                             <span class="text-xs font-bold text-zinc-500 italic">Awaiting Admin
@@ -418,49 +472,9 @@
                     <h2 class="text-sm font-bold uppercase tracking-widest text-zinc-900 dark:text-white">Chronological
                         Activity</h2>
                 </div>
-                @php
-                    $bids = $auction->bids()->with('user')->latest()->get();
-                @endphp
-                @forelse ($bids as $bid)
-                    <div
-                        class="flex items-center justify-between gap-4 px-8 py-5 transition hover:bg-zinc-50 dark:hover:bg-white/5">
-                        <div class="flex items-center gap-4">
-                            <div
-                                class="h-2 w-2 rounded-full @if ($bid->status === 'active') bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] @elseif($bid->status === 'outbid') bg-zinc-300 @elseif($bid->status === 'superseded') bg-brand-gold/40 @else bg-red-500 @endif">
-                            </div>
-                            <div>
-                                <p class="text-sm font-bold text-zinc-900 dark:text-white">
-                                    @if ($bid->user_id == auth('user')->id())
-                                        <span class="text-brand-gold">You</span>
-                                    @else
-                                        @if ($bid->user)
-                                            Collector #{{ substr($bid->user->id, 0, 4) }}
-                                        @else
-                                            System
-                                        @endif
-                                    @endif
-                                </p>
-                                <p class="text-[10px] uppercase font-bold tracking-widest text-zinc-400">
-                                    {{ $bid->status }} · {{ $bid->created_at->diffForHumans() }}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-lg font-black text-zinc-900 dark:text-white">
-                                ¥{{ number_format($bid->amount_yen) }}
-                            </p>
-                            @if ($bid->user_id == auth('user')->id() && $bid->max_amount_yen > $bid->amount_yen)
-                                <p class="text-[9px] font-bold uppercase tracking-widest text-brand-gold">
-                                    Max: ¥{{ number_format($bid->max_amount_yen) }}
-                                </p>
-                            @endif
-                        </div>
-                    </div>
-                @empty
-                    <div class="p-12 text-center text-sm text-zinc-500 italic">
-                        No bids have been placed yet. Be the first to bid!
-                    </div>
-                @endforelse
+                <div id="bid-history-container">
+                    @include('user.auctions._bid_history', ['bids' => $auction->bids])
+                </div>
             </div>
         </div>
 
@@ -517,4 +531,43 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const updatesUrl = "{{ route('user.auctions.updates', $auction) }}";
+            const historyContainer = document.getElementById('bid-history-container');
+            const currentBidDisplay = document.getElementById('current-bid-display');
+            const endsAtDisplay = document.getElementById('ends-at-display');
+            const amountInput = document.getElementById('amount_yen');
+
+            let lastBidId = "{{ $auction->bids->first()?->id }}";
+
+            async function fetchUpdates() {
+                try {
+                    const response = await fetch(updatesUrl);
+                    if (!response.ok) return;
+
+                    const data = await response.json();
+
+                    if (currentBidDisplay) currentBidDisplay.textContent =
+                        `¥${data.current_bid_yen.toLocaleString()}`;
+                    if (endsAtDisplay && data.ends_at_human) endsAtDisplay.textContent = data.ends_at_human;
+
+                    if (amountInput) {
+                        amountInput.min = data.current_bid_yen + 1;
+                    }
+
+                    if (data.highest_active_bid_id != lastBidId) {
+                        lastBidId = data.highest_active_bid_id;
+                        if (historyContainer) {
+                            historyContainer.innerHTML = data.bids_html;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch auction updates:', error);
+                }
+            }
+
+            setInterval(fetchUpdates, 10000);
+        });
+    </script>
 </x-user-layout>

@@ -68,8 +68,10 @@ Route::middleware('auth:user')->group(function () {
     Route::prefix('app')->name('user.')->group(function () {
         Route::get('/auctions', [UserAuctionController::class, 'index'])->name('auctions.index');
         Route::get('/auctions/{auction}', [UserAuctionDetailController::class, 'show'])->name('auctions.show');
+        Route::get('/auctions/{auction}/updates', [UserAuctionDetailController::class, 'getUpdates'])->name('auctions.updates');
         Route::post('/auctions/{auction}/bids', [UserAuctionDetailController::class, 'storeBid'])->name('auctions.bids.store');
         Route::post('/auctions/{auction}/confirm-shipment', [UserAuctionDetailController::class, 'confirmShipment'])->name('auctions.confirm-shipment');
+        Route::post('/auctions/{auction}/reject-shipment', [UserAuctionDetailController::class, 'rejectShipment'])->name('auctions.reject-shipment');
         Route::get('/bids', [UserBidController::class, 'index'])->name('bids.index');
         Route::post('/bids/{bid}/cancel', [UserBidController::class, 'cancel'])->name('bids.cancel');
         Route::get('/watchlist', [UserWatchlistController::class, 'index'])->name('watchlist.index');

@@ -1,16 +1,17 @@
 <?php
 
+use App\Enums\UserRole;
 use App\Models\Auction;
 use App\Models\User;
-use App\Enums\UserRole;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 test('full auction shipment flow: winning -> bidder confirmation -> admin approval', function () {
     // 1. Setup - Create User and Admin
     $user = User::factory()->create(['role' => UserRole::User->value]);
     $admin = User::factory()->create(['role' => UserRole::Admin->value]);
-    
+
     // 2. Create an ended auction won by the user
     $auction = Auction::factory()->create([
         'status' => 'ended',
@@ -58,10 +59,55 @@ test('full auction shipment flow: winning -> bidder confirmation -> admin approv
     expect($auction->admin_approved_at)->not->toBeNull();
 });
 
+test('user can reject their own shipment request when pending', function () {
+    $user = User::factory()->create(['role' => UserRole::User->value]);
+    $admin = User::factory()->create(['role' => UserRole::Admin->value]);
+
+    $auction = Auction::factory()->create([
+        'status' => 'ended',
+        'winner_user_id' => $user->id,
+        'shipment_status' => 'pending',
+    ]);
+
+    $this->actingAs($user, 'user')
+        ->post(route('user.auctions.reject-shipment', $auction))
+        ->assertRedirect()
+        ->assertSessionHas('success');
+
+    $auction->refresh();
+    expect($auction->shipment_status)->toBe('bidder_rejected');
+
+    // Admin can reset it
+    $this->actingAs($admin, 'admin')
+        ->post(route('admin.auctions.reject-shipment', $auction))
+        ->assertRedirect();
+
+    $auction->refresh();
+    expect($auction->shipment_status)->toBe('pending');
+});
+
+test('user cannot reject shipment once confirmed', function () {
+    $user = User::factory()->create(['role' => UserRole::User->value]);
+
+    $auction = Auction::factory()->create([
+        'status' => 'ended',
+        'winner_user_id' => $user->id,
+        'shipment_status' => 'bidder_confirmed',
+    ]);
+
+    $this->actingAs($user, 'user')
+        ->post(route('user.auctions.reject-shipment', $auction))
+        ->assertRedirect()
+        ->assertSessionHas('error');
+
+    $auction->refresh();
+    expect($auction->shipment_status)->toBe('bidder_confirmed');
+});
+
 test('unauthorized users cannot approve shipments', function () {
     $user = User::factory()->create(['role' => UserRole::User->value]);
     $otherUser = User::factory()->create(['role' => UserRole::User->value]);
-    
+
     $auction = Auction::factory()->create([
         'status' => 'ended',
         'winner_user_id' => $user->id,
@@ -71,5 +117,5 @@ test('unauthorized users cannot approve shipments', function () {
     // Regular user trying to access admin approval
     $this->actingAs($otherUser, 'user')
         ->post(route('admin.auctions.approve-shipment', $auction))
-        ->assertRedirect('/admin/login'); 
+        ->assertRedirect('/admin/login');
 });

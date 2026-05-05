@@ -80,8 +80,8 @@ class AuctionController extends Controller
 
     public function rejectShipment(Auction $auction, Request $request): RedirectResponse
     {
-        if ($auction->shipment_status !== 'bidder_confirmed') {
-            return back()->with('error', 'Shipment must be confirmed by the bidder first.');
+        if ($auction->shipment_status !== 'bidder_confirmed' && $auction->shipment_status !== 'bidder_rejected') {
+            return back()->with('error', 'Shipment must be confirmed or rejected by the bidder first.');
         }
 
         $auction->update([
@@ -89,6 +89,6 @@ class AuctionController extends Controller
             'bidder_confirmed_at' => null,
         ]);
 
-        return back()->with('success', 'Shipment rejected and returned to pending state.');
+        return back()->with('success', 'Shipment state has been reset to pending.');
     }
 }

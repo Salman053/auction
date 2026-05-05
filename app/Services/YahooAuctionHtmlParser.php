@@ -146,9 +146,15 @@ class YahooAuctionHtmlParser
             'seller_name' => $sellerData['name'] ?? null,
             'yahoo_seller_id' => $sellerData['id'] ?? null,
             'seller_rating' => $sellerData['rating'] ?? null,
+            'watcher_count' => $sellerData['watch_count'] ?? null,
             'thumbnail_url' => $this->extractMainImage($xpath),
             'image_urls' => $this->extractImageUrls($xpath),
-            'raw' => ['source_url' => $sourceUrl],
+            'raw' => array_merge($sellerData['raw'] ?? [], [
+                'source_url' => $sourceUrl,
+                'scraped_at' => now()->toDateTimeString(),
+                'title_raw' => $title,
+                'price_text' => $priceText,
+            ]),
         ];
     }
 
@@ -198,11 +204,17 @@ class YahooAuctionHtmlParser
                     $item = $json['props']['pageProps']['initialState']['item']['detail']['item'] ?? null;
                     if ($item && isset($item['seller'])) {
                         $seller = $item['seller'];
+                        $watchCount = $item['watchCount'] ?? null;
 
                         return [
                             'name' => $seller['displayName'] ?? null,
                             'id' => $seller['id'] ?? null,
                             'rating' => isset($seller['rating']['goodRating']) ? (float) str_replace('%', '', $seller['rating']['goodRating']) : null,
+                            'watch_count' => $watchCount,
+                            'raw' => [
+                                'seller_json' => $seller,
+                                'item_json_partial' => array_intersect_key($item, array_flip(['id', 'title', 'price', 'category', 'condition', 'watchCount'])),
+                            ],
                         ];
                     }
                 }
@@ -231,10 +243,20 @@ class YahooAuctionHtmlParser
             $rating = (float) $m[1];
         }
 
+        // Watcher count from DOM
+        $watchCount = $this->extractWatcherCount($xpath, $html);
+
         return [
             'name' => $name ? $this->cleanText($name) : null,
             'id' => $sellerId,
             'rating' => $rating,
+            'watch_count' => $watchCount,
+            'raw' => [
+                'seller_name_dom' => $name,
+                'seller_id_regex' => $sellerId,
+                'seller_rating_parsed' => $rating,
+                'watch_count_parsed' => $watchCount,
+            ],
         ];
     }
 
@@ -671,6 +693,29 @@ class YahooAuctionHtmlParser
         }
 
         return (float) $matches[1];
+    }
+
+    private function extractWatcherCount(DOMXPath $xpath, string $html): ?int
+    {
+        $selectors = [
+            "//*[contains(@class, 'Watchlist__count')]",
+            "//*[contains(@class, 'watchlist-count')]",
+            "//*[contains(text(), 'ウォッチリスト')]/following-sibling::*",
+        ];
+
+        foreach ($selectors as $selector) {
+            $text = $this->firstText($xpath, [$selector]);
+            if ($text && preg_match('/(\d+)/', $text, $matches)) {
+                return (int) $matches[1];
+            }
+        }
+
+        // Regex fallback
+        if (preg_match('/"watchCount":\s*(\d+)/', $html, $m)) {
+            return (int) $m[1];
+        }
+
+        return null;
     }
 
     private function cleanText(string $text): string

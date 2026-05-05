@@ -8,6 +8,7 @@ use App\Models\Auction;
 use App\Models\Bid;
 use App\Models\ShippingRate;
 use App\Services\BiddingService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -86,5 +87,43 @@ class AuctionDetailController extends Controller
         ]);
 
         return back()->with('success', 'Shipment details confirmed! Waiting for admin approval.');
+    }
+
+    public function rejectShipment(Auction $auction, Request $request): RedirectResponse
+    {
+        $user = $request->user('user');
+        if ($auction->winner_user_id !== $user->id) {
+            abort(403);
+        }
+
+        if ($auction->shipment_status !== 'pending') {
+            return back()->with('error', 'Shipment cannot be rejected at this stage.');
+        }
+
+        $auction->update([
+            'shipment_status' => 'bidder_rejected',
+            'bidder_confirmed_at' => null,
+        ]);
+
+        return back()->with('success', 'Shipment request has been rejected.');
+    }
+
+    public function getUpdates(Auction $auction): JsonResponse
+    {
+        $auction->load(['bids' => fn ($query) => $query->with('user')->latest()->limit(30)]);
+
+        $highestActiveBid = Bid::where('auction_id', $auction->id)
+            ->where('status', 'active')
+            ->orderByDesc('max_amount_yen')
+            ->orderBy('created_at')
+            ->first();
+
+        return response()->json([
+            'current_bid_yen' => (int) $auction->current_bid_yen,
+            'bid_count' => (int) $auction->bid_count,
+            'highest_active_bid_id' => $highestActiveBid?->id,
+            'ends_at_human' => $auction->ends_at?->diffForHumans(),
+            'bids_html' => view('user.auctions._bid_history', ['bids' => $auction->bids])->render(),
+        ]);
     }
 }

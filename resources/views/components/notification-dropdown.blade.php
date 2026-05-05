@@ -40,9 +40,9 @@
                 </div>
             </div>
 
-            <div class="max-h-[400px] overflow-y-auto">
+            <div class="max-h-[400px] overflow-y-auto p-3">
                 @forelse($user->notifications->take(10) as $notification)
-                    @if (auth('admin'))
+                    @if ($isAdmin)
                         <a href="{{ route('admin.auctions.show', $notification->data['auction_id']) }}"
                             class="group relative border-b border-black/5 px-5 py-4 transition hover:bg-zinc-50 dark:border-white/10 dark:hover:bg-white/5 {{ $notification->unread() ? 'bg-zinc-50/50 dark:bg-white/2' : '' }}">
                             <div class="flex gap-3">
@@ -60,7 +60,7 @@
                             </div>
                         </a>
                     @else
-                        <a href="{{ route('auctions.show', $notification->data['auction_id']) }}"
+                        <a href="{{ route('user.auctions.show', $notification->data['auction_id']) }}"
                             class="group relative border-b border-black/5 px-5 py-4 transition hover:bg-zinc-50 dark:border-white/10 dark:hover:bg-white/5 {{ $notification->unread() ? 'bg-zinc-50/50 dark:bg-white/2' : '' }}">
                             <div class="flex gap-3">
                                 <div

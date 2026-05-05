@@ -42,6 +42,7 @@ class Auction extends Model
         'winner_user_id',
         'winning_bid_id',
         'auto_extension',
+        'yahoo_watcher_count',
     ];
 
     public function getTotalEstimatedYenAttribute(): int
@@ -182,5 +183,6 @@ class Auction extends Model
         'winner_user_id' => 'integer',
         'winning_bid_id' => 'integer',
         'auto_extension' => 'boolean',
+        'yahoo_watcher_count' => 'integer',
     ];
 }

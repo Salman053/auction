@@ -1,6 +1,6 @@
 @props(['winningBids', 'lostBids', 'resultBids'])
 
-<div x-show="tab === 'results'" x-cloak class="mt-4 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
+<div x-show="tab === 'results'" class="mt-4 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
     <div class="border-b border-black/5 bg-zinc-50 px-6 py-4 dark:border-white/10 dark:bg-white/5">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>

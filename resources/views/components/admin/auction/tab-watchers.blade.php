@@ -1,6 +1,6 @@
 @props(['auction'])
 
-<div x-show="tab === 'watchers'" x-cloak class="mt-4 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
+<div x-show="tab === 'watchers'" class="mt-4 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
     <div class="overflow-x-auto">
         <table class="w-full text-left text-sm">
             <thead class="border-b border-black/5 bg-zinc-50/50 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400">

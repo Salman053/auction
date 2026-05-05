@@ -98,11 +98,28 @@ class BiddingService
 
             if ($result['status'] === 'failed_outbid') {
                 // The current user was immediately outbid by a proxy.
-                // We don't lock their funds, but we update the auction price which was pushed up.
+                // We transfer the lock from the previous bid to the new active bid for the high bidder.
+                if (isset($result['previous_bid']) && $result['bid']) {
+                    $lockAmount = (int) $result['previous_bid']->locked_amount_yen;
+                    $result['bid']->update(['locked_amount_yen' => $lockAmount]);
+                    $result['previous_bid']->update(['locked_amount_yen' => 0]);
+                }
+
                 $auction->update([
                     'current_bid_yen' => $result['bid']->amount_yen,
                     'bid_count' => $auction->bids()->count(),
                 ]);
+
+                // Notify the user they were immediately outbid
+                $user->notify(new OutbidNotification($auction, $result['bid']->amount_yen));
+
+                // Notify all administrators about the bidding activity
+                $admins = User::where('role', UserRole::Admin->value)->get();
+                foreach ($admins as $admin) {
+                    if (isset($result['new_bid'])) {
+                        $admin->notify(new AdminNewBidNotification($auction, $result['new_bid'], $user));
+                    }
+                }
 
                 return $result;
             }

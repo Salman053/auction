@@ -107,6 +107,14 @@
                                             <span class="h-1 w-1 rounded-full bg-zinc-300 dark:bg-zinc-700"></span>
                                             <span
                                                 class="text-[10px] font-medium text-rose-500/70">{{ $auction->seller_name ?? 'Anonymous Seller' }}</span>
+                                            <span class="h-1 w-1 rounded-full bg-zinc-300 dark:bg-zinc-700"></span>
+                                            <a href="https://page.auctions.yahoo.co.jp/jp/auction/{{ $auction->yahoo_auction_id }}"
+                                               target="_blank" rel="noopener noreferrer"
+                                               onclick="event.stopPropagation()"
+                                               class="group/link flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-brand-gold transition dark:text-zinc-500 dark:hover:text-brand-gold">
+                                                Yahoo Original
+                                                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -152,6 +160,11 @@
                                             <span
                                                 class="inline-flex rounded-lg bg-amber-50 px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 animate-pulse">
                                                 Ready to Ship
+                                            </span>
+                                        @elseif($auction->shipment_status === 'bidder_rejected')
+                                            <span
+                                                class="inline-flex rounded-lg bg-rose-50 px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-rose-700 dark:bg-rose-500/10 dark:text-rose-400">
+                                                Bidder Rejected
                                             </span>
                                         @elseif($auction->shipment_status === 'admin_approved')
                                             <span
