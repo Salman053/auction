@@ -7,12 +7,11 @@ use App\Models\Auction;
 use App\Models\Bid;
 use App\Models\User;
 use App\Models\Wallet;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class AnalyticsController extends Controller
 {
-    public function index(Request $request): View
+    public function index(): View
     {
         $stats = [
             'total_users' => User::count(),

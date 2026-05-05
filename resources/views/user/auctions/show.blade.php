@@ -211,19 +211,20 @@
                         </p>
 
                         @php
-                            $sColor = match($auction->shipment_status) {
-                                'bidder_confirmed' => 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+                            $sColor = match ($auction->shipment_status) {
+                                'bidder_confirmed'
+                                    => 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
                                 'bidder_rejected' => 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400',
                                 'admin_approved' => 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
                                 default => 'bg-zinc-100 text-zinc-700 dark:bg-white/5 dark:text-zinc-400',
                             };
-                            $dotColor = match($auction->shipment_status) {
+                            $dotColor = match ($auction->shipment_status) {
                                 'bidder_confirmed' => 'text-emerald-500',
                                 'bidder_rejected' => 'text-rose-500',
                                 'admin_approved' => 'text-blue-500',
                                 default => 'text-zinc-500',
                             };
-                            $dotBgColor = match($auction->shipment_status) {
+                            $dotBgColor = match ($auction->shipment_status) {
                                 'bidder_confirmed' => 'bg-emerald-500',
                                 'bidder_rejected' => 'bg-rose-500',
                                 'admin_approved' => 'bg-blue-500',
@@ -240,7 +241,7 @@
                                         data-confirm-text="Confirm Now" data-confirm-type="success"
                                         data-confirm-on-confirm="#confirm-shipment-form"
                                         data-confirm-message="Are you sure you want to confirm the shipment details for this item? This will notify the administration to begin processing your delivery."
-                                        class="w-full rounded-2xl bg-emerald-600 px-8 py-4 text-xs font-black uppercase tracking-[0.2em] text-white shadow-lg shadow-emerald-600/20 transition hover:scale-[1.02] hover:bg-emerald-700 active:scale-[0.98]">
+                                        class="w-full rounded-2xl bg-emerald-600 px-4 py-4 text-xs font-black uppercase tracking-[0.2em] text-white shadow-lg shadow-emerald-600/20 transition hover:scale-[1.02] hover:bg-emerald-700 active:scale-[0.98]">
                                         Confirm Shipment
                                     </button>
                                 </form>
@@ -263,7 +264,8 @@
                         @else
                             <div
                                 class="mt-8 inline-flex items-center gap-3 rounded-full {{ $sColor }} px-6 py-2 text-xs font-black uppercase tracking-widest">
-                                <span class="h-2 w-2 rounded-full {{ $dotBgColor }} {{ $auction->shipment_status === 'bidder_confirmed' ? 'animate-pulse' : '' }}"></span>
+                                <span
+                                    class="h-2 w-2 rounded-full {{ $dotBgColor }} {{ $auction->shipment_status === 'bidder_confirmed' ? 'animate-pulse' : '' }}"></span>
                                 Shipment: {{ str_replace('_', ' ', $auction->shipment_status) }}
                             </div>
                         @endif
@@ -423,7 +425,8 @@
                                             <form id="confirm-shipment-footer-form" method="POST"
                                                 action="{{ route('user.auctions.confirm-shipment', $auction) }}">
                                                 @csrf
-                                                <button type="button" data-confirm data-confirm-title="Confirm Shipment"
+                                                <button type="button" data-confirm
+                                                    data-confirm-title="Confirm Shipment"
                                                     data-confirm-text="Confirm Now" data-confirm-type="success"
                                                     data-confirm-on-confirm="#confirm-shipment-footer-form"
                                                     data-confirm-message="Are you sure you want to confirm the shipment details for this item?"
@@ -435,7 +438,8 @@
                                             <form id="reject-shipment-footer-form" method="POST"
                                                 action="{{ route('user.auctions.reject-shipment', $auction) }}">
                                                 @csrf
-                                                <button type="button" data-confirm data-confirm-title="Reject Shipment"
+                                                <button type="button" data-confirm
+                                                    data-confirm-title="Reject Shipment"
                                                     data-confirm-text="Reject Now" data-confirm-type="danger"
                                                     data-confirm-on-confirm="#reject-shipment-footer-form"
                                                     data-confirm-message="Are you sure you want to reject this shipment request? This action is final."
