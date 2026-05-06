@@ -42,41 +42,27 @@
 
             <div class="max-h-[400px] overflow-y-auto p-3">
                 @forelse($user->notifications->take(10) as $notification)
-                    @if ($isAdmin)
-                        <a href="{{ route('admin.auctions.show', $notification->data['auction_id']) }}"
-                            class="group relative border-b border-black/5 px-5 py-4 transition hover:bg-zinc-50 dark:border-white/10 dark:hover:bg-white/5 {{ $notification->unread() ? 'bg-zinc-50/50 dark:bg-white/2' : '' }}">
-                            <div class="flex gap-3">
-                                <div
-                                    class="mt-1 flex h-2 w-2 shrink-0 rounded-full {{ $notification->unread() ? 'bg-brand-gold' : 'bg-transparent' }}">
-                                </div>
-                                <div class="flex-1">
-                                    <p class="text-xs font-semibold text-zinc-900 dark:text-white leading-relaxed">
-                                        {{ $notification->data['message'] ?? 'No message content' }}
-                                    </p>
-                                    <span class="mt-1.5 block text-[10px] text-zinc-400 dark:text-zinc-500">
-                                        {{ $notification->created_at->diffForHumans() }}
-                                    </span>
-                                </div>
+                    @php
+                        $actionUrl = isset($notification->data['auction_id'])
+                            ? route($prefix . '.auctions.show', $notification->data['auction_id'])
+                            : route($prefix . '.notifications.index');
+                    @endphp
+                    <a href="{{ $actionUrl }}"
+                        class="group relative border-b border-black/5 px-5 py-4 transition hover:bg-zinc-50 dark:border-white/10 dark:hover:bg-white/5 {{ $notification->unread() ? 'bg-zinc-50/50 dark:bg-white/2' : '' }}">
+                        <div class="flex gap-3">
+                            <div
+                                class="mt-1 flex h-2 w-2 shrink-0 rounded-full {{ $notification->unread() ? 'bg-brand-gold' : 'bg-transparent' }}">
                             </div>
-                        </a>
-                    @else
-                        <a href="{{ route('user.auctions.show', $notification->data['auction_id']) }}"
-                            class="group relative border-b border-black/5 px-5 py-4 transition hover:bg-zinc-50 dark:border-white/10 dark:hover:bg-white/5 {{ $notification->unread() ? 'bg-zinc-50/50 dark:bg-white/2' : '' }}">
-                            <div class="flex gap-3">
-                                <div
-                                    class="mt-1 flex h-2 w-2 shrink-0 rounded-full {{ $notification->unread() ? 'bg-brand-gold' : 'bg-transparent' }}">
-                                </div>
-                                <div class="flex-1">
-                                    <p class="text-xs font-semibold text-zinc-900 dark:text-white leading-relaxed">
-                                        {{ $notification->data['message'] ?? 'No message content' }}
-                                    </p>
-                                    <span class="mt-1.5 block text-[10px] text-zinc-400 dark:text-zinc-500">
-                                        {{ $notification->created_at->diffForHumans() }}
-                                    </span>
-                                </div>
+                            <div class="flex-1">
+                                <p class="text-xs font-semibold text-zinc-900 dark:text-white leading-relaxed">
+                                    {{ $notification->data['message'] ?? 'No message content' }}
+                                </p>
+                                <span class="mt-1.5 block text-[10px] text-zinc-400 dark:text-zinc-500">
+                                    {{ $notification->created_at->diffForHumans() }}
+                                </span>
                             </div>
-                        </a>
-                    @endif
+                        </div>
+                    </a>
                 @empty
                     <div class="flex flex-col items-center justify-center py-12 px-5 text-center">
                         <svg class="h-10 w-10 text-zinc-200 dark:text-zinc-700" fill="none" viewBox="0 0 24 24"

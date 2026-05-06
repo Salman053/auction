@@ -169,7 +169,7 @@
 
                     <a href="{{ route('user.profile.edit') }}"
                         class="flex h-9 w-9 overflow-hidden rounded-full ring-2 ring-brand-gold/20 transition hover:ring-brand-gold sm:h-10 sm:w-10">
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=0F172A&color=D4AF37"
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth('user')->user()?->name ?? 'User') }}&background=0F172A&color=D4AF37"
                             alt="Profile">
                     </a>
                 </div>
