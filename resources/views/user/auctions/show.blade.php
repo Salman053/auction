@@ -124,14 +124,14 @@
                         {{-- Navigation Arrows --}}
                         @if (count($carouselImages) > 1)
                             <button id="prev-slide"
-                                class="absolute left-6 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-3 text-zinc-900 shadow-lg opacity-0 group-hover:opacity-100 transition hover:bg-white dark:bg-zinc-800/80 dark:text-white">
+                                class="absolute left-6 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-3 text-zinc-900 shadow-lg opacity-0 group-hover:opacity-100 transition hover:bg-white dark:bg-zinc-800/80 dark:text-black">
                                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M15 19l-7-7 7-7" />
                                 </svg>
                             </button>
                             <button id="next-slide"
-                                class="absolute right-6 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-3 text-zinc-900 shadow-lg opacity-0 group-hover:opacity-100 transition hover:bg-white dark:bg-zinc-800/80 dark:text-white">
+                                class="absolute right-6 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-3 text-zinc-900 shadow-lg opacity-0 group-hover:opacity-100 transition hover:bg-white dark:bg-zinc-800/80 dark:text-black">
                                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 5l7 7-7 7" />
@@ -258,7 +258,8 @@
                                     </button>
                                 </form>
                             </div>
-                            <p class="mt-4 text-[10px] font-bold uppercase tracking-widest text-emerald-600/40">
+                            <p
+                                class="mt-4 text-[10px] font-bold uppercase tracking-widest dark:text-white text-emerald-900/40">
                                 Finalizing your destination preferences
                             </p>
                         @else
@@ -406,7 +407,7 @@
                         @if ($auction->status === 'finished' && $auction->winner_user_id == auth('user')->id())
                             <div class="mt-6 rounded-2xl bg-brand-gold/10 p-8 border border-brand-gold/20">
                                 <h4
-                                    class="text-xl font-bold text-brand-navy dark:text-brand-gold uppercase tracking-tighter">
+                                    class="text-xl font-bold text-brand-navy dark:text-white dark:text-brand-gold uppercase tracking-tighter">
                                     Congratulations, You Won!</h4>
                                 <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
                                     Please confirm your shipping details to proceed with the delivery.
