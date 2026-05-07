@@ -141,13 +141,13 @@
                     <button id="mobileMenuToggle"
                         class="rounded-xl p-2 text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10 lg:hidden"
                         aria-label="Open menu">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class=" h-4 w-4 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
 
-                    <h2 class="text-lg font-bold text-slate-900 dark:text-white">
+                    <h2 class=" text-sm md:text-lg font-bold text-slate-900 dark:text-white">
                         {{ Str::limit($title ?? 'Collector Console', 40, '...') }}
                     </h2>
                 </div>

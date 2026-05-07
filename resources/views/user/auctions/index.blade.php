@@ -43,7 +43,12 @@
                     <div class="flex items-center gap-2 mb-3">
                         <span class="inline-flex h-2 w-2 rounded-full bg-brand-gold"></span>
                         <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-                            Ends {{ $auction->ends_at?->diffForHumans(null, true) ?? '—' }}
+                            @if ($auction->ends_at)
+                                {{ $auction->ends_at->isPast() ? 'Ended' : 'Ends' }}
+                                {{ $auction->ends_at->diffForHumans() }}
+                            @else
+                                —
+                            @endif
                         </span>
                     </div>
 
@@ -63,6 +68,26 @@
 
                         </div>
                         <div class="text-right">
+                            <div class="flex items-center justify-end gap-3 mb-1 opacity-60">
+                                <span
+                                    class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-zinc-400">
+                                    <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    {{ number_format($auction->view_count) }}
+                                </span>
+                                <span
+                                    class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-zinc-400">
+                                    <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                    </svg>
+                                    {{ number_format($auction->watchlist_items_count) }}
+                                </span>
+                            </div>
                             <p class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Intensity</p>
                             <p class="mt-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">
                                 {{ number_format($auction->bid_count) }} bids</p>

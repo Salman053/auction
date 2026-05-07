@@ -80,7 +80,9 @@ class Auction extends Model
         });
 
         $query->when($filters['status'] ?? null, function ($query, $status) {
-            $query->where('status', $status);
+            if ($status !== 'all') {
+                $query->where('status', $status);
+            }
         });
 
         $query->when($filters['sort'] ?? null, function ($query, $sort) {

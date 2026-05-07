@@ -11,7 +11,13 @@ class AuctionController extends Controller
 {
     public function index(Request $request): View
     {
-        $auctions = Auction::filter($request->all())
+        $filters = $request->all();
+        if (! isset($filters['status'])) {
+            $filters['status'] = 'active';
+        }
+
+        $auctions = Auction::filter($filters)
+            ->withCount('watchlistItems')
             ->paginate(24)
             ->withQueryString();
 
@@ -22,7 +28,7 @@ class AuctionController extends Controller
 
         return view('user.auctions.index', [
             'auctions' => $auctions,
-            'filters' => $request->all(),
+            'filters' => $filters,
             'watchlistedAuctionIds' => $watchlistedAuctionIds,
         ]);
     }

@@ -18,6 +18,7 @@ class AuctionDetailController extends Controller
     public function show(Request $request, Auction $auction): View
     {
         $auction->increment('view_count');
+        $auction->loadCount('watchlistItems');
         $auction->load(['bids' => fn ($query) => $query->with('user')->latest()->limit(30)]);
 
         $user = $request->user('user');
@@ -41,6 +42,10 @@ class AuctionDetailController extends Controller
         $canBid = in_array($auction->status, ['active', 'ending_soon'], true)
             && ($auction->ends_at === null || $auction->ends_at->isFuture());
 
+        $isWatched = $user
+            ? $user->watchlistItems()->where('auction_id', $auction->id)->exists()
+            : false;
+
         return view('user.auctions.show', [
             'auction' => $auction,
             'wallet' => $wallet,
@@ -49,6 +54,7 @@ class AuctionDetailController extends Controller
             'highestActiveBid' => $highestActiveBid,
             'userHighestActiveBid' => $userHighestActiveBid,
             'canBid' => $canBid,
+            'isWatched' => $isWatched,
         ]);
     }
 

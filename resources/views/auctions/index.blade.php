@@ -53,8 +53,14 @@
                                     @endif
                                 </div>
                                 <div class="p-8">
-                                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Ends
-                                        {{ $auction->ends_at?->diffForHumans() ?? '—' }}</p>
+                                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                        @if ($auction->ends_at)
+                                            {{ $auction->ends_at->isPast() ? 'Ended' : 'Ends' }}
+                                            {{ $auction->ends_at->diffForHumans() }}
+                                        @else
+                                            —
+                                        @endif
+                                    </p>
                                     <h4
                                         class="mt-2 truncate text-sm font-black transition-colors group-hover:text-brand-gold">
                                         {{ $auction->title }}</h4>

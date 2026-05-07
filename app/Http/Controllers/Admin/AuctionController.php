@@ -12,7 +12,7 @@ class AuctionController extends Controller
 {
     public function index(Request $request): View
     {
-        $tab = $request->query('tab', 'all');
+        $tab = $request->query('tab', 'active');
         $query = Auction::withCount(['bids', 'watchlistItems']);
 
         if ($tab === 'won') {

@@ -2,9 +2,28 @@
 
     <div class="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div>
-            <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
-                {{ Str::limit($auction->title, 50) }}
-            </h1>
+            <div class="flex items-center gap-4">
+                <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
+                    {{ Str::limit($auction->title, 50) }}
+                </h1>
+                <form
+                    action="{{ $isWatched ? route('user.watchlist.destroy', $auction) : route('user.watchlist.store', $auction) }}"
+                    method="POST">
+                    @csrf
+                    @if ($isWatched)
+                        @method('DELETE')
+                    @endif
+                    <button type="submit"
+                        class="group flex h-10 w-10 items-center justify-center rounded-full border transition-all {{ $isWatched ? 'bg-rose-500 border-rose-500 text-white shadow-lg shadow-rose-500/20' : 'bg-white border-zinc-200 text-zinc-400 hover:border-rose-200 hover:text-rose-500 dark:bg-zinc-800 dark:border-zinc-700' }}"
+                        title="{{ $isWatched ? 'Remove from Watchlist' : 'Add to Watchlist' }}">
+                        <svg class="h-5 w-5 {{ $isWatched ? 'fill-current' : 'fill-none group-hover:fill-rose-500' }}"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
 
             <div
                 class="mt-3 flex flex-wrap items-center gap-4 text-xs font-bold uppercase tracking-widest text-zinc-500">
@@ -27,7 +46,8 @@
                 @if ($auction->ends_at)
                     <span class="flex items-center gap-1.5">
                         <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span>
-                        Ends: <span id="ends-at-display">{{ $auction->ends_at->diffForHumans() }}</span>
+                        {{ $auction->ends_at->isPast() ? 'Ended' : 'Ends' }}: <span
+                            id="ends-at-display">{{ $auction->ends_at->diffForHumans() }}</span>
                     </span>
                 @else
                     <span class="flex items-center gap-1.5">
@@ -35,6 +55,14 @@
                         Ends: Not specified
                     </span>
                 @endif
+                <span class="flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+                    Views: {{ number_format($auction->view_count) }}
+                </span>
+                <span class="flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
+                    Watchers: {{ number_format($auction->watchlist_items_count) }}
+                </span>
             </div>
 
             @if ($highestActiveBid && $highestActiveBid->max_amount_yen > $auction->current_bid_yen)

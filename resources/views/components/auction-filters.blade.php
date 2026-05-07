@@ -27,6 +27,21 @@
             </div>
         </div>
 
+        {{-- Status --}}
+        @php
+            $currentStatus = $filters['status'] ?? 'active';
+        @endphp
+        <div>
+            <label for="status"
+                class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Status</label>
+            <select name="status" id="status"
+                class="w-full rounded-xl border-none bg-slate-50 dark:bg-black/20 px-5 py-3 text-xs font-bold focus:ring-2 focus:ring-brand-gold dark:text-white appearance-none">
+                <option value="active" {{ $currentStatus === 'active' ? 'selected' : '' }}>Active</option>
+                <option value="finished" {{ $currentStatus === 'finished' ? 'selected' : '' }}>Finished</option>
+                <option value="all" {{ $currentStatus === 'all' ? 'selected' : '' }}>All Auctions</option>
+            </select>
+        </div>
+
         @php
             $currentSort = $filters['sort'] ?? 'newest';
         @endphp
@@ -44,15 +59,6 @@
                 <option value="bid_count" {{ $currentSort === 'bid_count' ? 'selected' : '' }}>Most Bids</option>
             </select>
         </div>
-
-        {{-- Unique Sellers --}}
-        {{-- <div class="flex items-center gap-3 h-full pb-3">
-            <div class="relative flex items-center">
-                <input type="checkbox" name="unique_sellers" id="unique_sellers" value="1" {{ ($filters['unique_sellers'] ?? '') ? 'checked' : '' }}
-                    class="h-5 w-5 rounded border-none bg-slate-50 dark:bg-black/20 text-brand-gold focus:ring-brand-gold" />
-            </div>
-            <label for="unique_sellers" class="text-[10px] font-black uppercase tracking-widest text-slate-400">Unique Sellers Only</label>
-        </div> --}}
 
         {{-- Actions --}}
         <div class="flex gap-2">
