@@ -20,7 +20,10 @@ class AuctionSettlementService
                 $this->settleAuction($auction);
                 $count++;
             } catch (\Exception $e) {
-                Log::error("Failed to settle auction {$auction->id}: ".$e->getMessage());
+                Log::error("Failed to settle auction {$auction->id} (#{$auction->yahoo_auction_id}): ".$e->getMessage(), [
+                    'exception' => $e,
+                    'auction_status' => $auction->status,
+                ]);
             }
         }
 
