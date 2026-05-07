@@ -431,7 +431,7 @@
                                                     data-confirm-text="Confirm Now" data-confirm-type="success"
                                                     data-confirm-on-confirm="#confirm-shipment-footer-form"
                                                     data-confirm-message="Are you sure you want to confirm the shipment details for this item?"
-                                                    class="w-full rounded-2xl bg-brand-navy px-8 py-4 text-center text-sm font-bold uppercase tracking-widest text-brand-gold transition hover:scale-[1.02] hover:bg-black dark:bg-brand-gold dark:text-brand-navy">
+                                                    class="w-full rounded-2xl bg-brand-navy dark:text-white px-8 py-4 text-center text-sm font-bold uppercase tracking-widest text-brand-gold transition hover:scale-[1.02] hover:bg-black dark:bg-brand-gold ">
                                                     Confirm Shipment
                                                 </button>
                                             </form>
