@@ -1,6 +1,6 @@
 <x-guest-layout :search="$filters['q'] ?? ''" :title="'Global Market'">
     <div class="py-12 sm:py-20">
-        <div class="mx-auto max-w-7xl min-w-[80%] px-8">
+        <div class="mx-auto px-3 md:px-12">
             <div class="flex flex-row flex-wrap items-center justify-between gap-6">
                 <div>
                     <h1 class="text-xs font-black uppercase tracking-[0.3em] text-brand-gold">Real-Time Market</h1>
@@ -27,10 +27,10 @@
                         found in the current market pool.</p>
                 </div>
             @else
-                <div class="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div class="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7">
                     @foreach ($auctions as $auction)
                         <div
-                            class="group relative flex flex-col overflow-hidden rounded-[2.5rem] bg-white text-slate-900 shadow-2xl transition-transform duration-500 hover:-translate-y-2 dark:bg-zinc-800 dark:text-white">
+                            class="group relative flex flex-col overflow-hidden rounded-md bg-white text-slate-900 shadow-2xl transition-transform duration-500 hover:-translate-y-2 dark:bg-zinc-800 dark:text-white">
                             <a href="{{ route('auctions.show', $auction) }}" class="flex-1">
                                 <div class="relative aspect-[4/5] overflow-hidden">
                                     <img src="{{ $auction->thumbnail_url }}" alt=""
@@ -63,7 +63,8 @@
                                     </p>
                                     <h4
                                         class="mt-2 truncate text-sm font-black transition-colors group-hover:text-brand-gold">
-                                        {{ $auction->title }}</h4>
+                                        {{ $auction->title }}
+                                    </h4>
 
                                     <div
                                         class="mt-6 flex items-center justify-between border-t border-slate-50 pt-4 dark:border-white/5">
@@ -78,7 +79,8 @@
                                                 Seller Hub</p>
                                             <p
                                                 class="text-[10px] font-bold text-slate-900 dark:text-white truncate max-w-[80px]">
-                                                {{ $auction->seller_name ?? 'Trusted' }}</p>
+                                                {{ $auction->seller_name ?? 'Trusted' }}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>

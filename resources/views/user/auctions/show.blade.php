@@ -1,117 +1,129 @@
 <x-user-layout :title="'Placing Bid: ' . Str::limit($auction->title, 50)">
 
-    <div class="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-            <div class="flex items-center gap-4">
-                <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
-                    {{ Str::limit($auction->title, 50) }}
-                </h1>
-                <form
-                    action="{{ $isWatched ? route('user.watchlist.destroy', $auction) : route('user.watchlist.store', $auction) }}"
-                    method="POST">
-                    @csrf
-                    @if ($isWatched)
-                        @method('DELETE')
+    <div x-data="biddingConsole({
+        auctionId: {{ $auction->id }},
+        currentBid: {{ $auction->current_bid_yen }},
+        bidAmount: {{ (int) old('amount_yen', $auction->current_bid_yen + 500) }},
+        shippingFee: {{ $userShippingRate?->fee_yen ?? 0 }},
+        availableCapacity: {{ $availableCapacityYen }},
+        multiplier: {{ $multiplierPercent }},
+        endsAt: '{{ $auction->ends_at?->diffForHumans() ?? 'Ended' }}',
+        updatesUrl: '{{ route('user.auctions.updates', $auction) }}',
+        lastBidId: '{{ $auction->bids->first()?->id }}'
+    })" x-init="initPolling()">
+
+        <div class="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+                <div class="flex items-center gap-4">
+                    <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
+                        {{ Str::limit($auction->title, 50) }}
+                    </h1>
+                    <form
+                        action="{{ $isWatched ? route('user.watchlist.destroy', $auction) : route('user.watchlist.store', $auction) }}"
+                        method="POST">
+                        @csrf
+                        @if ($isWatched)
+                            @method('DELETE')
+                        @endif
+                        <button type="submit"
+                            class="group flex h-10 w-10 items-center justify-center rounded-full border transition-all {{ $isWatched ? 'bg-rose-500 border-rose-500 text-white shadow-lg shadow-rose-500/20' : 'bg-white border-zinc-200 text-zinc-400 hover:border-rose-200 hover:text-rose-500 dark:bg-zinc-800 dark:border-zinc-700' }}"
+                            title="{{ $isWatched ? 'Remove from Watchlist' : 'Add to Watchlist' }}">
+                            <svg class="h-5 w-5 {{ $isWatched ? 'fill-current' : 'fill-none group-hover:fill-rose-500' }}"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                <div
+                    class="mt-3 flex flex-wrap items-center gap-4 text-xs font-bold uppercase tracking-widest text-zinc-500">
+                    <span
+                        class="rounded-full bg-brand-navy px-3 py-1 text-white dark:bg-brand-gold dark:text-brand-navy">{{ $auction->status }}</span>
+                    <span class="flex items-center gap-1.5">
+                        <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span>
+                        Current Bid: <span x-text="'¥' + currentBid.toLocaleString()">¥{{ number_format($auction->current_bid_yen) }}</span>
+                    </span>
+                    @if (
+                        $userHighestActiveBid &&
+                            $highestActiveBid &&
+                            $userHighestActiveBid->id === $highestActiveBid->id &&
+                            $highestActiveBid->max_amount_yen > $auction->current_bid_yen)
+                        <span class="flex items-center gap-1.5">
+                            <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span>
+                            Your Max Bid: ¥{{ number_format($highestActiveBid->max_amount_yen) }}
+                        </span>
                     @endif
-                    <button type="submit"
-                        class="group flex h-10 w-10 items-center justify-center rounded-full border transition-all {{ $isWatched ? 'bg-rose-500 border-rose-500 text-white shadow-lg shadow-rose-500/20' : 'bg-white border-zinc-200 text-zinc-400 hover:border-rose-200 hover:text-rose-500 dark:bg-zinc-800 dark:border-zinc-700' }}"
-                        title="{{ $isWatched ? 'Remove from Watchlist' : 'Add to Watchlist' }}">
-                        <svg class="h-5 w-5 {{ $isWatched ? 'fill-current' : 'fill-none group-hover:fill-rose-500' }}"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                    </button>
-                </form>
+                    @if ($auction->ends_at)
+                        <span class="flex items-center gap-1.5">
+                            <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span>
+                            {{ $auction->ends_at->isPast() ? 'Ended' : 'Ends' }}: <span
+                                x-text="endsAt">{{ $auction->ends_at->diffForHumans() }}</span>
+                        </span>
+                    @else
+                        <span class="flex items-center gap-1.5">
+                            <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span>
+                            Ends: Not specified
+                        </span>
+                    @endif
+                    <span class="flex items-center gap-1.5">
+                        <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+                        Views: {{ number_format($auction->view_count) }}
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
+                        Watchers: {{ number_format($auction->watchlist_items_count) }}
+                    </span>
+                </div>
+
+                @if ($highestActiveBid && $highestActiveBid->max_amount_yen > $auction->current_bid_yen)
+                    <div class="mt-4 rounded-2xl bg-zinc-50 p-4 text-xs text-zinc-600 dark:bg-white/5 dark:text-zinc-300">
+                        @if ($userHighestActiveBid && $highestActiveBid->id === $userHighestActiveBid->id)
+                            <div class="flex items-center gap-2">
+                                <svg class="h-4 w-4 text-brand-gold" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span>You are the current top bidder with a maximum proxy bid of
+                                    <strong
+                                        class="text-zinc-900 dark:text-white">¥{{ number_format($highestActiveBid->max_amount_yen) }}</strong>.</span>
+                            </div>
+                            <p class="mt-1 ml-6 opacity-70 italic">The public price is
+                                ¥{{ number_format($auction->current_bid_yen) }}. It will only increase if another bidder
+                                challenges your position.</p>
+                        @endif
+                    </div>
+                @endif
             </div>
 
             <div
-                class="mt-3 flex flex-wrap items-center gap-4 text-xs font-bold uppercase tracking-widest text-zinc-500">
-                <span
-                    class="rounded-full bg-brand-navy px-3 py-1 text-white dark:bg-brand-gold dark:text-brand-navy">{{ $auction->status }}</span>
-                <span class="flex items-center gap-1.5">
-                    <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span>
-                    Current Bid: <span id="current-bid-display">¥{{ number_format($auction->current_bid_yen) }}</span>
-                </span>
-                @if (
-                    $userHighestActiveBid &&
-                        $highestActiveBid &&
-                        $userHighestActiveBid->id === $highestActiveBid->id &&
-                        $highestActiveBid->max_amount_yen > $auction->current_bid_yen)
-                    <span class="flex items-center gap-1.5">
-                        <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span>
-                        Your Max Bid: ¥{{ number_format($highestActiveBid->max_amount_yen) }}
-                    </span>
-                @endif
-                @if ($auction->ends_at)
-                    <span class="flex items-center gap-1.5">
-                        <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span>
-                        {{ $auction->ends_at->isPast() ? 'Ended' : 'Ends' }}: <span
-                            id="ends-at-display">{{ $auction->ends_at->diffForHumans() }}</span>
-                    </span>
-                @else
-                    <span class="flex items-center gap-1.5">
-                        <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span>
-                        Ends: Not specified
-                    </span>
-                @endif
-                <span class="flex items-center gap-1.5">
-                    <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
-                    Views: {{ number_format($auction->view_count) }}
-                </span>
-                <span class="flex items-center gap-1.5">
-                    <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
-                    Watchers: {{ number_format($auction->watchlist_items_count) }}
-                </span>
-            </div>
-
-            @if ($highestActiveBid && $highestActiveBid->max_amount_yen > $auction->current_bid_yen)
-                <div class="mt-4 rounded-2xl bg-zinc-50 p-4 text-xs text-zinc-600 dark:bg-white/5 dark:text-zinc-300">
-                    @if ($userHighestActiveBid && $highestActiveBid->id === $userHighestActiveBid->id)
-                        <div class="flex items-center gap-2">
-                            <svg class="h-4 w-4 text-brand-gold" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span>You are the current top bidder with a maximum proxy bid of
-                                <strong
-                                    class="text-zinc-900 dark:text-white">¥{{ number_format($highestActiveBid->max_amount_yen) }}</strong>.</span>
+                class="relative overflow-hidden rounded-3xl min-w-[300px] bg-brand-navy p-6 shadow-xl dark:bg-brand-navy/50">
+                <div class="relative z-10">
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-gold/60">Active Bidding Wallet</p>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span
+                            class="text-2xl font-bold text-white">¥{{ number_format((int) ($wallet?->balance_yen ?? 0)) }}</span>
+                        <span class="text-xs font-medium text-brand-gold-light/60">Balance</span>
+                    </div>
+                    <div class="mt-4 grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
+                        <div>
+                            <p class="text-[9px] font-bold uppercase tracking-widest text-white/40">Committed</p>
+                            <p class="text-sm font-bold text-brand-gold-light">
+                                ¥{{ number_format((int) ($wallet?->locked_balance_yen ?? 0)) }}</p>
                         </div>
-                        <p class="mt-1 ml-6 opacity-70 italic">The public price is
-                            ¥{{ number_format($auction->current_bid_yen) }}. It will only increase if another bidder
-                            challenges your position.</p>
-                    @endif
-                </div>
-            @endif
-        </div>
-
-        <div
-            class="relative overflow-hidden rounded-3xl min-w-[300px] bg-brand-navy p-6 shadow-xl dark:bg-brand-navy/50">
-            <div class="relative z-10">
-                <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-gold/60">Active Bidding Wallet</p>
-                <div class="mt-2 flex items-baseline gap-2">
-                    <span
-                        class="text-2xl font-bold text-white">¥{{ number_format((int) ($wallet?->balance_yen ?? 0)) }}</span>
-                    <span class="text-xs font-medium text-brand-gold-light/60">Balance</span>
-                </div>
-                <div class="mt-4 grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
-                    <div>
-                        <p class="text-[9px] font-bold uppercase tracking-widest text-white/40">Committed</p>
-                        <p class="text-sm font-bold text-brand-gold-light">
-                            ¥{{ number_format((int) ($wallet?->locked_balance_yen ?? 0)) }}</p>
+                        <div>
+                            <p class="text-[9px] font-bold uppercase tracking-widest text-white/40">Multiplier</p>
+                            <p class="text-sm font-bold text-white">{{ $multiplierPercent }}%</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-[9px] font-bold uppercase tracking-widest text-white/40">Multiplier</p>
-                        <p class="text-sm font-bold text-white">{{ $user->bidding_multiplier_percent ?? 500 }}%</p>
-                    </div>
+                    <a href="{{ route('user.wallet.index') }}"
+                        class="mt-4 block text-center text-[10px] font-bold uppercase tracking-widest text-brand-gold hover:text-white transition">Add
+                        Funds</a>
                 </div>
-                <a href="{{ route('user.wallet.index') }}"
-                    class="mt-4 block text-center text-[10px] font-bold uppercase tracking-widest text-brand-gold hover:text-white transition">Add
-                    Funds</a>
             </div>
         </div>
-    </div>
 
     @if (session('status') === 'bid-placed')
         <div

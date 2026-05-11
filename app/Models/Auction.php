@@ -60,6 +60,11 @@ class Auction extends Model
         return $this->hasMany(WatchlistItem::class);
     }
 
+    public function watchers()
+    {
+        return $this->belongsToMany(User::class, 'watchlist_items');
+    }
+
     public function scopeActive($query)
     {
         return $query->where('status', 'active');

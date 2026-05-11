@@ -46,6 +46,17 @@ class AuctionDetailController extends Controller
             ? $user->watchlistItems()->where('auction_id', $auction->id)->exists()
             : false;
 
+        $multiplierPercent = (int) ($user->bidding_multiplier_percent ?? 0);
+        if ($multiplierPercent <= 0) {
+            $multiplierPercent = app(\App\Services\SettingService::class)->getInt(
+                \App\Services\SettingService::DEFAULT_BIDDING_MULTIPLIER_PERCENT_KEY,
+                500,
+            );
+        }
+
+        $capacityYen = (int) floor(((int) ($wallet?->balance_yen ?? 0)) * ($multiplierPercent / 100));
+        $availableCapacityYen = max(0, $capacityYen - (int) ($wallet?->locked_balance_yen ?? 0) - (int) ($wallet?->withdrawal_locked_yen ?? 0));
+
         return view('user.auctions.show', [
             'auction' => $auction,
             'wallet' => $wallet,
@@ -55,6 +66,8 @@ class AuctionDetailController extends Controller
             'userHighestActiveBid' => $userHighestActiveBid,
             'canBid' => $canBid,
             'isWatched' => $isWatched,
+            'multiplierPercent' => $multiplierPercent,
+            'availableCapacityYen' => $availableCapacityYen,
         ]);
     }
 

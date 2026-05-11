@@ -69,6 +69,16 @@
                     My Bids
                 </x-dashboard.sidebar-item>
 
+                <x-dashboard.sidebar-item href="{{ route('user.watchlist.index') }}" :active="request()->routeIs('user.watchlist.*')">
+                    <x-slot name="icon">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </x-slot>
+                    Watchlist
+                </x-dashboard.sidebar-item>
+
                 <p class="mb-4 mt-10 px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Account</p>
 
                 <x-dashboard.sidebar-item href="{{ route('user.wallet.index') }}" :active="request()->routeIs('user.wallet.*')">
@@ -136,7 +146,7 @@
             {{-- Top Bar (mobile hamburger + desktop layout) --}}
             <header
                 class="flex h-[var(--topbar-height)] shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 dark:border-white/10 dark:bg-zinc-900 sm:px-6 lg:px-8">
-                <div class="flex items-center gap-3">
+                <div class="flex flex-1 items-center gap-3 lg:gap-8">
                     {{-- Mobile menu button (visible only on < lg) --}}
                     <button id="mobileMenuToggle"
                         class="rounded-xl p-2 text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10 lg:hidden"
@@ -147,12 +157,25 @@
                         </svg>
                     </button>
 
-                    <h2 class=" text-sm md:text-lg font-bold text-slate-900 dark:text-white">
-                        {{ Str::limit($title ?? 'Collector Console', 40, '...') }}
+                    <h2 class="hidden text-sm md:text-lg font-bold text-slate-900 dark:text-white lg:block">
+                        {{ Str::limit($title ?? 'Collector Console', 30, '...') }}
                     </h2>
+
+                    {{-- Global Search Bar --}}
+                    <div class="max-w-md flex-1">
+                        <form action="{{ route('user.auctions.index') }}" method="GET" class="relative group">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                                <svg class="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-brand-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                            <input type="text" name="q" value="{{ request('q') }}" placeholder="Search Japan Auctions..." 
+                                class="w-full rounded-2xl border-none bg-slate-50 py-2.5 pl-11 pr-4 text-xs font-bold shadow-inner ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white dark:placeholder:text-zinc-600" />
+                        </form>
+                    </div>
                 </div>
 
-                <div class="flex items-center gap-4 sm:gap-6">
+                <div class="flex items-center gap-4 sm:gap-6 ml-4">
                     <div class="hidden items-center gap-2 text-sm font-bold text-slate-500 sm:flex">
                         <span
                             class="flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
@@ -220,14 +243,14 @@
                 <span class="text-[10px] font-medium">Bids</span>
             </a>
 
-            {{-- Wallet --}}
-            <a href="{{ route('user.wallet.index') }}"
-                class="mobile-nav-item flex flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 transition-all duration-200 {{ request()->routeIs('user.wallet.*') ? 'text-brand-gold dark:text-brand-gold' : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/10' }}">
+            {{-- Watchlist --}}
+            <a href="{{ route('user.watchlist.index') }}"
+                class="mobile-nav-item flex flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 transition-all duration-200 {{ request()->routeIs('user.watchlist.*') ? 'text-brand-gold dark:text-brand-gold' : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/10' }}">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
-                <span class="text-[10px] font-medium">Wallet</span>
+                <span class="text-[10px] font-medium">Watchlist</span>
             </a>
 
             {{-- More menu (opens slide-out drawer) --}}
@@ -299,6 +322,15 @@
                                 d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                         </svg>
                         My Bids
+                    </a>
+
+                    <a href="{{ route('user.watchlist.index') }}"
+                        class="drawer-nav-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all {{ request()->routeIs('user.watchlist.*') ? 'bg-brand-gold/10 text-brand-gold dark:bg-brand-gold/20' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10' }}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                        Watchlist
                     </a>
 
                     <div class="my-5 h-px bg-slate-200 dark:bg-white/10"></div>

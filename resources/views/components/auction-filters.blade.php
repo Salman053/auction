@@ -34,7 +34,7 @@
         <div>
             <label for="status"
                 class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Status</label>
-            <select name="status" id="status"
+            <select name="status" id="status" onchange="this.form.submit()"
                 class="w-full rounded-xl border-none bg-slate-50 dark:bg-black/20 px-5 py-3 text-xs font-bold focus:ring-2 focus:ring-brand-gold dark:text-white appearance-none">
                 <option value="active" {{ $currentStatus === 'active' ? 'selected' : '' }}>Active</option>
                 <option value="finished" {{ $currentStatus === 'finished' ? 'selected' : '' }}>Finished</option>
@@ -48,7 +48,7 @@
         <div>
             <label for="sort"
                 class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Sort by</label>
-            <select name="sort" id="sort"
+            <select name="sort" id="sort" onchange="this.form.submit()"
                 class="w-full rounded-xl border-none bg-slate-50 dark:bg-black/20 px-5 py-3 text-xs font-bold focus:ring-2 focus:ring-brand-gold dark:text-white appearance-none">
                 <option value="newest" {{ $currentSort === 'newest' ? 'selected' : '' }}>Recently Added</option>
                 <option value="ends_soon" {{ $currentSort === 'ends_soon' ? 'selected' : '' }}>Ending Soon</option>

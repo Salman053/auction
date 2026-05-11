@@ -11,6 +11,7 @@ use App\Notifications\AdminNewBidNotification;
 use App\Notifications\BidPlacedNotification;
 use App\Notifications\LowBalanceNotification;
 use App\Notifications\OutbidNotification;
+use App\Notifications\WatchlistAuctionActivityNotification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -121,6 +122,14 @@ class BiddingService
                     }
                 }
 
+                // Notify watchers
+                $watchers = $auction->watchers()
+                    ->where('users.id', '!=', $user->id)
+                    ->get();
+                foreach ($watchers as $watcher) {
+                    $watcher->notify(new WatchlistAuctionActivityNotification($auction, $result['bid']));
+                }
+
                 return $result;
             }
 
@@ -172,6 +181,16 @@ class BiddingService
             $admins = User::where('role', UserRole::Admin->value)->get();
             foreach ($admins as $admin) {
                 $admin->notify(new AdminNewBidNotification($auction, $result['bid'], $user));
+            }
+
+            // Notify watchers (excluding the current bidder and outbid user)
+            $excludeIds = array_filter([$user->id, $result['outbid_user']?->id ?? null]);
+            $watchers = $auction->watchers()
+                ->whereNotIn('users.id', $excludeIds)
+                ->get();
+            
+            foreach ($watchers as $watcher) {
+                $watcher->notify(new WatchlistAuctionActivityNotification($auction, $result['bid']));
             }
 
             // Check for low balance

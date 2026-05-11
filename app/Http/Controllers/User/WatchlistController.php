@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Auction;
 use App\Models\WatchlistItem;
+use App\Notifications\WatchlistAddedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -31,10 +32,14 @@ class WatchlistController extends Controller
             return redirect()->route('login')->with('error', 'Please login to manage your watchlist.');
         }
 
-        WatchlistItem::query()->firstOrCreate([
+        $item = WatchlistItem::query()->firstOrCreate([
             'user_id' => $user->id,
             'auction_id' => $auction->id,
         ]);
+
+        if ($item->wasRecentlyCreated) {
+            $user->notify(new WatchlistAddedNotification($auction));
+        }
 
         return back()->with('success', 'Item successfully added to your watchlist.');
     }
@@ -54,3 +59,4 @@ class WatchlistController extends Controller
         return back()->with('success', 'Item removed from your watchlist.');
     }
 }
+    

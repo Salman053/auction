@@ -9,18 +9,18 @@
         <x-auction-filters :filters="$filters" :route="route('user.auctions.index')" />
     </div>
 
-    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
         @forelse ($auctions as $auction)
             @php($isWatchlisted = in_array($auction->id, $watchlistedAuctionIds, true))
 
             <div
                 class="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-zinc-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-zinc-900 dark:ring-white/10">
-                <div class="relative aspect-[4/3] overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                <div class="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                     <img src="{{ $auction->thumbnail_url ?? 'https://placehold.co/400x300/1e293b/d4af37?text=WatchHub' }}"
                         alt="{{ $auction->title }}"
                         class="h-full w-full object-contain transition duration-500 group-hover:scale-105">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                    <div class="absolute right-4 top-4">
+                    <div class="absolute right-4 top-4 z-30">
                         <form method="POST"
                             action="{{ $isWatchlisted ? route('user.watchlist.destroy', $auction) : route('user.watchlist.store', $auction) }}">
                             @csrf
@@ -53,7 +53,7 @@
                     </div>
 
                     <h3
-                        class="line-clamp-2 min-h-[2.5rem] text-sm font-bold text-zinc-900 group-hover:text-brand-gold transition dark:text-white">
+                        class="line-clamp-2 min-h-10 text-sm font-bold text-zinc-900 group-hover:text-brand-gold transition dark:text-white">
                         <a href="{{ route('user.auctions.show', $auction) }}">
                             <span class="absolute inset-0"></span>
                             {{ $auction->title }}

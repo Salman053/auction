@@ -53,8 +53,7 @@ class SupportTicketController extends Controller
             'is_internal' => false,
         ]);
 
-        $supportTicket->update(['status' => 'open']); // Set back to open if user replies
-
-        return back()->with('success', 'Your reply has been sent.');
+        $supportTicket->update(['status' => 'open']); 
+        return back();
     }
 }

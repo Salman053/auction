@@ -1,7 +1,10 @@
-<div id="global-page-loader" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-50 dark:bg-zinc-950 transition-opacity duration-700 ease-in-out">
+<div id="global-page-loader"
+    class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-50 dark:bg-zinc-950 transition-opacity duration-700 ease-in-out">
     <div class="relative flex items-center justify-center">
         {{-- Outer spinning ring --}}
-        <div class="absolute h-24 w-24 rounded-full border-t-2 border-brand-gold/80 border-r-2 border-r-transparent animate-spin"></div>
+        <div
+            class="absolute h-24 w-24 rounded-full border-t-2 border-brand-gold/80 border-r-2 border-r-transparent animate-spin">
+        </div>
         {{-- Inner pulsing ring --}}
         <div class="absolute h-16 w-16 rounded-full border border-brand-gold/30 animate-ping"></div>
         {{-- Center Logo element --}}
@@ -16,7 +19,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Fallback max duration in case 'load' event doesn't fire as expected
         const maxWait = setTimeout(() => hideLoader(), 3000);
 
         window.addEventListener('load', () => {
