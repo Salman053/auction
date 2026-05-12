@@ -11,9 +11,10 @@ class AuctionController extends Controller
 {
     public function index(Request $request): View
     {
+
         $filters = $request->all();
         if (! isset($filters['status'])) {
-            $filters['status'] = 'active';
+            $filters['sort'] = 'ends_soon';
         }
 
         $auctions = Auction::filter($filters)

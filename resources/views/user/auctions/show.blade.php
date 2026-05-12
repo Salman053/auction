@@ -126,24 +126,30 @@
 
                 @if ($highestActiveBid && $highestActiveBid->max_amount_yen > $auction->current_bid_yen)
                     <div
-                        class="mt-4 rounded-2xl bg-zinc-50 p-4 text-xs text-zinc-600 dark:bg-white/5 dark:text-zinc-300">
+                        class="mt-4 rounded-2xl bg-green-50 p-4 text-sm text-green-900 border-l-4 border-green-300 shadow-lg">
                         @if ($userHighestActiveBid && $highestActiveBid->id === $userHighestActiveBid->id)
-                            <div class="flex items-center gap-2">
-                                <svg class="h-4 w-4 text-brand-gold" fill="none" viewBox="0 0 24 24"
+                            <div class="flex items-center gap-3">
+                                <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
+                                    <circle cx="12" cy="12" r="10" stroke-width="2"
+                                        class="text-green-300" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        d="M9 12l2 2 4-4" />
                                 </svg>
-                                <span>You are the current top bidder with a maximum proxy bid of
+                                <span class="font-bold text-lg">
+                                    You are the current top bidder with a maximum proxy bid of
                                     <strong
-                                        class="text-zinc-900 dark:text-white">¥{{ number_format($highestActiveBid->max_amount_yen) }}</strong>.</span>
+                                        class="text-green-700">¥{{ number_format($highestActiveBid->max_amount_yen) }}</strong>.
+                                </span>
                             </div>
-                            <p class="mt-1 ml-6 opacity-70 italic">The public price is
-                                ¥{{ number_format($auction->current_bid_yen) }}. It will only increase if another
-                                bidder
-                                challenges your position.</p>
+                            <p class="mt-2 ml-9 italic text-green-700 opacity-80">
+                                The public price is ¥{{ number_format($auction->current_bid_yen) }}. It will only
+                                increase if another bidder challenges your position.
+                            </p>
                         @endif
                     </div>
+
+
                 @endif
             </div>
 

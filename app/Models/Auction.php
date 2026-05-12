@@ -67,7 +67,11 @@ class Auction extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('status', 'active');
+        return $query->where('status', 'active')
+            ->where(function ($query) {
+                $query->whereNull('ends_at')
+                    ->orWhere('ends_at', '>', now());
+            });
     }
 
     public function scopeFilter($query, array $filters)
@@ -85,7 +89,9 @@ class Auction extends Model
         });
 
         $query->when($filters['status'] ?? null, function ($query, $status) {
-            if ($status !== 'all') {
+            if ($status === 'active') {
+                $query->active();
+            } elseif ($status !== 'all') {
                 $query->where('status', $status);
             }
         });

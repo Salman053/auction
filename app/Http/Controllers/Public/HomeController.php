@@ -13,6 +13,10 @@ class HomeController extends Controller
     {
         $featured = Auction::query()
             ->whereIn('status', ['active', 'ending_soon'])
+            ->where(function ($query) {
+                $query->whereNull('ends_at')
+                    ->orWhere('ends_at', '>', now());
+            })
             ->limit(8)
             ->get();
 

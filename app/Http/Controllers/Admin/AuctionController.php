@@ -23,8 +23,7 @@ class AuctionController extends Controller
         } elseif ($tab === 'shipment_pending') {
             $query->where('shipment_status', 'bidder_confirmed');
         } elseif ($tab === 'active') {
-            $query->where('status', 'active')
-                ->where('ends_at', '>', now());
+            $query->active();
         }
 
         $auctions = $query->filter($request->all())

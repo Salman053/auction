@@ -102,8 +102,6 @@ class BiddingService
             $admins = User::where('role', UserRole::Admin->value)->get();
 
             if ($result['status'] === 'failed_outbid') {
-                // The current user was immediately outbid by a proxy.
-                // We transfer the lock from the previous bid to the new active bid for the high bidder.
                 if (isset($result['previous_bid']) && $result['bid']) {
                     $lockAmount = (int) $result['previous_bid']->locked_amount_yen;
                     $result['bid']->update(['locked_amount_yen' => $lockAmount]);
