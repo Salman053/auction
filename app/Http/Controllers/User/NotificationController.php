@@ -22,6 +22,19 @@ class NotificationController extends Controller
         ]);
     }
 
+    public function read(string $id, Request $request): RedirectResponse
+    {
+        $user = $request->user('user');
+        $notification = $user->notifications()->findOrFail($id);
+        $notification->markAsRead();
+
+        $actionUrl = isset($notification->data['auction_id'])
+            ? route('user.auctions.show', $notification->data['auction_id'])
+            : route('user.notifications.index');
+
+        return redirect($actionUrl);
+    }
+
     public function markAllRead(Request $request): RedirectResponse
     {
         $user = $request->user('user');

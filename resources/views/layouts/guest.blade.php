@@ -130,6 +130,7 @@
     </footer>
     <x-confirm-dialog />
     <x-toast />
+    <x-cookie-consent />
 </body>
 
 </html>

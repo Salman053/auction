@@ -4,10 +4,11 @@ namespace App\Notifications;
 
 use App\Models\Auction;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class OutbidNotification extends Notification
+class OutbidNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

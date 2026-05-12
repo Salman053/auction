@@ -45,6 +45,10 @@ class SupportTicketController extends Controller
             abort(403);
         }
 
+        if ($supportTicket->status === 'closed') {
+            return back()->with('error', 'You cannot reply to a closed ticket.');
+        }
+
         $validated = $request->validated();
 
         $supportTicket->messages()->create([
@@ -53,7 +57,38 @@ class SupportTicketController extends Controller
             'is_internal' => false,
         ]);
 
-        $supportTicket->update(['status' => 'open']); 
+        $supportTicket->update(['status' => 'open']);
+
         return back();
+    }
+
+    public function close(Request $request, SupportTicket $supportTicket): RedirectResponse
+    {
+        $user = $request->user('user');
+        if ($supportTicket->user_id !== $user->id) {
+            abort(403);
+        }
+
+        $supportTicket->update([
+            'status' => 'closed',
+            'closed_at' => now(),
+        ]);
+
+        return back()->with('success', 'Ticket has been closed.');
+    }
+
+    public function reopen(Request $request, SupportTicket $supportTicket): RedirectResponse
+    {
+        $user = $request->user('user');
+        if ($supportTicket->user_id !== $user->id) {
+            abort(403);
+        }
+
+        $supportTicket->update([
+            'status' => 'open',
+            'closed_at' => null,
+        ]);
+
+        return back()->with('success', 'Ticket has been reopened.');
     }
 }

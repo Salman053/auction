@@ -13,6 +13,7 @@ use App\Notifications\LowBalanceNotification;
 use App\Notifications\OutbidNotification;
 use App\Notifications\WatchlistAuctionActivityNotification;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -97,6 +98,9 @@ class BiddingService
                 return $result;
             }
 
+            $bidCount = $auction->bids()->count();
+            $admins = User::where('role', UserRole::Admin->value)->get();
+
             if ($result['status'] === 'failed_outbid') {
                 // The current user was immediately outbid by a proxy.
                 // We transfer the lock from the previous bid to the new active bid for the high bidder.
@@ -108,27 +112,22 @@ class BiddingService
 
                 $auction->update([
                     'current_bid_yen' => $result['bid']->amount_yen,
-                    'bid_count' => $auction->bids()->count(),
+                    'bid_count' => $bidCount,
                 ]);
 
                 // Notify the user they were immediately outbid
                 $user->notify(new OutbidNotification($auction, $result['bid']->amount_yen));
 
                 // Notify all administrators about the bidding activity
-                $admins = User::where('role', UserRole::Admin->value)->get();
-                foreach ($admins as $admin) {
-                    if (isset($result['new_bid'])) {
-                        $admin->notify(new AdminNewBidNotification($auction, $result['new_bid'], $user));
-                    }
+                if (isset($result['new_bid'])) {
+                    Notification::send($admins, new AdminNewBidNotification($auction, $result['new_bid'], $user));
                 }
 
                 // Notify watchers
                 $watchers = $auction->watchers()
                     ->where('users.id', '!=', $user->id)
                     ->get();
-                foreach ($watchers as $watcher) {
-                    $watcher->notify(new WatchlistAuctionActivityNotification($auction, $result['bid']));
-                }
+                Notification::send($watchers, new WatchlistAuctionActivityNotification($auction, $result['bid']));
 
                 return $result;
             }
@@ -161,7 +160,7 @@ class BiddingService
             // Sync auction stats
             $updateData = [
                 'current_bid_yen' => $result['bid']->amount_yen,
-                'bid_count' => $auction->bids()->count(),
+                'bid_count' => $bidCount,
             ];
 
             // Auto-extension logic
@@ -178,20 +177,15 @@ class BiddingService
             $user->notify(new BidPlacedNotification($auction, $result['bid']));
 
             // Notify all administrators
-            $admins = User::where('role', UserRole::Admin->value)->get();
-            foreach ($admins as $admin) {
-                $admin->notify(new AdminNewBidNotification($auction, $result['bid'], $user));
-            }
+            Notification::send($admins, new AdminNewBidNotification($auction, $result['bid'], $user));
 
             // Notify watchers (excluding the current bidder and outbid user)
             $excludeIds = array_filter([$user->id, $result['outbid_user']?->id ?? null]);
             $watchers = $auction->watchers()
                 ->whereNotIn('users.id', $excludeIds)
                 ->get();
-            
-            foreach ($watchers as $watcher) {
-                $watcher->notify(new WatchlistAuctionActivityNotification($auction, $result['bid']));
-            }
+
+            Notification::send($watchers, new WatchlistAuctionActivityNotification($auction, $result['bid']));
 
             // Check for low balance
             $balance = (int) ($wallet->balance_yen ?? 0);

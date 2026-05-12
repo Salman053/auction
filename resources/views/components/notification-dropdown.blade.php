@@ -1,8 +1,7 @@
 @php
     $user = auth('admin')->user() ?? (auth('user')->user() ?? auth()->user());
     $unreadCount = $user ? $user->unreadNotifications->count() : 0;
-    $isAdmin =
-        $user && ((isset($user->role) && $user->role === \App\Enums\UserRole::Admin->value) || request()->is('admin*'));
+    $isAdmin = $user && ((isset($user->role) && $user->role === \App\Enums\UserRole::Admin) || request()->is('admin*'));
     $prefix = $isAdmin ? 'admin' : 'user';
 @endphp
 
@@ -41,13 +40,11 @@
             </div>
 
             <div class="max-h-[400px] overflow-y-auto p-3">
-                @forelse($user->notifications->take(10) as $notification)
+                @forelse($user->unreadNotifications->take(10) as $notification)
                     @php
-                        $actionUrl = isset($notification->data['auction_id'])
-                            ? route($prefix . '.auctions.show', $notification->data['auction_id'])
-                            : route($prefix . '.notifications.index');
+                        $readUrl = route($prefix . '.notifications.read', $notification->id);
                     @endphp
-                    <a href="{{ $actionUrl }}"
+                    <a href="{{ $readUrl }}"
                         class="group relative border-b border-black/5 px-5 py-4 transition hover:bg-zinc-50 dark:border-white/10 dark:hover:bg-white/5 {{ $notification->unread() ? 'bg-zinc-50/50 dark:bg-white/2' : '' }}">
                         <div class="flex gap-3">
                             <div
@@ -70,7 +67,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                 d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                         </svg>
-                        <p class="mt-2 text-xs font-medium text-zinc-400 dark:text-zinc-500">No notifications yet.</p>
+                        <p class="mt-2 text-xs font-medium text-zinc-400 dark:text-zinc-500">No unread notifications
+                            yet.</p>
                     </div>
                 @endforelse
             </div>

@@ -33,7 +33,7 @@ class SupportTicketController extends Controller
 
     public function show(Request $request, SupportTicket $supportTicket): View
     {
-        $supportTicket->load(['messages' => fn ($query) => $query->latest(), 'user']);
+        $supportTicket->load(['messages' => fn ($query) => $query->oldest()->with('author'), 'user']);
 
         return view('admin.support-tickets.show', [
             'ticket' => $supportTicket,
@@ -44,6 +44,8 @@ class SupportTicketController extends Controller
         SupportTicketReplyRequest $request,
         SupportTicket $supportTicket
     ): RedirectResponse {
+        $supportTicket->load('user');
+
         $admin = $request->user('admin');
 
         $validated = $request->validated();
@@ -64,5 +66,25 @@ class SupportTicketController extends Controller
         }
 
         return back()->with('success', 'Support ticket status updated.');
+    }
+
+    public function close(Request $request, SupportTicket $supportTicket): RedirectResponse
+    {
+        $supportTicket->update([
+            'status' => 'closed',
+            'closed_at' => now(),
+        ]);
+
+        return back()->with('success', 'Ticket has been closed.');
+    }
+
+    public function reopen(Request $request, SupportTicket $supportTicket): RedirectResponse
+    {
+        $supportTicket->update([
+            'status' => 'open',
+            'closed_at' => null,
+        ]);
+
+        return back()->with('success', 'Ticket has been reopened.');
     }
 }

@@ -44,7 +44,7 @@
                     </div>
 
                     <div class="flex items-center">
-                        <input id="remember_me" name="remember" type="checkbox"
+                        <input id="remember_me" name="remember" type="checkbox" value="1" checked
                             class="h-4 w-4 rounded border-slate-300 text-brand-navy focus:ring-brand-gold dark:border-white/10 dark:bg-black/20">
                         <label for="remember_me"
                             class="ml-3 text-xs font-bold text-slate-500 dark:text-zinc-500">Persistent Session</label>

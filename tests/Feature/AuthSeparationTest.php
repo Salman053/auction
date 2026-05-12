@@ -1,8 +1,10 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
 it('prevents an admin from using the bidder login', function () {
+    $this->withoutMiddleware(VerifyCsrfToken::class);
     $admin = User::factory()->admin()->create([
         'password' => 'password',
     ]);
@@ -14,6 +16,7 @@ it('prevents an admin from using the bidder login', function () {
 });
 
 it('prevents a bidder from using the admin login', function () {
+    $this->withoutMiddleware(VerifyCsrfToken::class);
     $user = User::factory()->create([
         'password' => 'password',
     ]);
@@ -25,6 +28,7 @@ it('prevents a bidder from using the admin login', function () {
 });
 
 it('allows an unverified bidder to access the dashboard', function () {
+    $this->withoutMiddleware(VerifyCsrfToken::class);
     $user = User::factory()->unverified()->create([
         'password' => 'password',
     ]);

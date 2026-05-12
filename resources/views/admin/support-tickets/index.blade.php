@@ -38,7 +38,13 @@
                         <td class="px-5 py-4 text-xs text-zinc-600 dark:text-zinc-400">
                             {{ $ticket->requester_email ?? $ticket->user?->email ?? '—' }}
                         </td>
-                        <td class="px-5 py-4 font-semibold">{{ strtoupper($ticket->status) }}</td>
+                        <td class="px-5 py-4">
+                            @if ($ticket->status === 'open')
+                                <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">OPEN</span>
+                            @else
+                                <span class="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-bold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">CLOSED</span>
+                            @endif
+                        </td>
                         <td class="px-5 py-4 text-xs text-zinc-600 dark:text-zinc-400">{{ $ticket->created_at?->diffForHumans() }}</td>
                     </tr>
                 @empty

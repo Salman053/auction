@@ -14,11 +14,28 @@
         </div>
         <div>
             @if ($ticket->status === 'open')
-                <span
-                    class="inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-600 ring-1 ring-inset ring-amber-500/10 dark:bg-amber-400/10 dark:text-amber-400 dark:ring-amber-400/20">Open</span>
+                <div class="flex items-center gap-2">
+                    <span
+                        class="inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-600 ring-1 ring-inset ring-amber-500/10 dark:bg-amber-400/10 dark:text-amber-400 dark:ring-amber-400/20">Open</span>
+                    <form action="{{ route('user.support.close', $ticket) }}" method="POST"
+                        onsubmit="return confirm('Are you sure you want to close this ticket?')">
+                        @csrf
+                        <button type="submit"
+                            class="text-xs font-bold text-slate-500 hover:text-rose-600 transition">Close
+                            Ticket</button>
+                    </form>
+                </div>
             @else
-                <span
-                    class="inline-flex items-center rounded-full bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600 ring-1 ring-inset ring-slate-500/10 dark:bg-white/5 dark:text-slate-400 dark:ring-white/10">Closed</span>
+                <div class="flex items-center gap-2">
+                    <span
+                        class="inline-flex items-center rounded-full bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600 ring-1 ring-inset ring-slate-500/10 dark:bg-white/5 dark:text-slate-400 dark:ring-white/10">Closed</span>
+                    <form action="{{ route('user.support.reopen', $ticket) }}" method="POST">
+                        @csrf
+                        <button type="submit"
+                            class="text-xs font-bold text-slate-500 hover:text-brand-navy dark:hover:text-brand-gold transition">Reopen
+                            Ticket</button>
+                    </form>
+                </div>
             @endif
         </div>
     </div>
@@ -30,34 +47,36 @@
                     <h2 class="text-lg font-black text-slate-900 dark:text-white">{{ $ticket->subject }}</h2>
                 </div>
 
-                <div class="p-6 lg:p-8 space-y-8">
+                <div id="message-container" class="p-6 lg:p-8 space-y-8 max-h-[70vh] overflow-y-auto scroll-smooth">
                     @foreach ($ticket->messages as $message)
-                        <div
-                            class="flex gap-4 {{ $message->author_user_id === auth()->id() ? 'flex-row-reverse' : '' }}">
+                        @php
+                            $isUser = $message->author_user_id === auth('user')->id();
+                        @endphp
+                        <div class="flex gap-4 {{ $isUser ? 'flex-row-reverse' : '' }}">
                             <div class="shrink-0">
-                                @if ($message->author_user_id === auth()->id())
+                                @if ($isUser)
                                     <div
-                                        class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-navy text-brand-gold">
-                                        <span class="font-bold">You</span>
+                                        class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-navy text-brand-gold shadow-sm">
+                                        <span
+                                            class="text-xs font-bold">{{ substr(auth('user')->user()->name ?? 'U', 0, 1) }}</span>
                                     </div>
                                 @else
                                     <div
-                                        class="flex h-10 w-10 items-center justify-center rounded-full bg-rose-600 text-white">
-                                        <span class="font-bold">W</span>
+                                        class="flex h-10 w-10 items-center justify-center rounded-full bg-rose-600 text-white shadow-sm">
+                                        <span class="text-xs font-bold">S</span>
                                     </div>
                                 @endif
                             </div>
-                            <div
-                                class="flex flex-col {{ $message->author_user_id === auth()->id() ? 'items-end' : 'items-start' }} max-w-[80%]">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="text-xs font-bold text-slate-500">
-                                        {{ $message->author_user_id === auth()->id() ? 'You' : 'WatchHub Support' }}
+                            <div class="flex flex-col {{ $isUser ? 'items-end' : 'items-start' }} max-w-[85%]">
+                                <div class="flex items-center gap-2 mb-1 px-1">
+                                    <span class="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                                        {{ $isUser ? 'You' : 'Support Team' }}
                                     </span>
                                     <span
-                                        class="text-[10px] text-slate-400">{{ $message->created_at->diffForHumans() }}</span>
+                                        class="text-[10px] text-slate-400 font-medium">{{ $message->created_at->diffForHumans() }}</span>
                                 </div>
                                 <div
-                                    class="rounded-2xl p-4 {{ $message->author_user_id === auth()->id() ? 'bg-brand-navy text-white rounded-tr-sm' : 'bg-slate-100 dark:bg-white/5 text-slate-900 dark:text-white rounded-tl-sm' }}">
+                                    class="rounded-2xl p-4 transition-all duration-300 hover:shadow-md {{ $isUser ? 'bg-brand-navy text-white rounded-tr-sm' : 'bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white rounded-tl-sm ring-1 ring-slate-100 dark:ring-white/5' }}">
                                     <p class="whitespace-pre-wrap text-sm leading-relaxed">{{ $message->body }}</p>
                                 </div>
                             </div>
@@ -65,32 +84,16 @@
                     @endforeach
                 </div>
             </div>
-
-            @if ($ticket->status === 'open')
-                <div
-                    class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-zinc-900 dark:ring-white/10 lg:p-8">
-                    <h3 class="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white mb-4">Post a
-                        Reply</h3>
-                    <form method="POST" action="{{ route('user.support.reply', $ticket) }}">
-                        @csrf
-                        <div>
-                            <textarea name="body" rows="4"
-                                class="w-full rounded-2xl border-none bg-slate-50 px-5 py-4 text-sm shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white"
-                                placeholder="Type your message here..." required></textarea>
-                            @error('body')
-                                <p class="mt-2 text-xs font-bold text-rose-500">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <div class="mt-4 flex justify-end">
-                            <button type="submit"
-                                class="rounded-2xl bg-brand-navy px-8 py-3 text-sm font-black text-brand-gold shadow-lg transition hover:scale-[1.02] active:scale-95 dark:bg-brand-gold dark:text-brand-navy">
-                                Send Reply
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            @endif
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const container = document.getElementById('message-container');
+                if (container) {
+                    container.scrollTop = container.scrollHeight;
+                }
+            });
+        </script>
 
         <div class="space-y-6">
             <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-zinc-900 dark:ring-white/10">
@@ -115,6 +118,42 @@
                     @endif
                 </div>
             </div>
+            @if ($ticket->status === 'open')
+                <div
+                    class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-zinc-900 dark:ring-white/10 lg:p-8">
+                    <h3 class="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white mb-4">Post a
+                        Reply</h3>
+                    <form method="POST" action="{{ route('user.support.reply', $ticket) }}">
+                        @csrf
+                        <div>
+                            <textarea name="body" rows="4"
+                                class="w-full rounded-2xl border-none bg-slate-50 px-5 py-4 text-sm shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white"
+                                placeholder="Type your message here..." required></textarea>
+                            @error('body')
+                                <p class="mt-2 text-xs font-bold text-rose-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div class="mt-4 flex justify-end">
+                            <button type="submit"
+                                class="rounded-2xl bg-brand-navy px-8 py-3 text-sm font-black text-brand-gold shadow-lg transition hover:scale-[1.02] active:scale-95 dark:bg-brand-gold dark:text-brand-navy">
+                                Send Reply
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            @else
+                <div
+                    class="rounded-3xl bg-slate-50 p-8 text-center ring-1 ring-slate-200 dark:bg-white/5 dark:ring-white/10">
+                    <p class="text-sm font-bold text-slate-600 dark:text-slate-400">This ticket is closed. If you still
+                        need help, you can reopen it.</p>
+                    <form action="{{ route('user.support.reopen', $ticket) }}" method="POST" class="mt-4">
+                        @csrf
+                        <button type="submit"
+                            class="rounded-2xl bg-white px-6 py-2 text-xs font-bold text-slate-900 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50 dark:bg-zinc-900 dark:text-white dark:ring-white/10">Reopen
+                            Ticket</button>
+                    </form>
+                </div>
+            @endif
         </div>
     </div>
 </x-user-layout>

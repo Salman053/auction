@@ -45,13 +45,13 @@
                                         </span>
 
                                         @if(isset($notification->data['auction_id']))
-                                            <a href="{{ route('user.auctions.show', $notification->data['auction_id']) }}" class="text-[10px] font-black uppercase tracking-widest text-brand-gold hover:underline">
+                                            <a href="{{ route('user.notifications.read', $notification->id) }}" class="text-[10px] font-black uppercase tracking-widest text-brand-gold hover:underline">
                                                 View Auction
                                             </a>
                                         @endif
 
                                         @if(isset($notification->data['balance']))
-                                            <a href="{{ route('user.wallet.index') }}" class="text-[10px] font-black uppercase tracking-widest text-brand-gold hover:underline">
+                                            <a href="{{ route('user.notifications.read', $notification->id) }}" class="text-[10px] font-black uppercase tracking-widest text-brand-gold hover:underline">
                                                 Top Up Wallet
                                             </a>
                                         @endif

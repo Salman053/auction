@@ -23,6 +23,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+
         $validated = $request->validated();
         $remember = (bool) ($validated['remember'] ?? false);
 
@@ -35,7 +36,7 @@ class AuthenticatedSessionController extends Controller
 
         if (! $authenticated) {
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'email' => __('auth.suspended'),
             ]);
         }
 

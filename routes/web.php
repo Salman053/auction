@@ -26,6 +26,7 @@ use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\User\AuctionController as UserAuctionController;
 use App\Http\Controllers\User\AuctionDetailController as UserAuctionDetailController;
 use App\Http\Controllers\User\BidController as UserBidController;
+use App\Http\Controllers\User\CookieConsentController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\NotificationController as UserNotificationController;
 use App\Http\Controllers\User\ProfileController;
@@ -47,6 +48,7 @@ Route::get('/how-it-works', [StaticPageController::class, 'howItWorks'])->name('
 Route::get('/faq', [StaticPageController::class, 'faq'])->name('faq');
 Route::get('/contact', [ContactController::class, 'create'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::post('/cookie-consent', [CookieConsentController::class, 'store'])->name('cookie-consent.store');
 
 Route::post('/stripe/webhook', StripeWebhookController::class)
     ->withoutMiddleware([VerifyCsrfToken::class])
@@ -86,11 +88,14 @@ Route::middleware('auth:user')->group(function () {
         Route::get('/support', [SupportTicketController::class, 'index'])->name('support.index');
         Route::get('/support/{supportTicket}', [SupportTicketController::class, 'show'])->name('support.show');
         Route::post('/support/{supportTicket}/reply', [SupportTicketController::class, 'reply'])->name('support.reply');
+        Route::post('/support/{supportTicket}/close', [SupportTicketController::class, 'close'])->name('support.close');
+        Route::post('/support/{supportTicket}/reopen', [SupportTicketController::class, 'reopen'])->name('support.reopen');
 
         Route::get('/withdrawals', [UserWithdrawalController::class, 'index'])->name('withdrawals.index');
         Route::post('/withdrawals', [UserWithdrawalController::class, 'store'])->name('withdrawals.store');
 
         Route::get('/notifications', [UserNotificationController::class, 'index'])->name('notifications.index');
+        Route::get('/notifications/{id}/read', [UserNotificationController::class, 'read'])->name('notifications.read');
         Route::post('/notifications/mark-all-read', [UserNotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
 
         Route::get('/settings', [UserSettingsController::class, 'index'])->name('settings.index');
@@ -127,8 +132,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/support-tickets', [AdminSupportTicketController::class, 'index'])->name('support-tickets.index');
         Route::get('/support-tickets/{supportTicket}', [AdminSupportTicketController::class, 'show'])->name('support-tickets.show');
         Route::post('/support-tickets/{supportTicket}/reply', [AdminSupportTicketController::class, 'reply'])->name('support-tickets.reply');
+        Route::post('/support-tickets/{supportTicket}/close', [AdminSupportTicketController::class, 'close'])->name('support-tickets.close');
+        Route::post('/support-tickets/{supportTicket}/reopen', [AdminSupportTicketController::class, 'reopen'])->name('support-tickets.reopen');
 
         Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
+        Route::get('/notifications/{id}/read', [AdminNotificationController::class, 'read'])->name('notifications.read');
         Route::post('/notifications/mark-all-read', [AdminNotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
         Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
         Route::get('/analytics', [AdminAnalyticsController::class, 'index'])->name('analytics.index');

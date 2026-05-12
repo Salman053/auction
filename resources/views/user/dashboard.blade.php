@@ -70,20 +70,33 @@
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <x-dashboard.chart-card title="Bidding Intensity" id="bidIntensityChart" class="lg:col-span-2" />
 
-        <x-dashboard.card title="Capacity Composition" class="flex flex-col">
-            <div id="capacityRadialChart" class="flex-1"></div>
-            <div class="mt-4 space-y-3">
-                <div class="flex items-center justify-between text-xs font-bold uppercase tracking-widest">
-                    <span class="text-slate-400">Available</span>
-                    <span class="text-slate-900 dark:text-white">¥{{ number_format($availableCapacityYen) }}</span>
+        <x-dashboard.card title="Capacity Composition" class="flex flex-col h-full">
+            <div id="capacityRadialChart" class="flex-1 min-h-[220px] w-full"></div>
+
+            <div
+                class="mt-6 p-4 rounded-xl bg-slate-50/50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
+                <div class="flex items-end justify-between mb-2">
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                            Available Balance
+                        </p>
+                        <p class="text-lg font-semibold text-slate-900 dark:text-white leading-none">
+                            ¥{{ number_format($availableCapacityYen) }}
+                        </p>
+                    </div>
+                    <span class="text-xs font-medium text-brand-gold">
+                        {{ $capacityYen > 0 ? round(($availableCapacityYen / $capacityYen) * 100) : 0 }}%
+                    </span>
                 </div>
-                <div class="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-white/5">
-                    <div class="h-full bg-brand-gold"
+
+                <div class="h-2.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+                    <div class="h-full bg-brand-gold transition-all duration-500 ease-out shadow-[0_0_8px_rgba(var(--brand-gold-rgb),0.4)]"
                         style="width: {{ $capacityYen > 0 ? ($availableCapacityYen / $capacityYen) * 100 : 0 }}%">
                     </div>
                 </div>
             </div>
         </x-dashboard.card>
+
     </div>
 
     <script>

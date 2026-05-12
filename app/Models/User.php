@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -24,8 +25,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'suspended_at',
         'stripe_account_id',
         'shipping_rate_id',
+        'cookies_accepted',
+        'cookies_settings',
+        'cookies_accepted_at',
     ];
 
     public function isAdmin(): bool
@@ -48,7 +54,7 @@ class User extends Authenticatable
         return $this->hasMany(WatchlistItem::class);
     }
 
-    public function shippingRate(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function shippingRate(): BelongsTo
     {
         return $this->belongsTo(ShippingRate::class);
     }
@@ -77,6 +83,9 @@ class User extends Authenticatable
             'two_factor_enabled_at' => 'datetime',
             'role' => UserRole::class,
             'password' => 'hashed',
+            'cookies_accepted' => 'boolean',
+            'cookies_settings' => 'array',
+            'cookies_accepted_at' => 'datetime',
         ];
     }
 }
