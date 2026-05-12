@@ -61,21 +61,25 @@
                             @endif
                         </td>
                         <td class="px-5 py-4 text-right">
-                            <form id="suspend-form-{{ $user->id }}" method="POST" action="{{ route('admin.users.suspend', $user) }}">
-                                @csrf
-                                <button
-                                    type="button"
-                                    data-confirm
-                                    data-confirm-title="{{ $user->suspended_at ? 'Confirm Unsuspend' : 'Confirm Suspension' }}"
-                                    data-confirm-message="Are you sure you want to {{ $user->suspended_at ? 'unsuspend' : 'suspend' }} the collector {{ $user->name }} ({{ $user->email }})?"
-                                    data-confirm-text="{{ $user->suspended_at ? 'Unsuspend' : 'Suspend' }}"
-                                    data-confirm-type="{{ $user->suspended_at ? 'info' : 'danger' }}"
-                                    data-confirm-on-confirm="#suspend-form-{{ $user->id }}"
-                                    class="rounded-full border border-zinc-200 bg-zinc-50 px-4 py-2 text-xs font-semibold hover:bg-zinc-100 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
-                                >
-                                    {{ $user->suspended_at ? 'Unsuspend' : 'Suspend' }}
-                                </button>
-                            </form>
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{{ route('admin.users.show', $user) }}"
+                                    class="rounded-full border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold hover:bg-zinc-100 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10">
+                                    Explore
+                                </a>
+                                <form id="suspend-form-{{ $user->id }}" method="POST"
+                                    action="{{ route('admin.users.suspend', $user) }}">
+                                    @csrf
+                                    <button type="button" data-confirm
+                                        data-confirm-title="{{ $user->suspended_at ? 'Confirm Unsuspend' : 'Confirm Suspension' }}"
+                                        data-confirm-message="Are you sure you want to {{ $user->suspended_at ? 'unsuspend' : 'suspend' }} the collector {{ $user->name }} ({{ $user->email }})?"
+                                        data-confirm-text="{{ $user->suspended_at ? 'Unsuspend' : 'Suspend' }}"
+                                        data-confirm-type="{{ $user->suspended_at ? 'info' : 'danger' }}"
+                                        data-confirm-on-confirm="#suspend-form-{{ $user->id }}"
+                                        class="rounded-full border border-zinc-200 bg-zinc-50 px-4 py-2 text-xs font-semibold hover:bg-zinc-100 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10">
+                                        {{ $user->suspended_at ? 'Unsuspend' : 'Suspend' }}
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

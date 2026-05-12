@@ -151,11 +151,23 @@
                     <button id="mobileMenuToggle"
                         class="rounded-xl p-2 text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10 lg:hidden"
                         aria-label="Open menu">
-                        <svg class=" h-4 w-4 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class=" h-4 w-4 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
+
+                    @if ($backUrl ?? false)
+                        <a href="{{ $backUrl }}"
+                            class="flex h-9 items-center justify-center rounded-xl bg-slate-100 px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-200 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10">
+                            <svg class="mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Back
+                        </a>
+                    @endif
 
                     <h2 class="hidden text-sm md:text-lg font-bold text-slate-900 dark:text-white lg:block">
                         {{ Str::limit($title ?? 'Collector Console', 30, '...') }}
@@ -165,11 +177,14 @@
                     <div class="max-w-md flex-1">
                         <form action="{{ route('user.auctions.index') }}" method="GET" class="relative group">
                             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                                <svg class="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-brand-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                <svg class="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-brand-gold"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </div>
-                            <input type="text" name="q" value="{{ request('q') }}" placeholder="Search Japan Auctions..." 
+                            <input type="text" name="q" value="{{ request('q') }}"
+                                placeholder="Search Japan Auctions..."
                                 class="w-full rounded-2xl border-none bg-slate-50 py-2.5 pl-11 pr-4 text-xs font-bold shadow-inner ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white dark:placeholder:text-zinc-600" />
                         </form>
                     </div>
@@ -408,7 +423,6 @@
             const closeDrawerBtn = document.getElementById('closeDrawerBtn');
             const body = document.body;
 
-            // Helper: open drawer
             function openDrawer() {
                 if (!drawer || !drawerOverlay) return;
                 drawer.classList.remove('-translate-x-full');
@@ -420,7 +434,6 @@
                 });
             }
 
-            // Helper: close drawer
             function closeDrawer() {
                 if (!drawer || !drawerOverlay) return;
                 drawer.classList.add('-translate-x-full');
@@ -433,38 +446,31 @@
                 e.preventDefault();
             }
 
-            // Open drawer from top bar hamburger
             if (mobileMenuToggle) {
                 mobileMenuToggle.addEventListener('click', openDrawer);
             }
 
-            // Open drawer from bottom nav "More" button
             if (mobileMoreButton) {
                 mobileMoreButton.addEventListener('click', openDrawer);
             }
 
-            // Close drawer via X button
             if (closeDrawerBtn) {
                 closeDrawerBtn.addEventListener('click', closeDrawer);
             }
 
-            // Close drawer when clicking overlay
             if (drawerOverlay) {
                 drawerOverlay.addEventListener('click', closeDrawer);
             }
 
-            // Close drawer on escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && drawer && !drawer.classList.contains('-translate-x-full')) {
                     closeDrawer();
                 }
             });
 
-            // Optional: close drawer after clicking any nav link inside drawer (for better UX)
             const drawerLinks = document.querySelectorAll('.drawer-nav-link');
             drawerLinks.forEach(link => {
                 link.addEventListener('click', function() {
-                    // Small delay to allow navigation to start, but drawer closes instantly
                     closeDrawer();
                 });
             });
@@ -480,11 +486,9 @@
                 }
             }
 
-            // Run on load and resize
             adjustMainPadding();
             window.addEventListener('resize', adjustMainPadding);
 
-            // Also close drawer on orientation change to avoid weird states
             window.addEventListener('resize', function() {
                 if (window.innerWidth >= 1024) {
                     closeDrawer();

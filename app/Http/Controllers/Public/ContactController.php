@@ -37,7 +37,7 @@ class ContactController extends Controller
         ]);
 
         // Notify Admin
-        Notification::route('mail', 'concierge@watchhub.jp')
+        Notification::route('mail', config('mail.from.address'))
             ->notify(new AdminSupportTicketReceivedNotification($ticket));
 
         return back()->with('success', 'Your message has been transmitted successfully to our administrative hub. Reference ID: #'.$ticket->id);

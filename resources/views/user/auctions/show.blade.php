@@ -1,4 +1,4 @@
-<x-user-layout :title="'Placing Bid: ' . Str::limit($auction->title, 50)">
+<x-user-layout :title="'Placing Bid: ' . Str::limit($auction->title, 50)" :back-url="route('user.auctions.index')">
 
 
     <script>

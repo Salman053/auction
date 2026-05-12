@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserMultiplierRequest;
 use App\Models\User;
@@ -15,12 +16,11 @@ class UserController extends Controller
     {
         $search = trim((string) $request->string('q'));
 
-        $query = User::query()->latest();
+        $query = User::where('role', UserRole::User->value)->latest();
 
         if ($search !== '') {
             $query->where(function ($builder) use ($search) {
-                $builder
-                    ->where('email', 'like', '%'.$search.'%')
+                $builder->where('email', 'like', '%'.$search.'%')
                     ->orWhere('name', 'like', '%'.$search.'%');
             });
         }
@@ -28,6 +28,25 @@ class UserController extends Controller
         return view('admin.users.index', [
             'users' => $query->paginate(25)->withQueryString(),
             'search' => $search,
+        ]);
+    }
+
+    public function show(User $user): View
+    {
+        $user->load([
+            'wallet',
+            'bids.auction',
+            'watchlistItems.auction',
+            'shippingRate',
+        ]);
+
+        $transactions = $user->wallet ? $user->wallet->transactions()->latest()->paginate(10, ['*'], 'transactions_page') : collect();
+        $bids = $user->bids()->with('auction')->latest()->paginate(10, ['*'], 'bids_page');
+
+        return view('admin.users.show', [
+            'user' => $user,
+            'transactions' => $transactions,
+            'bids' => $bids,
         ]);
     }
 

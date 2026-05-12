@@ -117,6 +117,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
         Route::post('/users/{user}/suspend', [AdminUserController::class, 'toggleSuspend'])->name('users.suspend');
         Route::post('/users/{user}/multiplier', [AdminUserController::class, 'updateMultiplier'])->name('users.multiplier');
 

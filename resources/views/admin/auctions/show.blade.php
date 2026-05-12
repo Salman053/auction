@@ -1,4 +1,4 @@
-<x-admin-layout :title="$auction->title">
+<x-admin-layout :title="$auction->title" :back-url="route('admin.auctions.index')">
     {{-- ===== BREADCRUMB + BACK ===== --}}
     <div class="mb-6 flex items-center gap-3">
         <a href="{{ route('admin.auctions.index') }}"
