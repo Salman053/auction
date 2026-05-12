@@ -67,7 +67,7 @@ class Auction extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('status', 'active')
+        return $query->whereIn('status', ['active', 'ending_soon'])
             ->where(function ($query) {
                 $query->whereNull('ends_at')
                     ->orWhere('ends_at', '>', now());
@@ -88,13 +88,18 @@ class Auction extends Model
             $query->where('current_bid_yen', '<=', $price);
         });
 
-        $query->when($filters['status'] ?? null, function ($query, $status) {
-            if ($status === 'active') {
-                $query->active();
-            } elseif ($status !== 'all') {
-                $query->where('status', $status);
-            }
-        });
+        $status = $filters['status'] ?? 'active';
+
+        if ($status === 'active') {
+            $query->active();
+        } elseif ($status === 'finished') {
+            $query->where(function ($q) {
+                $q->where('status', 'closed')
+                    ->orWhere('ends_at', '<=', now());
+            });
+        } elseif ($status !== 'all') {
+            $query->where('status', $status);
+        }
 
         $query->when($filters['sort'] ?? null, function ($query, $sort) {
             match ($sort) {
