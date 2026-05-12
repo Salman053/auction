@@ -14,10 +14,16 @@ Schedule::command('auctions:import-yahoo-html', [
     ->everyTenMinutes()
     ->withoutOverlapping();
 
+// Increase scraping frequency to every minute for real-time updates
 Schedule::command('yahoo:scrape', ['watch', '--pages=1', '--delay=3', '--fetch-details'])
-    ->everyFiveMinutes()
+    ->everyMinute()
     ->withoutOverlapping()
     ->runInBackground();
+
+// Notify users about auctions ending soon
+Schedule::command('auctions:notify-ending-soon')
+    ->everyFiveMinutes()
+    ->withoutOverlapping();
 
 Schedule::command('auctions:close')
     ->everyMinute()
@@ -27,3 +33,15 @@ Schedule::command('auctions:close')
 Schedule::command('auctions:close --force')
     ->hourly()
     ->withoutOverlapping();
+
+// Failure recovery: Retry failed jobs daily to ensure system integrity
+Schedule::command('queue:retry all')
+    ->dailyAt('03:00')
+    ->withoutOverlapping();
+
+// Cleanup: Prune failed jobs older than 24 hours
+Schedule::command('queue:prune-failed --hours=24')
+    ->dailyAt('04:00')
+    ->withoutOverlapping();
+
+
