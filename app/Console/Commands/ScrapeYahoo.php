@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Auction;
 use App\Models\ScrapingLog;
+use App\Services\AuctionReconciliationService;
 use App\Services\ScraperService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -107,6 +108,9 @@ class ScrapeYahoo extends Command
                         'thumbnail_url' => $item['thumbnail_url'] ?? null,
                         'last_synced_at' => now(),
                     ]);
+
+                    // BUG-002 Fix: Reconcile internal bids with Yahoo's new price
+                    app(AuctionReconciliationService::class)->reconcile($auction);
 
                     if ($forceDetails) {
                         $this->line('      📅 Force fetching details...');
@@ -233,6 +237,10 @@ class ScrapeYahoo extends Command
                         'image_urls' => $details['image_urls'] ?? $auction->image_urls,
                         'last_synced_at' => now(),
                     ]);
+
+                    // BUG-002 Fix: Reconcile internal bids with Yahoo's new price
+                    app(AuctionReconciliationService::class)->reconcile($auction);
+
                     $updated++;
                     $this->info('  ✅ Updated successfully');
                 }

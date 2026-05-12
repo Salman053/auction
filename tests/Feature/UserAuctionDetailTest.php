@@ -18,8 +18,12 @@ test('user auction detail shows image carousel fallback and proxy bid summary', 
         'status' => 'active',
         'starting_bid_yen' => 1000,
         'current_bid_yen' => 1000,
-        'thumbnail_url' => 'https://example.com/image.jpg',
-        'image_urls' => [],
+        'thumbnail_url' => 'https://example.com/thumb.jpg',
+        'image_urls' => [
+            'https://example.com/skipped1.jpg',
+            'https://example.com/skipped2.jpg',
+            'https://example.com/visible.jpg',
+        ],
     ]);
 
     app(BiddingService::class)->placeBid($otherUser, $auction, 5000);
@@ -30,6 +34,7 @@ test('user auction detail shows image carousel fallback and proxy bid summary', 
     $response->assertOk();
     $response->assertSeeText('Current Bid');
     $response->assertSeeText('Your Max Bid');
-    $response->assertSee('https://example.com/image.jpg');
+    $response->assertSee('https://example.com/visible.jpg');
+    $response->assertDontSee('https://example.com/skipped1.jpg');
     $response->assertSeeText('You are the current top bidder');
 });

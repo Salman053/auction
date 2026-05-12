@@ -38,12 +38,20 @@ class AuctionSettlementService
                 return;
             }
 
-            // Get all bids to settle
+            // Get all bids to settle (lock them to prevent race conditions with Reconciliation)
             $bids = Bid::where('auction_id', $auction->id)
                 ->whereIn('status', ['active', 'outbid'])
+                ->lockForUpdate()
                 ->get();
 
             $highestBid = $bids->where('status', 'active')->sortByDesc('amount_yen')->first();
+
+            // BUG-001 Fix: Verify if the internal high bidder was actually outbid on Yahoo
+            $isYahooOutbid = false;
+            if ($highestBid && (int) $auction->current_bid_yen > (int) $highestBid->max_amount_yen) {
+                $isYahooOutbid = true;
+                Log::info("Settlement: User #{$highestBid->user_id} was outbid on Yahoo for Auction #{$auction->id} (Yahoo: ¥{$auction->current_bid_yen} > Max: ¥{$highestBid->max_amount_yen})");
+            }
 
             foreach ($bids as $bid) {
                 $user = $bid->user;
@@ -53,7 +61,10 @@ class AuctionSettlementService
                     continue;
                 }
 
-                if ($highestBid && $bid->id === $highestBid->id) {
+                // Refresh bid to get latest locked_amount_yen in case it was changed by Reconciliation
+                $bid->refresh();
+
+                if (! $isYahooOutbid && $highestBid && $bid->id === $highestBid->id && $bid->status === 'active') {
                     // Winner
                     $bid->update(['status' => 'won']);
 
@@ -61,8 +72,11 @@ class AuctionSettlementService
                     $destinationFee = (int) ($shippingRate?->fee_yen ?? 0);
                     $totalCost = $bid->amount_yen + $destinationFee;
 
-                    // Unlock the EXACT amount they had locked
-                    $wallet->decrement('locked_balance_yen', $bid->locked_amount_yen);
+                    // Unlock the EXACT amount they had locked (if any still remains)
+                    if ($bid->locked_amount_yen > 0) {
+                        $wallet->decrement('locked_balance_yen', $bid->locked_amount_yen);
+                        $bid->update(['locked_amount_yen' => 0]);
+                    }
 
                     // Deduct the ACTUAL cost (Bid + Shipping) from balance
                     $wallet->decrement('balance_yen', $totalCost);
@@ -93,14 +107,24 @@ class AuctionSettlementService
                     // Loser
                     $bid->update(['status' => 'lost']);
 
-                    // Unlock their exact locked amount
-                    $wallet->decrement('locked_balance_yen', $bid->locked_amount_yen);
+                    // Unlock their exact locked amount (if any still remains)
+                    if ($bid->locked_amount_yen > 0) {
+                        $wallet->decrement('locked_balance_yen', $bid->locked_amount_yen);
+                        $bid->update(['locked_amount_yen' => 0]);
+                    }
                 }
             }
 
-            if (! $highestBid) {
-                $auction->update(['status' => 'ended_no_bids']);
+            if ($isYahooOutbid) {
+                $auction->update(['status' => 'ended_outbid_on_yahoo']);
+            } elseif (! $highestBid) {
+                if ($bids->isNotEmpty()) {
+                    $auction->update(['status' => 'ended_outbid_on_yahoo']); // They were all 'outbid' already
+                } else {
+                    $auction->update(['status' => 'ended_no_bids']);
+                }
             }
+
         });
     }
 }

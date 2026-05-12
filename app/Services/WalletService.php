@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\WalletTransaction;
 use App\Models\WithdrawalRequest;
 use App\Notifications\AdminNewDepositRequestNotification;
+use App\Notifications\AdminNewWithdrawalRequestNotification;
 use App\Notifications\DepositApprovedNotification;
 use App\Notifications\WithdrawalProcessedNotification;
 use Illuminate\Support\Facades\DB;
@@ -168,6 +169,11 @@ class WalletService
                     'destination_meta' => $destinationMeta,
                 ],
             ]);
+
+            $admins = User::query()->where('role', UserRole::Admin->value)->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new AdminNewWithdrawalRequestNotification($withdrawal, $user));
+            }
 
             return $withdrawal;
         });

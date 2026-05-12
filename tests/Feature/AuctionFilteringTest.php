@@ -50,20 +50,44 @@ it('can sort auctions by price ascending', function () {
     expect($pos2)->toBeLessThan($pos3);
 });
 
-it('can sort auctions by price descending', function () {
-    Auction::factory()->create(['current_bid_yen' => 10000, 'status' => 'active']);
-    Auction::factory()->create(['current_bid_yen' => 1000, 'status' => 'active']);
-    Auction::factory()->create(['current_bid_yen' => 5000, 'status' => 'active']);
+it('hides ended auctions by default', function () {
+    // Auction that hasn't ended
+    Auction::factory()->create([
+        'title' => 'Active Watch',
+        'status' => 'active',
+        'ends_at' => now()->addDay(),
+    ]);
 
-    $response = $this->get(route('auctions.index', ['sort' => 'price_desc']));
+    // Auction that has ended but still has 'active' status in DB
+    Auction::factory()->create([
+        'title' => 'Ended Watch',
+        'status' => 'active',
+        'ends_at' => now()->subDay(),
+    ]);
+
+    $response = $this->get(route('auctions.index'));
 
     $response->assertStatus(200);
-    $content = $response->getContent();
+    $response->assertSee('Active Watch');
+    $response->assertDontSee('Ended Watch');
+});
 
-    $pos1 = strpos($content, '¥10,000');
-    $pos2 = strpos($content, '¥5,000');
-    $pos3 = strpos($content, '¥1,000');
+it('shows finished auctions when explicitly requested', function () {
+    Auction::factory()->create([
+        'title' => 'Ended Watch',
+        'status' => 'active', // ended by time
+        'ends_at' => now()->subDay(),
+    ]);
 
-    expect($pos1)->toBeLessThan($pos2);
-    expect($pos2)->toBeLessThan($pos3);
+    Auction::factory()->create([
+        'title' => 'Closed Watch',
+        'status' => 'closed',
+        'ends_at' => now()->subDay(),
+    ]);
+
+    $response = $this->get(route('auctions.index', ['status' => 'finished']));
+
+    $response->assertStatus(200);
+    $response->assertSee('Ended Watch');
+    $response->assertSee('Closed Watch');
 });

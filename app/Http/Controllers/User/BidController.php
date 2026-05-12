@@ -16,12 +16,12 @@ class BidController extends Controller
     public function index(Request $request): View
     {
         $user = $request->user('user');
-        if (!$user) {
+        if (! $user) {
             return view('user.bids.index', ['bids' => collect(), 'counts' => []]);
         }
 
         $status = $request->query('status', 'all');
-        
+
         $query = $user->bids()->with('auction');
 
         // Get counts for tabs

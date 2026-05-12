@@ -71,7 +71,8 @@ class BiddingService
                 );
             }
 
-            $capacityYen = (int) floor(((int) $wallet->balance_yen) * ($multiplierPercent / 100));
+            $effectiveBalanceYen = max(0, (int) $wallet->balance_yen - (int) $wallet->withdrawal_locked_yen);
+            $capacityYen = (int) floor($effectiveBalanceYen * ($multiplierPercent / 100));
 
             $existingBid = Bid::where('auction_id', $auction->id)
                 ->where('user_id', $user->id)
@@ -83,7 +84,7 @@ class BiddingService
             $totalCommitmentYen = $maxAmountYen + $destinationFee;
             $newAdditionalLockNeeded = $totalCommitmentYen - $previouslyLockedForThisAuction;
 
-            $availableCapacityYen = max(0, $capacityYen - (int) $wallet->locked_balance_yen - (int) $wallet->withdrawal_locked_yen);
+            $availableCapacityYen = max(0, $capacityYen - (int) $wallet->locked_balance_yen);
 
             if ($newAdditionalLockNeeded > $availableCapacityYen) {
                 throw ValidationException::withMessages([

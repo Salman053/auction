@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 class TestWinningNotification extends Command
 {
     protected $signature = 'test:send-won-email {email=salmankhanm859@gmail.com}';
+
     protected $description = 'Send a test Auction Won notification to a specific email';
 
     public function handle()
@@ -19,8 +20,8 @@ class TestWinningNotification extends Command
         $email = $this->argument('email');
 
         $user = User::where('email', $email)->first();
-        if (!$user) {
-            $this->info("User not found, creating test user...");
+        if (! $user) {
+            $this->info('User not found, creating test user...');
             $user = User::create([
                 'name' => 'Salman Khan (Test)',
                 'email' => $email,
@@ -36,8 +37,8 @@ class TestWinningNotification extends Command
         }
 
         $auction = Auction::first();
-        if (!$auction) {
-            $this->info("Creating a dummy auction for testing...");
+        if (! $auction) {
+            $this->info('Creating a dummy auction for testing...');
             $auction = Auction::create([
                 'yahoo_auction_id' => 't123456789',
                 'title' => 'Luxury Rolex Cosmograph Daytona (Test)',
@@ -55,11 +56,11 @@ class TestWinningNotification extends Command
         }
 
         $this->info("Sending notification to {$email}...");
-        
+
         $user->notify(new AuctionWonNotification($auction, 3500000));
 
-        $this->info("Notification sent! Check your email (or logs if using log driver).");
-        
+        $this->info('Notification sent! Check your email (or logs if using log driver).');
+
         return 0;
     }
 }

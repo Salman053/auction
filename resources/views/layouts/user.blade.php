@@ -91,6 +91,16 @@
                     Wallet
                 </x-dashboard.sidebar-item>
 
+                <x-dashboard.sidebar-item href="{{ route('user.withdrawals.index') }}" :active="request()->routeIs('user.withdrawals.*')">
+                    <x-slot name="icon">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zM17 16l4-4m0 0l-4-4m4 4H7" />
+                        </svg>
+                    </x-slot>
+                    Withdrawals
+                </x-dashboard.sidebar-item>
+
                 <x-dashboard.sidebar-item href="{{ route('user.notifications.index') }}" :active="request()->routeIs('user.notifications.*')">
                     <x-slot name="icon">
                         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -359,6 +369,15 @@
                                 d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                         </svg>
                         Wallet
+                    </a>
+
+                    <a href="{{ route('user.withdrawals.index') }}"
+                        class="drawer-nav-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all {{ request()->routeIs('user.withdrawals.*') ? 'bg-brand-gold/10 text-brand-gold dark:bg-brand-gold/20' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10' }}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zM17 16l4-4m0 0l-4-4m4 4H7" />
+                        </svg>
+                        Withdrawals
                     </a>
 
                     <a href="{{ route('user.notifications.index') }}"

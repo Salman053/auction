@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 class NotifyEndingSoonAuctions extends Command
 {
     protected $signature = 'auctions:notify-ending-soon {minutes=60}';
+
     protected $description = 'Notify users about auctions ending within the specified number of minutes';
 
     public function handle()
@@ -26,6 +27,7 @@ class NotifyEndingSoonAuctions extends Command
 
         if ($auctions->isEmpty()) {
             $this->info("No auctions ending in the next {$minutes} minutes.");
+
             return 0;
         }
 
@@ -33,12 +35,12 @@ class NotifyEndingSoonAuctions extends Command
             $this->info("Processing auction: {$auction->title} (Ends at: {$auction->ends_at})");
 
             // Get bidders
-            $bidders = User::whereHas('bids', function($q) use ($auction) {
+            $bidders = User::whereHas('bids', function ($q) use ($auction) {
                 $q->where('auction_id', $auction->id)->where('status', 'active');
             })->get();
 
             // Get watchers
-            $watchers = User::whereHas('watchlistItems', function($q) use ($auction) {
+            $watchers = User::whereHas('watchlistItems', function ($q) use ($auction) {
                 $q->where('auction_id', $auction->id);
             })->get();
 
@@ -47,7 +49,7 @@ class NotifyEndingSoonAuctions extends Command
             foreach ($usersToNotify as $user) {
                 // Prevent duplicate notifications for the same auction within a window
                 $cacheKey = "notified_ending_soon_{$user->id}_{$auction->id}";
-                if (!Cache::has($cacheKey)) {
+                if (! Cache::has($cacheKey)) {
                     $user->notify(new AuctionEndingSoonNotification($auction));
                     Cache::put($cacheKey, true, now()->addHours(24));
                     $this->line(" - Notified user: {$user->email}");
@@ -55,7 +57,8 @@ class NotifyEndingSoonAuctions extends Command
             }
         }
 
-        $this->info("Notification process complete.");
+        $this->info('Notification process complete.');
+
         return 0;
     }
 }

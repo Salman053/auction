@@ -136,8 +136,17 @@ class ProxyBiddingService
         if ($currentPrice < 50000) {
             return 500;
         }
+        if ($currentPrice < 100000) {
+            return 1000;
+        }
+        if ($currentPrice < 500000) {
+            return 3000;
+        }
+        if ($currentPrice < 1000000) {
+            return 5000;
+        }
 
-        return 1000;
+        return 10000;
     }
 
     private function createBid(Auction $auction, User $user, int $amount, int $maxAmount, ?int $shippingRateId = null): Bid

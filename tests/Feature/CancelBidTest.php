@@ -4,6 +4,7 @@ use App\Models\Auction;
 use App\Models\Bid;
 use App\Models\User;
 use App\Services\BiddingService;
+use Illuminate\Validation\ValidationException;
 
 it('allows a user to cancel their active bid within 1 hour and releases locked funds', function () {
     $user = User::factory()->create([
@@ -79,7 +80,7 @@ it('prevents cancelling a bid after 1 hour', function () {
     ])->save();
 
     app(BiddingService::class)->cancelBid($user, $bid);
-})->throws(\Illuminate\Validation\ValidationException::class);
+})->throws(ValidationException::class);
 
 it('returns a friendly error when trying to cancel an expired bid from the bid cancel route', function () {
     $user = User::factory()->create([

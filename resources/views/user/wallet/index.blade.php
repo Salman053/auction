@@ -4,6 +4,14 @@
             <div>
                 <h1 class="text-2xl font-semibold tracking-tight">Wallet</h1>
                 <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">Deposit funds and track transactions.</p>
+                <div class="mt-4 flex gap-2">
+                    <a href="{{ route('user.withdrawals.index') }}" class="inline-flex items-center gap-2 rounded-xl bg-slate-100 px-4 py-2 text-xs font-black uppercase tracking-widest text-slate-600 transition hover:bg-slate-200 dark:bg-white/10 dark:text-zinc-400 dark:hover:bg-white/20">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zM17 16l4-4m0 0l-4-4m4 4H7" />
+                        </svg>
+                        Request Withdrawal
+                    </a>
+                </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">

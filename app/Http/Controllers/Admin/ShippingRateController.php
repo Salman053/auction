@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\ShippingRate;
 use App\Http\Requests\Admin\ShippingRateRequest;
+use App\Models\ShippingRate;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ShippingRateController
@@ -18,6 +17,7 @@ class ShippingRateController
         $rates = ShippingRate::orderBy('country', 'asc')
             ->orderBy('port', 'asc')
             ->paginate(15);
+
         return view('admin.shipping_rates.index', compact('rates'));
     }
 
@@ -35,6 +35,7 @@ class ShippingRateController
     public function store(ShippingRateRequest $request): RedirectResponse
     {
         ShippingRate::create($request->validated());
+
         return redirect()
             ->route('admin.shipping_rates.index')
             ->with('status', 'Shipping rate created successfully');
@@ -54,6 +55,7 @@ class ShippingRateController
     public function update(ShippingRateRequest $request, ShippingRate $shippingRate): RedirectResponse
     {
         $shippingRate->update($request->validated());
+
         return redirect()
             ->route('admin.shipping_rates.index')
             ->with('status', 'Shipping rate updated successfully');
@@ -65,9 +67,9 @@ class ShippingRateController
     public function destroy(ShippingRate $shippingRate): RedirectResponse
     {
         $shippingRate->delete();
+
         return redirect()
             ->route('admin.shipping_rates.index')
             ->with('status', 'Shipping rate deleted successfully');
     }
 }
-?>

@@ -59,4 +59,3 @@ class WatchlistController extends Controller
         return back()->with('success', 'Item removed from your watchlist.');
     }
 }
-    

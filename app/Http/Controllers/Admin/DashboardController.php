@@ -11,11 +11,12 @@ use App\Models\User;
 use App\Models\WalletTransaction;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request): View|\Illuminate\Http\Response
+    public function index(Request $request): View|Response
     {
         try {
             $now = CarbonImmutable::now();
@@ -94,7 +95,7 @@ class DashboardController extends Controller
                 ],
             ]);
         } catch (\Throwable $e) {
-            return response('Admin Dashboard Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine(), 500);
+            return response('Admin Dashboard Error: '.$e->getMessage().' in '.$e->getFile().':'.$e->getLine(), 500);
         }
     }
 }

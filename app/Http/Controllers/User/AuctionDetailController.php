@@ -8,6 +8,7 @@ use App\Models\Auction;
 use App\Models\Bid;
 use App\Models\ShippingRate;
 use App\Services\BiddingService;
+use App\Services\SettingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -48,8 +49,8 @@ class AuctionDetailController extends Controller
 
         $multiplierPercent = (int) ($user->bidding_multiplier_percent ?? 0);
         if ($multiplierPercent <= 0) {
-            $multiplierPercent = app(\App\Services\SettingService::class)->getInt(
-                \App\Services\SettingService::DEFAULT_BIDDING_MULTIPLIER_PERCENT_KEY,
+            $multiplierPercent = app(SettingService::class)->getInt(
+                SettingService::DEFAULT_BIDDING_MULTIPLIER_PERCENT_KEY,
                 500,
             );
         }

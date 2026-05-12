@@ -45,6 +45,7 @@ test('user can request a withdrawal and admin can process it', function () {
     $user->wallet->update(['balance_yen' => 100000]);
 
     $walletService = app(WalletService::class);
+    $admin = User::factory()->admin()->create();
 
     // Request withdrawal
     $withdrawal = $walletService->requestWithdrawal($user, 30000, 'bank_transfer', ['account' => '12345']);
@@ -53,6 +54,11 @@ test('user can request a withdrawal and admin can process it', function () {
     expect($user->wallet->withdrawal_locked_yen)->toBe(30000);
     // Balance shouldn't decrease yet, but "available" would be lower
     expect($user->wallet->balance_yen)->toBe(100000);
+
+    $admins = User::query()->where('role', \App\Enums\UserRole::Admin->value)->get();
+    foreach ($admins as $admin) {
+        Notification::assertSentTo($admin, \App\Notifications\AdminNewWithdrawalRequestNotification::class);
+    }
 
     // Approve withdrawal
     $admin = User::factory()->admin()->create();
