@@ -10,7 +10,7 @@
                 @foreach (['pending', 'approved', 'rejected', 'all'] as $tab)
                     <a
                         href="{{ route('admin.deposits.index', ['status' => $tab]) }}"
-                        class="rounded-full px-4 py-2 font-semibold {{ $status === $tab ? 'bg-[#1877f2] text-white' : 'bg-[#f0f2f5] text-zinc-900 hover:bg-zinc-200/60 dark:bg-white/5 dark:text-zinc-100 dark:hover:bg-white/10' }}"
+                        class="rounded-full px-5 py-2 text-[10px] font-black uppercase tracking-widest transition-all {{ $status === $tab ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-white/5 dark:text-zinc-400 dark:hover:bg-white/10' }}"
                     >
                         {{ ucfirst($tab) }}
                     </a>
@@ -21,13 +21,13 @@
 
     <div class="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
         <table class="w-full text-left text-sm">
-            <thead class="border-b border-black/5 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:border-white/10 dark:text-zinc-400">
+            <thead class="bg-zinc-50 border-b border-black/5 text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400">
                 <tr>
-                    <th class="px-5 py-3">User</th>
-                    <th class="px-5 py-3">Amount</th>
-                    <th class="px-5 py-3">Provider</th>
-                    <th class="px-5 py-3">Status</th>
-                    <th class="px-5 py-3 text-right">Decision</th>
+                    <th class="px-6 py-4">Depositor</th>
+                    <th class="px-6 py-4">Yen Amount</th>
+                    <th class="px-6 py-4">Transfer Method</th>
+                    <th class="px-6 py-4">Approval State</th>
+                    <th class="px-6 py-4 text-right">Operations</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-black/5 dark:divide-white/10">
@@ -50,13 +50,13 @@
                                 </a>
                             @endif
                         </td>
-                        <td class="px-5 py-4">
-                            <span class="rounded-full px-3 py-1 text-xs font-semibold
-                                @if ($tx->status === 'pending') bg-amber-600/10 text-amber-700 dark:text-amber-300
-                                @elseif ($tx->status === 'approved') bg-green-600/10 text-green-700 dark:text-green-300
-                                @else bg-red-600/10 text-red-700 dark:text-red-300 @endif
+                        <td class="px-6 py-4">
+                            <span class="rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest
+                                @if ($tx->status === 'pending') bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400
+                                @elseif ($tx->status === 'approved') bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400
+                                @else bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400 @endif
                             ">
-                                {{ strtoupper($tx->status) }}
+                                {{ $tx->status }}
                             </span>
                         </td>
                         <td class="px-5 py-4 text-right">
@@ -72,7 +72,7 @@
                                             data-confirm-text="Approve"
                                             data-confirm-type="success"
                                             data-confirm-on-confirm="#approve-form-{{ $tx->id }}"
-                                            class="rounded-full bg-green-600 px-4 py-2 text-xs font-semibold text-white hover:bg-green-500">Approve</button>
+                                            class="rounded-xl bg-blue-600 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition">Approve</button>
                                     </form>
                                     <form id="reject-form-{{ $tx->id }}" method="POST" action="{{ route('admin.deposits.decide', $tx) }}">
                                         @csrf
@@ -84,7 +84,7 @@
                                             data-confirm-text="Reject"
                                             data-confirm-type="danger"
                                             data-confirm-on-confirm="#reject-form-{{ $tx->id }}"
-                                            class="rounded-full bg-red-600 px-4 py-2 text-xs font-semibold text-white hover:bg-red-500">Reject</button>
+                                            class="rounded-xl bg-rose-50 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-rose-600 hover:bg-rose-100 transition">Reject</button>
                                     </form>
                                 </div>
                             @else

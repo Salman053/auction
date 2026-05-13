@@ -95,18 +95,25 @@ class ScrapeYahoo extends Command
             $allResults = array_merge($allResults, $results);
 
             foreach ($results as $index => $item) {
+                $yid = trim((string) $item['yahoo_auction_id']);
+                if (empty($yid)) continue;
+
                 $titlePreview = substr($item['title'] ?? '', 0, 50);
                 $this->line('   Processing item '.($index + 1).': '.$titlePreview);
 
-                $auction = Auction::where('yahoo_auction_id', $item['yahoo_auction_id'])->first();
+                $auction = Auction::withTrashed()->where('yahoo_auction_id', $yid)->first();
 
                 if ($auction) {
+                    if ($auction->trashed()) {
+                        $auction->restore();
+                    }
                     // Update basic info
                     $auction->update([
                         'title' => $item['title'],
                         'current_bid_yen' => $item['current_bid_yen'],
                         'ends_at' => $item['ends_at'] ?? $auction->ends_at,
                         'thumbnail_url' => $item['thumbnail_url'] ?? null,
+                        'status' => 'active',
                         'last_synced_at' => now(),
                     ]);
 
@@ -115,7 +122,7 @@ class ScrapeYahoo extends Command
 
                     if ($forceDetails) {
                         $this->line('      📅 Force fetching details...');
-                        $details = $scraper->getAuctionDetails($item['yahoo_auction_id']);
+                        $details = $scraper->getAuctionDetails($yid);
                         if (! empty($details)) {
                             $auction->update([
                                 'ends_at' => $details['ends_at'] ?? $auction->ends_at,
@@ -135,7 +142,7 @@ class ScrapeYahoo extends Command
                     $this->line('      🔄 Updated existing auction');
                 } else {
                     $auctionData = [
-                        'yahoo_auction_id' => $item['yahoo_auction_id'],
+                        'yahoo_auction_id' => $yid,
                         'title' => $item['title'],
                         'current_bid_yen' => $item['current_bid_yen'],
                         'thumbnail_url' => $item['thumbnail_url'] ?? null,
@@ -145,7 +152,7 @@ class ScrapeYahoo extends Command
 
                     if ($fetchDetails) {
                         $this->line('      📅 Fetching details for end date...');
-                        $details = $scraper->getAuctionDetails($item['yahoo_auction_id']);
+                        $details = $scraper->getAuctionDetails($yid);
                         if (isset($details['ends_at'])) {
                             $auctionData['ends_at'] = $details['ends_at'];
                         }
@@ -169,9 +176,23 @@ class ScrapeYahoo extends Command
                         sleep($delay); // delay after detail fetch
                     }
 
-                    Auction::create($auctionData);
-                    $created++;
-                    $this->line('      ✅ Created new auction');
+                    try {
+                        Auction::create($auctionData);
+                        $created++;
+                        $this->line('      ✅ Created new auction');
+                    } catch (\Illuminate\Database\QueryException $e) {
+                        if ($e->getCode() == 23000) {
+                            $retryAuction = Auction::withTrashed()->where('yahoo_auction_id', $yid)->first();
+                            if ($retryAuction) {
+                                if ($retryAuction->trashed()) $retryAuction->restore();
+                                $retryAuction->update($auctionData);
+                                $updated++;
+                                $this->line('      🔄 Updated existing auction (collision recovery)');
+                            }
+                        } else {
+                            throw $e;
+                        }
+                    }
                 }
             }
 

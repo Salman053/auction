@@ -9,8 +9,8 @@
             <form method="POST" action="{{ route('user.notifications.mark-all-read') }}">
                 @csrf
                 <button type="submit"
-                    class="rounded-xl border border-zinc-200 bg-zinc-50 px-5 py-2.5 text-xs font-black uppercase tracking-widest text-zinc-600 transition hover:bg-zinc-100 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400 dark:hover:bg-white/10">
-                    Mark all read
+                    class="rounded-xl border border-zinc-200 bg-white px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-zinc-600 transition-all hover:bg-zinc-50 hover:text-blue-600 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400 dark:hover:bg-white/10">
+                    Dismiss all
                 </button>
             </form>
         </div>
@@ -30,10 +30,10 @@
         @else
             <div class="divide-y divide-black/5 dark:divide-white/10">
                 @foreach ($notifications as $notification)
-                    <div class="group relative px-6 py-5 transition hover:bg-zinc-50 dark:hover:bg-white/5 {{ !$notification->read_at ? 'bg-brand-navy/5 dark:bg-brand-gold/2' : '' }}">
+                    <div class="group relative px-6 py-5 transition hover:bg-zinc-50 dark:hover:bg-white/5 {{ !$notification->read_at ? 'bg-blue-600/[0.03] dark:bg-blue-600/[0.05]' : '' }}">
                         <div class="flex items-start justify-between gap-6">
                             <div class="flex gap-4">
-                                <div class="mt-1 flex h-2 w-2 shrink-0 rounded-full {{ !$notification->read_at ? 'bg-brand-gold shadow-[0_0_8px_rgba(212,175,55,0.5)]' : 'bg-transparent' }}"></div>
+                                <div class="mt-1 flex h-2 w-2 shrink-0 rounded-full {{ !$notification->read_at ? 'bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.5)]' : 'bg-transparent' }}"></div>
                                 <div>
                                     <p class="text-sm font-bold text-zinc-900 dark:text-white leading-relaxed">
                                         {{ $notification->data['message'] ?? 'Notification alert' }}
@@ -45,14 +45,8 @@
                                         </span>
 
                                         @if(isset($notification->data['auction_id']))
-                                            <a href="{{ route('user.notifications.read', $notification->id) }}" class="text-[10px] font-black uppercase tracking-widest text-brand-gold hover:underline">
-                                                View Auction
-                                            </a>
-                                        @endif
-
-                                        @if(isset($notification->data['balance']))
-                                            <a href="{{ route('user.notifications.read', $notification->id) }}" class="text-[10px] font-black uppercase tracking-widest text-brand-gold hover:underline">
-                                                Top Up Wallet
+                                            <a href="{{ route('user.notifications.read', $notification->id) }}" class="text-[10px] font-black uppercase tracking-widest text-blue-600 hover:text-blue-700 transition">
+                                                Take Action
                                             </a>
                                         @endif
                                     </div>
@@ -61,7 +55,7 @@
                             
                             @if(!$notification->read_at)
                                 <div class="opacity-0 transition group-hover:opacity-100">
-                                    <span class="inline-flex rounded-lg bg-brand-gold/10 px-2 py-1 text-[10px] font-bold text-brand-gold">NEW</span>
+                                    <span class="inline-flex rounded-full bg-blue-600 px-3 py-1 text-[8px] font-black uppercase tracking-widest text-white shadow-lg">NEW</span>
                                 </div>
                             @endif
                         </div>

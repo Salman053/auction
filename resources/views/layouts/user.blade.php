@@ -19,25 +19,25 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 
-<body class="h-full bg-slate-50 antialiased dark:bg-zinc-950">
+<body class="h-full bg-zinc-50 antialiased dark:bg-zinc-950">
     <x-page-loader />
     <div class="flex h-full overflow-hidden">
         {{-- ============================================= --}}
         {{-- DESKTOP SIDEBAR (hidden on mobile) --}}
         {{-- ============================================= --}}
         <aside
-            class="hidden w-[var(--sidebar-width)] shrink-0 flex-col border-r border-slate-200 bg-white dark:border-white/10 dark:bg-zinc-900 lg:flex">
+            class="hidden w-[var(--sidebar-width)] shrink-0 flex-col border-r border-zinc-200 bg-white dark:border-white/10 dark:bg-zinc-900 lg:flex">
             <div class="flex h-[var(--topbar-height)] items-center px-8">
                 <a href="{{ route('user.dashboard') }}" class="flex items-center gap-2.5">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-navy dark:bg-brand-gold">
-                        <span class="text-xl font-black text-brand-gold dark:text-brand-navy">W</span>
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600">
+                        <span class="text-xl font-black text-white">A</span>
                     </div>
-                    <span class="text-xl font-black tracking-tighter text-brand-navy dark:text-white">WatchHub</span>
+                    <span class="text-xl font-black tracking-tighter text-blue-600">AuctionHub</span>
                 </a>
             </div>
 
             <nav class="flex-1 space-y-2 overflow-y-auto px-6 py-8">
-                <p class="mb-4 px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Navigation</p>
+                <p class="mb-4 px-3 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Navigation</p>
 
                 <x-dashboard.sidebar-item href="{{ route('user.dashboard') }}" :active="request()->routeIs('user.dashboard')">
                     <x-slot name="icon">
@@ -79,7 +79,7 @@
                     Watchlist
                 </x-dashboard.sidebar-item>
 
-                <p class="mb-4 mt-10 px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Account</p>
+                <p class="mb-4 mt-10 px-3 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Account</p>
 
                 <x-dashboard.sidebar-item href="{{ route('user.wallet.index') }}" :active="request()->routeIs('user.wallet.*')">
                     <x-slot name="icon">
@@ -132,7 +132,7 @@
                 </x-dashboard.sidebar-item>
             </nav>
 
-            <div class="border-t border-slate-200 p-8 dark:border-white/10">
+            <div class="border-t border-zinc-200 p-8 dark:border-white/10">
                 <form id="logout-form" method="POST" action="{{ route('logout') }}" class="hidden">
                     @csrf
                 </form>
@@ -155,7 +155,7 @@
         <div class="flex flex-1 flex-col overflow-hidden">
             {{-- Top Bar (mobile hamburger + desktop layout) --}}
             <header
-                class="flex h-[var(--topbar-height)] shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 dark:border-white/10 dark:bg-zinc-900 sm:px-6 lg:px-8">
+                class="flex h-[var(--topbar-height)] shrink-0 items-center justify-between border-b border-zinc-200 bg-white px-4 dark:border-white/10 dark:bg-zinc-900 sm:px-6 lg:px-8">
                 <div class="flex flex-1 items-center gap-3 lg:gap-8">
                     {{-- Mobile menu button (visible only on < lg) --}}
                     <button id="mobileMenuToggle"
@@ -187,7 +187,7 @@
                     <div class="max-w-md flex-1">
                         <form action="{{ route('user.auctions.index') }}" method="GET" class="relative group">
                             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                                <svg class="h-4 w-4 text-slate-400 transition-colors group-focus-within:text-brand-gold"
+                                <svg class="h-4 w-4 text-zinc-400 transition-colors group-focus-within:text-blue-600"
                                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -195,7 +195,7 @@
                             </div>
                             <input type="text" name="q" value="{{ request('q') }}"
                                 placeholder="Search Japan Auctions..."
-                                class="w-full rounded-2xl border-none bg-slate-50 py-2.5 pl-11 pr-4 text-xs font-bold shadow-inner ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white dark:placeholder:text-zinc-600" />
+                                class="w-full rounded-2xl border-none bg-zinc-50 py-2.5 pl-11 pr-4 text-xs font-bold shadow-inner ring-1 ring-zinc-200 transition-all focus:bg-white focus:ring-2 focus:ring-blue-600 dark:bg-black/20 dark:ring-white/10 dark:text-white dark:placeholder:text-zinc-600" />
                         </form>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
                         System Online
                     </div>
 
-                    <div class="hidden h-6 w-px bg-slate-200 dark:bg-white/10 sm:block"></div>
+                    <div class="hidden h-6 w-px bg-zinc-200 dark:bg-white/10 sm:block"></div>
 
                     <x-notification-dropdown />
 
@@ -216,8 +216,8 @@
                     </div>
 
                     <a href="{{ route('user.profile.edit') }}"
-                        class="flex h-9 w-9 overflow-hidden rounded-full ring-2 ring-brand-gold/20 transition hover:ring-brand-gold sm:h-10 sm:w-10">
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth('user')->user()?->name ?? 'User') }}&background=0F172A&color=D4AF37"
+                        class="flex h-9 w-9 overflow-hidden rounded-full ring-2 ring-blue-600/20 transition hover:ring-blue-600 sm:h-10 sm:w-10">
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth('user')->user()?->name ?? 'User') }}&background=2563EB&color=FFFFFF"
                             alt="Profile">
                     </a>
                 </div>
@@ -236,11 +236,11 @@
     {{-- MOBILE BOTTOM NAVIGATION BAR (visible only on mobile/tablet) --}}
     {{-- ============================================= --}}
     <div id="mobileBottomNav"
-        class="fixed bottom-0 left-0 z-40 block w-full border-t border-slate-200 bg-white/95 backdrop-blur-lg dark:border-white/10 dark:bg-zinc-900/95 lg:hidden">
+        class="fixed bottom-0 left-0 z-40 block w-full border-t border-zinc-200 bg-white/95 backdrop-blur-lg dark:border-white/10 dark:bg-zinc-900/95 lg:hidden">
         <div class="flex items-center justify-around px-2 py-2">
             {{-- Dashboard --}}
             <a href="{{ route('user.dashboard') }}"
-                class="mobile-nav-item flex flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 transition-all duration-200 {{ request()->routeIs('user.dashboard') ? 'text-brand-gold dark:text-brand-gold' : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/10' }}">
+                class="mobile-nav-item flex flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 transition-all duration-200 {{ request()->routeIs('user.dashboard') ? 'text-blue-600 dark:text-blue-500' : 'text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-white/10' }}">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -250,7 +250,7 @@
 
             {{-- Live Market --}}
             <a href="{{ route('user.auctions.index') }}"
-                class="mobile-nav-item flex flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 transition-all duration-200 {{ request()->routeIs('user.auctions.*') ? 'text-brand-gold dark:text-brand-gold' : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/10' }}">
+                class="mobile-nav-item flex flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 transition-all duration-200 {{ request()->routeIs('user.auctions.*') ? 'text-blue-600 dark:text-blue-500' : 'text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-white/10' }}">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -260,7 +260,7 @@
 
             {{-- My Bids --}}
             <a href="{{ route('user.bids.index') }}"
-                class="mobile-nav-item flex flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 transition-all duration-200 {{ request()->routeIs('user.bids.*') ? 'text-brand-gold dark:text-brand-gold' : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/10' }}">
+                class="mobile-nav-item flex flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 transition-all duration-200 {{ request()->routeIs('user.bids.*') ? 'text-blue-600 dark:text-blue-500' : 'text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-white/10' }}">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -270,7 +270,7 @@
 
             {{-- Watchlist --}}
             <a href="{{ route('user.watchlist.index') }}"
-                class="mobile-nav-item flex flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 transition-all duration-200 {{ request()->routeIs('user.watchlist.*') ? 'text-brand-gold dark:text-brand-gold' : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/10' }}">
+                class="mobile-nav-item flex flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 transition-all duration-200 {{ request()->routeIs('user.watchlist.*') ? 'text-blue-600 dark:text-blue-500' : 'text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-white/10' }}">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -280,7 +280,7 @@
 
             {{-- More menu (opens slide-out drawer) --}}
             <button id="mobileMoreButton"
-                class="flex flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 text-slate-500 transition-all duration-200 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/10">
+                class="flex flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 text-zinc-500 transition-all duration-200 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-white/10">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 6h16M4 12h16M4 18h16" />
@@ -301,12 +301,12 @@
         class="fixed inset-y-0 left-0 z-50 w-[280px] -translate-x-full transform bg-white shadow-2xl transition-transform duration-300 ease-out dark:bg-zinc-900 lg:hidden">
         <div class="flex h-full flex-col">
             {{-- Drawer header with brand and close button --}}
-            <div class="flex items-center justify-between border-b border-slate-200 px-6 py-5 dark:border-white/10">
+            <div class="flex items-center justify-between border-b border-zinc-200 px-6 py-5 dark:border-white/10">
                 <div class="flex items-center gap-2.5">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-navy dark:bg-brand-gold">
-                        <span class="text-lg font-black text-brand-gold dark:text-brand-navy">W</span>
+                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600">
+                        <span class="text-lg font-black text-white">A</span>
                     </div>
-                    <span class="text-xl font-black tracking-tighter text-brand-navy dark:text-white">WatchHub</span>
+                    <span class="text-xl font-black tracking-tighter text-blue-600">AuctionHub</span>
                 </div>
                 <button id="closeDrawerBtn"
                     class="rounded-full p-1.5 text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/10">
@@ -323,7 +323,7 @@
                     <p class="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Navigation</p>
 
                     <a href="{{ route('user.dashboard') }}"
-                        class="drawer-nav-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all {{ request()->routeIs('user.dashboard') ? 'bg-brand-gold/10 text-brand-gold dark:bg-brand-gold/20' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10' }}">
+                        class="drawer-nav-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all {{ request()->routeIs('user.dashboard') ? 'bg-blue-50 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400' : 'text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-white/10' }}">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />

@@ -6,13 +6,13 @@
 
     <div class="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
         <table class="w-full text-left text-sm">
-            <thead class="border-b border-black/5 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:border-white/10 dark:text-zinc-400">
+            <thead class="bg-zinc-50 border-b border-black/5 text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400">
                 <tr>
-                    <th class="px-5 py-3">Run</th>
-                    <th class="px-5 py-3">Status</th>
-                    <th class="px-5 py-3">Started</th>
-                    <th class="px-5 py-3">Ended</th>
-                    <th class="px-5 py-3">Proxy</th>
+                    <th class="px-6 py-4">Session UUID</th>
+                    <th class="px-6 py-4">Runtime Status</th>
+                    <th class="px-6 py-4">Initialization</th>
+                    <th class="px-6 py-4">Completion</th>
+                    <th class="px-6 py-4">Routing Node</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-black/5 dark:divide-white/10">

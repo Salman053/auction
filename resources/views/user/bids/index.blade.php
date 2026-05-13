@@ -6,17 +6,17 @@
                 <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Track and manage your active and historical timepiece bids.</p>
             </div>
             
-            <div class="flex items-center gap-2 p-1 bg-zinc-100 dark:bg-white/5 rounded-xl w-fit">
+            <div class="flex items-center gap-2 p-1 bg-zinc-100 dark:bg-white/5 rounded-2xl w-fit">
                 <a href="{{ route('user.bids.index', ['status' => 'all']) }}" 
-                   class="px-4 py-2 text-xs font-black uppercase tracking-widest rounded-lg transition {{ $currentStatus === 'all' ? 'bg-white text-brand-navy shadow-sm dark:bg-zinc-800 dark:text-brand-gold' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300' }}">
+                   class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all {{ $currentStatus === 'all' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
                     All ({{ $counts['all'] }})
                 </a>
                 <a href="{{ route('user.bids.index', ['status' => 'won']) }}" 
-                   class="px-4 py-2 text-xs font-black uppercase tracking-widest rounded-lg transition {{ $currentStatus === 'won' ? 'bg-white text-brand-navy shadow-sm dark:bg-zinc-800 dark:text-brand-gold' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300' }}">
+                   class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all {{ $currentStatus === 'won' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
                     Won ({{ $counts['won'] }})
                 </a>
                 <a href="{{ route('user.bids.index', ['status' => 'lost']) }}" 
-                   class="px-4 py-2 text-xs font-black uppercase tracking-widest rounded-lg transition {{ $currentStatus === 'lost' ? 'bg-white text-brand-navy shadow-sm dark:bg-zinc-800 dark:text-brand-gold' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300' }}">
+                   class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all {{ $currentStatus === 'lost' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
                     Lost ({{ $counts['lost'] }})
                 </a>
             </div>
@@ -33,7 +33,7 @@
                 </div>
                 <h3 class="mt-4 text-sm font-bold text-zinc-900 dark:text-white">No bids found</h3>
                 <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">You don't have any bids in this category yet.</p>
-                <a href="{{ route('auctions.index') }}" class="mt-6 text-xs font-black uppercase tracking-widest text-brand-gold hover:underline">Browse Auctions</a>
+                <a href="{{ route('auctions.index') }}" class="mt-6 text-xs font-black uppercase tracking-widest text-blue-600 hover:underline">Browse Auctions</a>
             </div>
         @else
             <div class="divide-y divide-black/5 dark:divide-white/10">
@@ -61,15 +61,15 @@
                                 @endif
                                 
                                 <div class="min-w-0">
-                                    <a href="{{ route('user.auctions.show', $bid->auction) }}" class="block text-sm font-bold text-zinc-900 dark:text-white hover:text-brand-gold transition truncate leading-tight">
+                                    <a href="{{ route('user.auctions.show', $bid->auction) }}" class="block text-sm font-bold text-zinc-900 dark:text-white hover:text-blue-600 transition truncate leading-tight">
                                         {{ $bid->auction?->title }}
                                     </a>
                                     <div class="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
                                         <span @class([
-                                            'inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-black uppercase tracking-widest',
+                                            'inline-flex items-center rounded-full px-2.5 py-1 text-[8px] font-black uppercase tracking-widest',
                                             'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400' => $isWon,
                                             'bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400' => $isOutbid,
-                                            'bg-brand-gold/10 text-brand-gold' => $isActive,
+                                            'bg-blue-600 text-white shadow-sm' => $isActive,
                                             'bg-zinc-100 text-zinc-600 dark:bg-white/5 dark:text-zinc-400' => !$isWon && !$isOutbid && !$isActive,
                                         ])>
                                             {{ $bid->status }}
@@ -108,7 +108,7 @@
                                     </form>
                                 @endif
                                 
-                                <a href="{{ route('user.auctions.show', $bid->auction) }}" class="p-2 text-zinc-400 hover:text-brand-gold transition dark:text-zinc-600">
+                                <a href="{{ route('user.auctions.show', $bid->auction) }}" class="p-2 text-zinc-400 hover:text-blue-600 transition dark:text-zinc-600">
                                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                     </svg>

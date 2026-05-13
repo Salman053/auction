@@ -21,7 +21,7 @@
         </div>
         
         @if($icon)
-        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-navy/5 text-brand-navy dark:bg-white/5 dark:text-brand-gold">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600/5 text-blue-600 dark:bg-blue-600/10 dark:text-blue-500">
             {{ $icon }}
         </div>
         @endif

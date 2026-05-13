@@ -7,7 +7,7 @@
                 <div class="min-w-0 flex-1">
                     <div class="flex flex-wrap items-center gap-3">
                         <div
-                            class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#1877f2] to-[#0d5fd9] text-white shadow-md">
+                            class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-md">
                             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z">
@@ -176,7 +176,7 @@
                                 class="flex max-w-[85%] items-end gap-2 {{ $isOwnMessage ? 'flex-row-reverse' : '' }}">
                                 <!-- Avatar -->
                                 <div
-                                    class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full {{ $isOwnMessage ? 'bg-gradient-to-br from-[#1877f2] to-[#0d5fd9]' : 'bg-gradient-to-br from-slate-400 to-slate-500 dark:from-slate-600 dark:to-slate-700' }} text-white shadow-sm">
+                                    class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full {{ $isOwnMessage ? 'bg-gradient-to-br from-blue-600 to-blue-700' : 'bg-gradient-to-br from-zinc-400 to-zinc-500 dark:from-zinc-600 dark:to-zinc-700' }} text-white shadow-sm">
                                     <span class="text-xs font-bold">
                                         {{ substr($message->author?->name ?? ($ticket->requester_name ?? 'R'), 0, 1) }}
                                     </span>
@@ -185,7 +185,7 @@
                                 <!-- Message Content -->
                                 <div class="relative">
                                     <div
-                                        class="rounded-2xl px-4 py-1 shadow-sm {{ $isOwnMessage ? 'bg-[#1877f2] text-white' : 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-white' }} {{ $isInternal ? 'border-l-4 border-l-amber-400' : '' }}">
+                                        class="rounded-2xl px-4 py-2 shadow-sm {{ $isOwnMessage ? 'bg-blue-600 text-white' : 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-white' }} {{ $isInternal ? 'border-l-4 border-l-amber-400' : '' }}">
                                         <p class=" break-words text-sm leading-relaxed">
                                             {{ $message->body }}
                                         </p>
@@ -236,19 +236,19 @@
                 <div
                     class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
                     <div class="mb-4 flex items-center gap-2">
-                        <svg class="h-5 w-5 text-[#1877f2]" fill="none" stroke="currentColor"
+                        <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
                         </svg>
-                        <h2 class="text-lg font-semibold">Quick Reply</h2>
+                        <h2 class="text-lg font-black tracking-tight">Quick Reply</h2>
                     </div>
                     <form method="POST" action="{{ route('admin.support-tickets.reply', $ticket) }}"
                         class="space-y-4">
                         @csrf
                         <div>
                             <textarea id="body" name="body" rows="6"
-                                class="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm outline-none transition-all focus:border-[#1877f2] focus:ring-2 focus:ring-[#1877f2]/15 dark:border-white/10 dark:bg-white/5 dark:text-white"
+                                class="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-5 py-4 text-sm outline-none transition-all focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 dark:border-white/10 dark:bg-white/5 dark:text-white"
                                 placeholder="Type your response here...">{{ old('body') }}</textarea>
                             @error('body')
                                 <div class="mt-2 flex items-center gap-1 text-sm text-red-600">
@@ -269,7 +269,7 @@
                             </span>
                         </label>
                         <button type="submit"
-                            class="mt-2 w-full transform rounded-xl bg-gradient-to-r from-[#1877f2] to-[#0d5fd9] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#1877f2]/20 transition-all hover:shadow-xl hover:shadow-[#1877f2]/30 active:scale-[0.98]">
+                            class="mt-2 w-full transform rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20 transition-all hover:shadow-xl hover:shadow-blue-600/30 active:scale-[0.98]">
                             Send Response
                         </button>
                     </form>

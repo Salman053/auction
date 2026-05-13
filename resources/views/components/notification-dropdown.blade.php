@@ -32,7 +32,7 @@
                     @if ($unreadCount > 0)
                         <form action="{{ route($prefix . '.notifications.mark-all-read') }}" method="POST">
                             @csrf
-                            <button type="submit" class="text-[10px] font-bold text-brand-gold hover:underline">Mark
+                            <button type="submit" class="text-[10px] font-bold text-blue-600 hover:underline">Mark
                                 all read</button>
                         </form>
                     @endif
@@ -48,7 +48,7 @@
                         class="group relative border-b border-black/5 px-5 py-4 transition hover:bg-zinc-50 dark:border-white/10 dark:hover:bg-white/5 {{ $notification->unread() ? 'bg-zinc-50/50 dark:bg-white/2' : '' }}">
                         <div class="flex gap-3">
                             <div
-                                class="mt-1 flex h-2 w-2 shrink-0 rounded-full {{ $notification->unread() ? 'bg-brand-gold' : 'bg-transparent' }}">
+                                class="mt-1 flex h-2 w-2 shrink-0 rounded-full {{ $notification->unread() ? 'bg-blue-600' : 'bg-transparent' }}">
                             </div>
                             <div class="flex-1">
                                 <p class="text-xs font-semibold text-zinc-900 dark:text-white leading-relaxed">

@@ -2,12 +2,12 @@
     <div class="flex items-center justify-between gap-4 px-8 py-5 transition hover:bg-zinc-50 dark:hover:bg-white/5">
         <div class="flex items-center gap-4">
             <div
-                class="h-2 w-2 rounded-full @if ($bid->status === 'active') bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] @elseif($bid->status === 'outbid') bg-zinc-300 @elseif($bid->status === 'superseded') bg-brand-gold/40 @else bg-red-500 @endif">
+                class="h-2 w-2 rounded-full @if ($bid->status === 'active') bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] @elseif($bid->status === 'outbid') bg-zinc-300 @elseif($bid->status === 'superseded') bg-blue-500/40 @else bg-rose-500 @endif">
             </div>
             <div>
-                <p class="text-sm font-bold text-zinc-900 dark:text-white">
+                <p class="text-sm font-black text-zinc-900 dark:text-white">
                     @if ($bid->user_id == auth('user')->id())
-                        <span class="text-brand-gold">You</span>
+                        <span class="text-blue-600">You</span>
                     @else
                         @if ($bid->user)
                             {{ $bid->user->name ?? 'Collector #' . substr($bid->user->id, 0, 4) }}
@@ -16,7 +16,7 @@
                         @endif
                     @endif
                 </p>
-                <p class="text-[10px] uppercase font-bold tracking-widest text-zinc-400">
+                <p class="text-[9px] uppercase font-black tracking-widest text-zinc-400">
                     {{ $bid->status === 'superseded' ? 'Proxy Increase' : $bid->status }} ·
                     {{ $bid->created_at->diffForHumans() }}
                 </p>
@@ -27,7 +27,7 @@
                 ¥{{ number_format($bid->amount_yen) }}
             </p>
             @if ($bid->user_id == auth('user')->id() && $bid->max_amount_yen > $bid->amount_yen)
-                <p class="text-[9px] font-bold uppercase tracking-widest text-brand-gold">
+                <p class="text-[9px] font-black uppercase tracking-widest text-blue-600">
                     Max: ¥{{ number_format($bid->max_amount_yen) }}
                 </p>
             @endif

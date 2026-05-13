@@ -9,7 +9,7 @@
             <div class="flex flex-wrap gap-2 text-sm">
                 @foreach (['pending', 'approved', 'rejected', 'all'] as $tab)
                     <a href="{{ route('admin.withdrawals.index', ['status' => $tab]) }}"
-                        class="rounded-full px-4 py-2 font-semibold {{ $status === $tab ? 'bg-[#1877f2] text-white' : 'bg-[#f0f2f5] text-zinc-900 hover:bg-zinc-200/60 dark:bg-white/5 dark:text-zinc-100 dark:hover:bg-white/10' }}">
+                        class="rounded-full px-5 py-2 text-[10px] font-black uppercase tracking-widest transition-all {{ $status === $tab ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-white/5 dark:text-zinc-400 dark:hover:bg-white/10' }}">
                         {{ ucfirst($tab) }}
                     </a>
                 @endforeach
@@ -21,14 +21,14 @@
         class="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
         <table class="w-full text-left text-sm">
             <thead
-                class="border-b border-black/5 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:border-white/10 dark:text-zinc-400">
+                class="bg-zinc-50 border-b border-black/5 text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400">
                 <tr>
-                    <th class="px-5 py-3">User</th>
-                    <th class="px-5 py-3">Amount</th>
-                    <th class="px-5 py-3">Payout Info</th>
-                    <th class="px-5 py-3">Status</th>
-                    <th class="px-5 py-3">Created</th>
-                    <th class="px-5 py-3 text-right">Decision</th>
+                    <th class="px-6 py-4">Beneficiary</th>
+                    <th class="px-6 py-4">Payout Value</th>
+                    <th class="px-6 py-4">Transfer Details</th>
+                    <th class="px-6 py-4">Approval State</th>
+                    <th class="px-6 py-4">Submission Date</th>
+                    <th class="px-6 py-4 text-right">Operations</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-black/5 dark:divide-white/10">
@@ -63,7 +63,7 @@
                                             setTimeout(() => this.copied = false, 2000);
                                         }
                                     }" @click="copyMemo"
-                                        class="group relative max-w-[260px] cursor-pointer rounded-xl border border-slate-200 bg-slate-50/50 p-3 transition-all hover:border-brand-gold hover:bg-white dark:border-white/10 dark:bg-black/20 dark:hover:bg-black/30">
+                                        class="group relative max-w-[260px] cursor-pointer rounded-2xl border border-zinc-200 bg-zinc-50/50 p-4 transition-all hover:border-blue-600 hover:bg-white dark:border-white/10 dark:bg-black/20 dark:hover:bg-black/30">
 
                                         <!-- Added x-ref here to safely target the text -->
                                         <div x-ref="memoText"
@@ -93,7 +93,7 @@
                                             <!-- Text Feedback -->
                                             <span class="text-[10px] font-black uppercase tracking-widest transition"
                                                 :class="copied ? 'text-emerald-500' :
-                                                    'text-slate-500 group-hover:text-brand-gold'">
+                                                    'text-zinc-500 group-hover:text-blue-600'">
                                                 <span x-text="copied ? 'Copied to Clipboard!' : 'Copy Details'"></span>
                                             </span>
                                         </div>
@@ -132,14 +132,14 @@
                                         @csrf
                                         <input type="hidden" name="action" value="approve" />
                                         <button
-                                            class="rounded-lg bg-emerald-600 px-4 py-2 text-xs font-black uppercase tracking-widest text-white shadow-sm transition hover:bg-emerald-500"
+                                            class="rounded-xl bg-blue-600 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700"
                                             type="submit">Approve</button>
                                     </form>
                                     <form method="POST" action="{{ route('admin.withdrawals.decide', $w) }}">
                                         @csrf
                                         <input type="hidden" name="action" value="reject" />
                                         <button
-                                            class="rounded-lg bg-rose-600 px-4 py-2 text-xs font-black uppercase tracking-widest text-white shadow-sm transition hover:bg-rose-500"
+                                            class="rounded-xl bg-rose-50 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-rose-600 hover:bg-rose-100 transition"
                                             type="submit">Reject</button>
                                     </form>
                                 </div>

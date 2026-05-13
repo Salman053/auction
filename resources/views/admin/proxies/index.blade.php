@@ -6,14 +6,14 @@
 
     <div class="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
         <table class="w-full text-left text-sm">
-            <thead class="border-b border-black/5 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:border-white/10 dark:text-zinc-400">
+            <thead class="bg-zinc-50 border-b border-black/5 text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400">
                 <tr>
-                    <th class="px-5 py-3">Host</th>
-                    <th class="px-5 py-3">Country</th>
-                    <th class="px-5 py-3">Active</th>
-                    <th class="px-5 py-3">Success</th>
-                    <th class="px-5 py-3">Failure</th>
-                    <th class="px-5 py-3">Last used</th>
+                    <th class="px-6 py-4">Network Node</th>
+                    <th class="px-6 py-4">Geo-Region</th>
+                    <th class="px-6 py-4">Operational</th>
+                    <th class="px-6 py-4">Success</th>
+                    <th class="px-6 py-4">Failure</th>
+                    <th class="px-6 py-4">Recent Usage</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-black/5 dark:divide-white/10">

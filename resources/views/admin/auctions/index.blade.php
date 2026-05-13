@@ -2,27 +2,27 @@
     <div class="mb-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-                <h1 class="text-2xl font-black tracking-tight text-zinc-900 dark:text-white uppercase italic">Market
+                <h1 class="text-3xl font-black tracking-tight text-zinc-900 dark:text-white uppercase tracking-tighter">Market
                     Monitoring</h1>
                 <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Advanced oversight of synced Yahoo Japan
                     auctions and bidding activity.</p>
             </div>
 
-            <div class="flex flex-wrap items-center gap-2 p-1 bg-zinc-100 dark:bg-white/5 rounded-xl w-fit">
+            <div class="flex flex-wrap items-center gap-2 p-1 bg-zinc-100 dark:bg-white/5 rounded-2xl w-fit">
                 <a href="{{ route('admin.auctions.index', ['tab' => 'all']) }}"
-                    class="px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition {{ $currentTab === 'all' ? 'bg-white text-rose-600 shadow-sm dark:bg-zinc-800 dark:text-rose-400' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300' }}">
+                    class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all {{ $currentTab === 'all' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
                     All
                 </a>
                 <a href="{{ route('admin.auctions.index', ['tab' => 'active']) }}"
-                    class="px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition {{ $currentTab === 'active' ? 'bg-white text-rose-600 shadow-sm dark:bg-zinc-800 dark:text-rose-400' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300' }}">
+                    class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all {{ $currentTab === 'active' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
                     Active
                 </a>
                 <a href="{{ route('admin.auctions.index', ['tab' => 'won']) }}"
-                    class="px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition {{ $currentTab === 'won' ? 'bg-white text-rose-600 shadow-sm dark:bg-zinc-800 dark:text-rose-400' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300' }}">
+                    class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all {{ $currentTab === 'won' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
                     Winning Bids
                 </a>
                 <a href="{{ route('admin.auctions.index', ['tab' => 'shipment_pending']) }}"
-                    class="px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition {{ $currentTab === 'shipment_pending' ? 'bg-white text-rose-600 shadow-sm dark:bg-zinc-800 dark:text-rose-400' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300' }}">
+                    class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all {{ $currentTab === 'shipment_pending' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
                     Shipment Pending
                 </a>
             </div>
@@ -36,7 +36,7 @@
                 <a href="{{ route('admin.auctions.show', $topAuction) }}"
                     class="relative overflow-hidden rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10 group transition hover:shadow-xl">
                     <div
-                        class="absolute -right-4 -top-4 flex h-16 w-16 items-center justify-center rounded-full bg-rose-600/10 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400 font-black italic text-2xl group-hover:scale-110 transition">
+                        class="absolute -right-4 -top-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-600/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 font-black italic text-2xl group-hover:scale-110 transition">
                         #{{ $index + 1 }}
                     </div>
                     <div class="flex items-center gap-4">
@@ -50,10 +50,10 @@
                                 class="text-xs font-black uppercase tracking-widest text-zinc-400 dark:text-zinc-500 mb-1">
                                 Most Bid Piece</h3>
                             <p
-                                class="text-sm font-bold text-zinc-900 dark:text-white truncate leading-tight group-hover:text-rose-600 dark:group-hover:text-rose-400 transition">
+                                class="text-sm font-bold text-zinc-900 dark:text-white truncate leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
                                 {{ $topAuction->title }}
                             </p>
-                            <div class="mt-1 text-xs font-black text-rose-600 dark:text-rose-400">
+                            <div class="mt-1 text-xs font-black text-blue-600 dark:text-blue-400">
                                 {{ $topAuction->bid_count }} BIDS REGISTERED
                             </div>
                         </div>
@@ -98,7 +98,7 @@
                                     </div>
                                     <div class="min-w-0">
                                         <div
-                                            class="text-sm font-bold text-zinc-900 group-hover:text-rose-600 dark:text-white dark:group-hover:text-rose-400 transition truncate max-w-[300px]">
+                                            class="text-sm font-bold text-zinc-900 group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400 transition truncate max-w-[300px]">
                                             {{ $auction->title }}
                                         </div>
                                         <div class="mt-0.5 flex items-center gap-2">
@@ -111,7 +111,7 @@
                                             <a href="https://page.auctions.yahoo.co.jp/jp/auction/{{ $auction->yahoo_auction_id }}"
                                                target="_blank" rel="noopener noreferrer"
                                                onclick="event.stopPropagation()"
-                                               class="group/link flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-brand-gold transition dark:text-zinc-500 dark:hover:text-brand-gold">
+                                               class="group/link flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-blue-600 transition dark:text-zinc-500 dark:hover:text-blue-400">
                                                 Yahoo Original
                                                 <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                             </a>
@@ -147,7 +147,9 @@
                                                     'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400',
                                                 'ended' =>
                                                     'bg-zinc-100 text-zinc-600 dark:bg-white/5 dark:text-zinc-400',
-                                                'sold' => 'bg-brand-gold/10 text-brand-gold',
+                                                'finished' =>
+                                                    'bg-zinc-100 text-zinc-600 dark:bg-white/5 dark:text-zinc-400',
+                                                'sold' => 'bg-blue-600 text-white shadow-sm',
                                             ];
                                             $color = $statusColors[$auction->status] ?? $statusColors['ended'];
                                         @endphp
@@ -176,19 +178,19 @@
                                 </div>
                             </td>
                             <td class="px-6 py-5 text-right">
-                                <div class="text-xs font-black text-zinc-900 dark:text-white leading-tight">
+                                <div class="text-sm font-black text-zinc-900 dark:text-white leading-tight tracking-tighter">
                                     ¥{{ number_format($auction->current_bid_yen) }}</div>
                                 <div
-                                    class="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
+                                    class="text-[9px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
                                     Current Valuation</div>
                             </td>
                             <td class="px-6 py-5">
                                 <div
-                                    class="text-xs font-bold {{ $auction->ends_at?->isPast() ? 'text-zinc-400' : 'text-rose-600 dark:text-rose-400' }}">
+                                    class="text-xs font-black {{ $auction->ends_at?->isPast() ? 'text-zinc-400' : 'text-blue-600 dark:text-blue-400' }} tracking-tight">
                                     {{ $auction->ends_at?->format('M d, H:i') ?? '—' }}
                                 </div>
                                 <div
-                                    class="text-[9px] font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-tighter">
+                                    class="text-[9px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
                                     {{ $auction->ends_at?->diffForHumans() ?? 'Scheduled sync' }}
                                 </div>
                             </td>

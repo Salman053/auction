@@ -16,7 +16,7 @@
                 View Scraper Logs
             </a>
             <a href="{{ route('admin.settings.index') }}"
-                class="flex items-center gap-2 rounded-2xl bg-slate-900 px-6 py-3 text-sm font-black text-white shadow-lg transition hover:scale-[1.02] dark:bg-white dark:text-slate-900">
+                class="flex items-center gap-2 rounded-2xl bg-blue-600 px-6 py-3 text-sm font-black text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700">
                 System Settings
             </a>
         </div>
