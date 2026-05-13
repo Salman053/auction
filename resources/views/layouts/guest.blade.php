@@ -27,7 +27,8 @@
             <div class="flex items-center justify-between py-4">
                 {{-- Logo --}}
                 <a href="{{ route('home') }}" class="flex items-center gap-2">
-                    <span class="text-2xl font-black tracking-tighter text-blue-600">{{ config('app.name') }}</span>
+                    <span
+                        class="text-2xl font-black capitalize tracking-tighter text-blue-600">{{ config('app.name') }}</span>
                 </a>
 
                 {{-- Search Bar --}}
@@ -57,8 +58,12 @@
                         <div>
                             <p class="text-[10px] leading-tight text-zinc-400">Deliver to</p>
                             @php
-                                $shippingLocations = $shippingLocations ?? \App\Models\ShippingRate::orderBy('country')->get();
-                                $locationLabels = collect($shippingLocations)->map(fn($l) => is_string($l) ? $l : $l->country)->unique()->values();
+                                $shippingLocations =
+                                    $shippingLocations ?? \App\Models\ShippingRate::orderBy('country')->get();
+                                $locationLabels = collect($shippingLocations)
+                                    ->map(fn($l) => is_string($l) ? $l : $l->country)
+                                    ->unique()
+                                    ->values();
                             @endphp
                             @if ($locationLabels->isNotEmpty())
                                 <p class="font-bold text-zinc-900 dark:text-white">{{ $locationLabels->join(', ') }}</p>
@@ -115,7 +120,13 @@
                     All Categories
                 </a>
                 @php
-                    $navCategories = $navCategories ?? \App\Models\Category::where('depth', 0)->orderBy('priority', 'desc')->orderBy('name')->limit(8)->get();
+                    $navCategories =
+                        $navCategories ??
+                        \App\Models\Category::where('depth', 0)
+                            ->orderBy('priority', 'desc')
+                            ->orderBy('name')
+                            ->limit(8)
+                            ->get();
                 @endphp
                 @foreach ($navCategories as $navCat)
                     <a href="{{ route('auctions.index', ['category' => $navCat->yahoo_category_id]) }}"
