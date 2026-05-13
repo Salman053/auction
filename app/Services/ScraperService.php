@@ -28,11 +28,27 @@ class ScraperService
         $this->maxRetries = (int) config('scraper.max_retries', 3);
     }
 
-    public function search(string $keyword, int $page = 1): array
+    public function search(string $keyword = '', int $page = 1, ?string $categoryId = null, bool $newOnly = false, ?int $minPrice = null, ?int $maxPrice = null): array
     {
         $encodedKeyword = urlencode($keyword);
         $offset = (($page - 1) * 50) + 1;
         $url = "https://auctions.yahoo.co.jp/search/search?p={$encodedKeyword}&b={$offset}";
+
+        if ($categoryId) {
+            $url .= "&auccat={$categoryId}";
+        }
+
+        if ($newOnly) {
+            $url .= "&new=1";
+        }
+
+        if ($minPrice !== null) {
+            $url .= "&aucminprice={$minPrice}";
+        }
+
+        if ($maxPrice !== null) {
+            $url .= "&aucmaxprice={$maxPrice}";
+        }
 
         if ($this->debug) {
             Log::debug('Fetching URL for Yahoo search', ['url' => $url]);

@@ -568,8 +568,14 @@ class YahooAuctionHtmlParser
             return null;
         }
 
-        // If it contains "月", "年", "/" or "-", it's likely an absolute date, skip relative parsing
-        if (!preg_match('/[月年\/\-]/u', $originalString)) {
+        // Clean common Japanese characters for easier regex matching
+        $search = ['残り', '時間', '分', '秒', '日', ' ', '　'];
+        $replace = ['', 'h', 'm', 's', 'd', '', ''];
+        $normalized = str_replace($search, $replace, $originalString);
+
+        // Relative time detection: Look for duration units (d, h, m, s)
+        // Yahoo shows "3日", "4時間", "15分", etc.
+        if (preg_match('/(\d+d|\d+h|\d+m|\d+s)/', $normalized)) {
             $now = CarbonImmutable::now();
             $isRelative = false;
             $days = 0;
@@ -577,40 +583,35 @@ class YahooAuctionHtmlParser
             $minutes = 0;
             $seconds = 0;
 
-            // Handle days: "1日"
-            if (preg_match('/(\d+)\s*日/', $originalString, $m)) {
+            if (preg_match('/(\d+)d/', $normalized, $m)) {
                 $days = intval($m[1]);
                 $isRelative = true;
             }
-
-            // Handle hours: "2時間" or "08:27:09" or "13:34"
-            if (preg_match('/(\d+)\s*時間/', $originalString, $m)) {
+            if (preg_match('/(\d+)h/', $normalized, $m)) {
                 $hours = intval($m[1]);
-                $isRelative = true;
-            } elseif (preg_match('/(\d{1,2}):(\d{2}):(\d{2})/', $originalString, $m)) {
-                $hours = intval($m[1]);
-                $minutes = intval($m[2]);
-                $seconds = intval($m[3]);
-                $isRelative = true;
-            } elseif (preg_match('/(\d{1,2}):(\d{2})/', $originalString, $m)) {
-                $hours = intval($m[1]);
-                $minutes = intval($m[2]);
                 $isRelative = true;
             }
-
-            // Handle minutes: "15分"
-            if (preg_match('/(\d+)\s*分/', $originalString, $m)) {
+            if (preg_match('/(\d+)m/', $normalized, $m)) {
                 $minutes = intval($m[1]);
                 $isRelative = true;
             }
-
-            // Handle seconds: "30秒"
-            if (preg_match('/(\d+)\s*秒/', $originalString, $m)) {
+            if (preg_match('/(\d+)s/', $normalized, $m)) {
                 $seconds = intval($m[1]);
                 $isRelative = true;
             }
 
+            // Handle HH:MM:SS or HH:MM format IF it was in a "Remaining" context
+            // But usually Yahoo shows "X時間" or "X分"
+            if (!$isRelative && preg_match('/(\d{1,2}):(\d{2})(?::(\d{2}))?/', $normalized, $m)) {
+                $hours = intval($m[1]);
+                $minutes = intval($m[2]);
+                $seconds = isset($m[3]) ? intval($m[3]) : 0;
+                $isRelative = true;
+            }
+
             if ($isRelative) {
+                // If it's just "X days", Yahoo often means "X days and some hours"
+                // but we stick to the provided minimum for safety in bidding.
                 return $now->addDays($days)
                            ->addHours($hours)
                            ->addMinutes($minutes)
@@ -618,7 +619,7 @@ class YahooAuctionHtmlParser
             }
         }
 
-        // Remove common Japanese text for absolute date parsing
+        // Absolute date parsing
         $replacements = [
             '年' => '-',
             '月' => '-',
@@ -635,9 +636,12 @@ class YahooAuctionHtmlParser
             ')' => '',
             '【' => '',
             '】' => '',
+            '/' => '-',
         ];
 
-        $cleaned = str_replace(array_keys($replacements), array_values($replacements), $originalString);
+        // Also remove day of week like (水), (木) etc.
+        $cleaned = preg_replace('/\([月火水木金土日]\)/u', '', $originalString);
+        $cleaned = str_replace(array_keys($replacements), array_values($replacements), $cleaned);
         $cleaned = preg_replace('/\s+/', ' ', $cleaned);
         $cleaned = trim($cleaned);
 
@@ -647,35 +651,35 @@ class YahooAuctionHtmlParser
             'Y-m-d H:i',
             'Y-n-j H:i:s',
             'Y-n-j H:i',
-            'Y/m/d H:i:s',
-            'Y/m/d H:i',
-            'Y-m-d\TH:i:s',
-            'Y-m-d\TH:i',
-            'Y年n月j日 H:i',
-            'n-j H:i',
             'm-d H:i',
-            'n/j H:i',
-            'm/d H:i',
+            'n-j H:i',
+            'H:i:s',
+            'H:i',
         ];
 
         foreach ($formats as $format) {
             try {
                 // Yahoo Japan times are in JST (Asia/Tokyo)
                 $date = CarbonImmutable::createFromFormat($format, $cleaned, 'Asia/Tokyo');
-                if ($date && $date->year >= 2020 && $date->year <= 2030) {
+                
+                if ($date) {
+                    // If format was just H:i or m-d H:i, make sure we have the correct year
+                    // createFromFormat uses current year/month/day for missing parts in the JST timezone.
+                    
+                    // If the parsed date is significantly in the past (e.g. yesterday's H:i),
+                    // it might actually be for tomorrow if it's an end time.
+                    // But usually Yahoo shows "5/14" if it's tomorrow.
+                    
                     return $date->setTimezone('UTC');
                 }
             } catch (\Exception $e) {
             }
         }
 
-        // Try direct parse
+        // Try direct parse as last resort
         try {
-            // Assume JST if no timezone is specified in the string
             $date = CarbonImmutable::parse($cleaned, 'Asia/Tokyo');
-            if ($date && $date->year >= 2020 && $date->year <= 2030) {
-                return $date->setTimezone('UTC');
-            }
+            return $date->setTimezone('UTC');
         } catch (\Exception $e) {
         }
 

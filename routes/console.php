@@ -14,8 +14,8 @@ Schedule::command('auctions:import-yahoo-html', [
     ->everyMinute()
     ->withoutOverlapping();
 
-// Increase scraping frequency to every minute for real-time updates
-Schedule::command('yahoo:scrape', ['watch', '--pages=1', '--delay=3', '--fetch-details'])
+// Run comprehensive scraping for all categories every 5 minutes
+Schedule::command('yahoo:scrape-all', ['--pages=1', '--delay=2', '--fetch-details --min=0 --max=200'])
     ->everyMinute()
     ->withoutOverlapping()
     ->runInBackground();

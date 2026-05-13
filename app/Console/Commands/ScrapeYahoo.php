@@ -271,7 +271,7 @@ class ScrapeYahoo extends Command
 
     private function showSummary(ScrapingLog $log): void
     {
-        // ... (unchanged, but remove 'ended' count or set to 0)
+
         $this->line("\n");
         $this->info('═══════════════════════════════════════════════════════');
         $this->info('  SUMMARY');
@@ -291,7 +291,7 @@ class ScrapeYahoo extends Command
 
         $totalActive = Auction::where('status', 'active')->count();
         $totalClosed = Auction::where('status', 'closed')->count();
-        // $totalEnded is not used – we only have active/closed states
+
         $this->info("\n📊 Database Statistics:");
         $this->info("  Active auctions: {$totalActive}");
         $this->info("  Closed auctions: {$totalClosed}");

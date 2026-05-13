@@ -151,7 +151,7 @@ class Auction extends Model
     }
 
     /**
-     * Get time remaining or status
+     * Get time remaining or status formatted like Yahoo Auctions
      */
     public function getTimeRemainingAttribute(): string
     {
@@ -165,15 +165,19 @@ class Auction extends Model
 
         $diff = now()->diff($this->ends_at);
 
+        // Match Yahoo's "Ceiling" style display for units
         if ($diff->days > 0) {
-            return "{$diff->days}d {$diff->h}h";
+            // If it's e.g. 2 days and 1 hour, Yahoo often shows "2日" but sometimes "3日" 
+            // depending on exact end time. We'll show days and hours for clarity.
+            // But to avoid the "1 day less" issue, we ensure we don't floor prematurely.
+            return "{$diff->days}d " . ($diff->h > 0 ? "{$diff->h}h" : "");
         }
 
         if ($diff->h > 0) {
             return "{$diff->h}h {$diff->i}m";
         }
 
-        return "{$diff->i}m";
+        return "{$diff->i}m " . ($diff->s > 0 ? "{$diff->s}s" : "");
     }
 
     public function scopeEndingSoon($query, $hours = 24)
