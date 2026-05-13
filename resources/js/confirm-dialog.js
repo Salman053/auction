@@ -28,19 +28,19 @@ function iconClasses(type) {
         return 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400';
     }
 
-    return 'bg-brand-gold/10 text-brand-navy dark:bg-white/10 dark:text-white';
+    return 'bg-zinc-100 text-zinc-900 dark:bg-white/10 dark:text-white';
 }
 
 function confirmButtonClasses(type) {
     if (type === 'danger') {
-        return 'bg-rose-600 text-white shadow-rose-200 dark:shadow-none';
+        return 'bg-rose-600 text-white hover:bg-rose-500 shadow-rose-600/20';
     }
 
     if (type === 'success') {
-        return 'bg-emerald-600 text-white shadow-emerald-200 dark:shadow-none';
+        return 'bg-emerald-600 text-white hover:bg-emerald-500 shadow-emerald-600/20';
     }
 
-    return 'bg-brand-navy text-white shadow-slate-200 dark:shadow-none';
+    return 'bg-blue-600 text-white hover:bg-blue-500 shadow-blue-600/20';
 }
 
 function getConfirmDialogElements() {

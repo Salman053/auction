@@ -221,7 +221,7 @@
 
                     <x-notification-dropdown />
 
-                    <div class="bg-black rounded-full">
+                    <div class=" rounded-full">
                         <x-theme-toggle />
                     </div>
 

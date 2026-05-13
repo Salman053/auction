@@ -59,6 +59,13 @@ class AuctionDetailController extends Controller
         $capacityYen = (int) floor(((int) ($wallet?->balance_yen ?? 0)) * ($multiplierPercent / 100));
         $availableCapacityYen = max(0, $capacityYen - (int) ($wallet?->locked_balance_yen ?? 0) - (int) ($wallet?->withdrawal_locked_yen ?? 0));
 
+        $similarAuctions = Auction::where('id', '!=', $auction->id)
+            ->where('yahoo_category_id', $auction->yahoo_category_id)
+            ->where('status', 'active')
+            ->latest()
+            ->limit(4)
+            ->get();
+
         return view('user.auctions.show', [
             'auction' => $auction,
             'wallet' => $wallet,
@@ -72,6 +79,7 @@ class AuctionDetailController extends Controller
             'capacityYen' => $capacityYen,
             'availableCapacityYen' => $availableCapacityYen,
             'categories' => Category::where('depth', 0)->orderBy('priority', 'desc')->orderBy('name')->limit(8)->get(),
+            'similarAuctions' => $similarAuctions,
         ]);
     }
 

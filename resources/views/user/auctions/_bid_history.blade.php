@@ -28,7 +28,7 @@
             </p>
             @if ($bid->user_id == auth('user')->id() && $bid->max_amount_yen > $bid->amount_yen)
                 <p class="text-[9px] font-black uppercase tracking-widest text-blue-600">
-                    Max: ¥{{ number_format($bid->max_amount_yen) }}
+                    Your Max Bid: ¥{{ number_format($bid->max_amount_yen) }}
                 </p>
             @endif
         </div>
