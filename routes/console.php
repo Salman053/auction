@@ -11,7 +11,7 @@ Artisan::command('inspire', function () {
 Schedule::command('auctions:import-yahoo-html', [
     env('YAHOO_HTML_IMPORT_PATH', storage_path('app/yahoo-html')),
 ])
-    ->everyTenMinutes()
+    ->everyMinute()
     ->withoutOverlapping();
 
 // Increase scraping frequency to every minute for real-time updates
@@ -43,5 +43,3 @@ Schedule::command('queue:retry all')
 Schedule::command('queue:prune-failed --hours=24')
     ->dailyAt('04:00')
     ->withoutOverlapping();
-
-

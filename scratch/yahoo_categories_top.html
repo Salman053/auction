@@ -1,0 +1,822 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="content-style-type" content="text/css">
+  <meta name="description"
+    content="Yahoo!オークションは、誰でも簡単に売り買いが楽しめる、日本最大のネットオークションサイトです。圧倒的な商品数を誇るYahoo!オークションで、落札・出品してみませんか？補償制度もあります。">
+  <meta name="robots" content="noindex,follow" />
+  <link rel="stylesheet" href="https://s.yimg.jp/images/auc/all/common/css/1.0.1/common.min.css" type="text/css">
+  <link rel="stylesheet" type="text/css"
+    href="https://s.yimg.jp/images/auct/template/ui/auc_mod/css/00/comm/auct_common.css?">
+  <link rel="stylesheet" type="text/css"
+    href="https://s.yimg.jp/images/auct/template/ui/auc_mod/css/00/submit/2.1.3/auct_exhibitflow.css">
+  <link rel="stylesheet" type="text/css"
+    href="https://s.yimg.jp/images/auct/template/ui/auc_mod/css/00/comm/auct_ctnr.css">
+  <link rel="preload" href="https://s.yimg.jp/images/templa/mhd/v3/css/mhd-v3-patch-pc.css" as="style"
+    onload="this.rel='stylesheet'" />
+  <link rel="preload" as="image" href="https://s.yimg.jp/c/logo/f/2.1/a/auctions_r_34_2x.png" />
+  <title>Yahoo!オークション</title>
+</head>
+
+<body style="margin-top: 0;">
+  <div class="wrapper950" id="yaucSellJsOff">
+
+    <!--
+MASTHEAD
+-->
+    <noscript>
+      <div class="cm-StaticHeader cm-StaticHeader--pc">
+        <div class="cm-StaticHeader__banner">
+          <ul class="cm-StaticHeader__items">
+            <li class="cm-StaticHeader__item">
+              <a class="cm-StaticHeader__link" href="https://www.yahoo.co.jp/">Yahoo! JAPAN</a>
+            </li>
+            <li class="cm-StaticHeader__item">
+              <a class="cm-StaticHeader__link" href="https://support.yahoo-net.jp/PccAuctions/s/">ヘルプ</a>
+            </li>
+          </ul>
+        </div>
+        <div class="cm-StaticHeader__contents">
+          <a class="cm-StaticHeader__logoLink" href="https://auctions.yahoo.co.jp/">
+            <img class="cm-StaticHeader__logo cm-StaticHeader__logo--pc"
+              src="https://s.yimg.jp/c/logo/f/2.1/a/auctions_r_34_2x.png" width="238" height="34" alt="Yahoo!オークション" />
+          </a>
+        </div>
+      </div>
+    </noscript>
+    <div id="msthd"></div>
+    <div id="emg-v3"></div>
+    <script>
+      YAHOO = window.YAHOO || {};
+      YAHOO.JP = YAHOO.JP || {};
+      YAHOO.JP.templa = YAHOO.JP.templa || {};
+      YAHOO.JP.templa.MHD = YAHOO.JP.templa.MHD || {};
+      function decodeEscapedString(str) {
+        var txt = document.createElement("textarea");
+        txt.innerHTML = str;
+        var htmlDecoded = txt.value;
+        try {
+          return decodeURIComponent(htmlDecoded);
+        } catch (e) {
+          return htmlDecoded;
+        }
+      }
+      YAHOO.JP.templa.MHD.param = {
+        layout: {
+          mode: "pc",
+        },
+        loginDoneUrl: decodeEscapedString("https://auctions.yahoo.co.jp/category/list/"),
+        loginSrc: "auc",
+        pcHeader: {
+          helpUrl: "https://support.yahoo-net.jp/PccAuctions/s/",
+          serviceLogo: {
+            url: 'https://auctions.yahoo.co.jp/',
+            alt: "Yahoo!オークション",
+            src: "https://s.yimg.jp/c/logo/f/2.1/a/auctions_r_34_2x.png",
+          },
+        },
+        spHeader: {
+          serviceLogo: {
+            url: 'https://auctions.yahoo.co.jp/',
+            alt: 'Yahoo!オークション',
+            src: 'https://s.yimg.jp/c/logo/s/2.1/a/auctions_r_22_2x.png',
+          },
+          sidebar: {
+            zIndex: 5000001,
+            menuList: [
+              {
+                title: 'Yahoo!オークション',
+                lines: [
+                  {
+                    columns: [
+                      {
+                        title: '出品',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/jp/show/submit?category=0',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'マイ・オークション',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/my',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '入札中',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/my/bidding',
+                        },
+                      },
+                      {
+                        title: '出品中',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/my/selling',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '落札分',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/my/won',
+                        },
+                      },
+                      {
+                        title: '出品終了分',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/my/closed',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'ウォッチリスト',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/my/watchlist',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '保存した検索条件',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/search/myshortcut?type=list',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'フォローリスト',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/follow/list/',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '閲覧履歴',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/jp/show/browse_history',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '獲得済みクーポン',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/coupon/list',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'オプション/設定',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/jp/show/prefs',
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                title: 'カテゴリから探す',
+                lines: [
+                  {
+                    columns: [
+                      {
+                        title: 'コンピュータ',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list3/23336-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '家電、AV、カメラ',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list3/23632-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '音楽',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list3/22152-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '本、雑誌',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list4/21600-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '映画、ビデオ',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list4/21964-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'おもちゃ、ゲーム',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list4/25464-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'ホビー、カルチャー',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list5/24242-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'アンティーク、コレクション',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list5/20000-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'スポーツ、レジャー',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list4/24698-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '自動車、オートバイ',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list1/26318-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'ファッション',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list2/23000-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'アクセサリー、時計',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list5/23140-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'ビューティ、ヘルスケア',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list3/42177-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '食品、飲料',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list4/23976-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '住まい、インテリア',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list5/24198-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'ペット、生き物',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list3/2084055844-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '事務、店舗用品',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list5/22896-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '花、園芸',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list5/26086-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'チケット、金券、宿泊予約',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list5/2084043920-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'ベビー用品',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list4/24202-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'タレントグッズ',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list3/2084032594-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'コミック、アニメグッズ',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list5/20060-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '不動産',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list6/2084060731-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'チャリティー',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list3/2084217893-category.html',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'その他',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/list3/26084-category.html',
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                title: 'お知らせ',
+                lines: [
+                  {
+                    columns: [
+                      {
+                        title: 'お知らせ',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/topic/notice/',
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                title: '困ったとき',
+                lines: [
+                  {
+                    columns: [
+                      {
+                        title: 'ヘルプ',
+                        link: {
+                          url: 'https://support.yahoo-net.jp/SccAuctions/s/',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: 'ご利用ガイド',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/guide/m/navi/',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    columns: [
+                      {
+                        title: '安心安全な取引のために',
+                        link: {
+                          url: 'https://auctions.yahoo.co.jp/guide/guide/safesupport/',
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+            footer: {
+              texts: ['(C)LY Corporation'],
+              fontSize: 12,
+            },
+          },
+        },
+      };
+    </script>
+    <script defer="defer" src="https://s.yimg.jp/images/templa/mhd/v3/js/mhd-v3-templa.js"></script>
+    <script defer="defer" src="https://s.yimg.jp/images/templa/emg/v3/js/emg-v3-templa.js"></script>
+    <!--
+/MASTHEAD
+-->
+
+    <!--
+ALERT
+-->
+    <div id="modAlertBox">
+      <div class="decBg01">
+        <div class="decBg02">
+          <div class="decBg03">
+            <div class="decBg04">
+              <div class="decBg05">
+                <div class="decBg06">
+                  <div class="decBg07">
+
+                    <div class="untHead">
+                      <div class="decJS">
+                        <p><strong>
+                            指定されたURLのページは存在しません。
+                          </strong></p>
+                      </div>
+                    </div>
+                    <div class="untBody">
+                      <div class="decNoMatchTop">
+                        <p>Yahoo!オークションでは、お客様に楽しくお買い物をしていただくためのページをご用意しております。</p>
+                      </div>
+                      <div class="decNoMatchBottom">
+                        <p>Yahoo!オークションならきっとみつかる！</p>
+
+                        <table class="decNoMatch">
+                          <tr>
+                            <form action="https://auctions.yahoo.co.jp/search/search">
+                              <th scope="row" class="decNoMatch">
+                                <p>似たような商品を探す</p>
+                              </th>
+                              <td class="decNoMatch">
+                                <span class="decFormTxtBox">
+                                  <input name="p" size="45" value="">
+                                </span>
+                                <span class="SelectCategory">
+                                  <select name="auccat">
+                                    <option value="0" selected="selected">すべてのオークション</option>
+                                    <option value="20000">アンティーク、コレクション</option>
+                                    <option value="20060">コミック、アニメグッズ</option>
+                                    <option value="21600">本、雑誌</option>
+                                    <option value="21964">映画、ビデオ</option>
+                                    <option value="22152">音楽</option>
+                                    <option value="22896">事務、店舗用品</option>
+                                    <option value="23000">ファッション</option>
+                                    <option value="23140">アクセサリー、時計</option>
+                                    <option value="23336">コンピュータ</option>
+                                    <option value="23632">家電、AV、カメラ</option>
+                                    <option value="24198">住まい、インテリア</option>
+                                    <option value="24202">ベビー用品</option>
+                                    <option value="23976">食品、飲料</option>
+                                    <option value="26084">その他</option>
+                                    <option value="26086">花、園芸</option>
+                                    <option value="26318">自動車、オートバイ</option>
+                                    <option value="42177">ビューティー、ヘルスケア</option>
+                                    <option value="24698">スポーツ、レジャー</option>
+                                    <option value="24242">ホビー、カルチャー</option>
+                                    <option value="25464">おもちゃ、ゲーム</option>
+                                    <option value="2084032594">タレントグッズ</option>
+                                    <option value="2084043920">チケット、金券、宿泊予約</option>
+                                    <option value="2084055844">ペット、生き物</option>
+                                    <option value="2084060731">不動産</option>
+                                    <option value="2084217893">チャリティー</option>
+                                  </select>
+                                </span>
+                                <input name="submit222" type="submit" value="検索">
+                                <input type="hidden" NAME="tab_ex" value="commerce">
+                                <input name="ei" value="utf-8" type="hidden">
+                                <span class="option">
+                                  <a
+                                    href="https://auctions.yahoo.co.jp/search/advanced?catid=0&tab_ex=commerce&ei=utf-8">条件を指定して検索</a>
+                                </span>
+                              </td>
+                            </form>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!--
+/ALERT
+-->
+
+
+    <!--
+#modSeoFooter
+-->
+
+    <style type="text/css">
+      div#modSeoFooter {
+        width: 100%;
+        font-size: 80%;
+        border-bottom: solid 1px #dddddd;
+      }
+
+      div#modSeoFooter a {
+        text-decoration: none;
+      }
+
+      div#modSeoFooter div.untHead {
+        border: solid 1px #dddddd;
+        padding: 1px;
+      }
+
+      div#modSeoFooter div.untHead p {
+        margin: 0;
+        padding: 3px 5px 2px 5px;
+        padding: 4px 5px 3px 5px;
+        background-color: #ebebeb;
+        font-weight: bold;
+      }
+
+      div#modSeoFooter div.untBody {
+        padding: 8px 10px 8px 10px;
+        border-right: solid 1px #dddddd;
+        border-left: solid 1px #dddddd;
+      }
+
+      div#modSeoFooter div.untBody p {
+        margin: 0;
+        padding: 0;
+        line-height: 1.25;
+      }
+    </style>
+    <div id="modSeoFooter">
+      <!--
+.untHead
+-->
+      <div class="untHead">
+        <p>カテゴリから探す</p>
+      </div><!--
+/.untHead
+-->
+      <!--
+.untBody
+-->
+      <div class="untBody">
+        <p>
+
+          <a href="https://auctions.yahoo.co.jp/list3/23336-category.html">コンピュータ</a> |
+          <a href="https://auctions.yahoo.co.jp/list3/23632-category.html">家電、AV、カメラ</a> |
+          <a href="https://auctions.yahoo.co.jp/list3/22152-category.html">音楽</a> |
+          <a href="https://auctions.yahoo.co.jp/list4/21600-category.html">本、雑誌</a> |
+          <a href="https://auctions.yahoo.co.jp/list4/21964-category.html">映画、ビデオ</a> |
+          <a href="https://auctions.yahoo.co.jp/list4/25464-category.html">おもちゃ、ゲーム</a> |
+          <a href="https://auctions.yahoo.co.jp/list5/24242-category.html">ホビー、カルチャー</a> |
+          <a href="https://auctions.yahoo.co.jp/list5/20000-category.html">アンティーク、コレクション</a> |
+          <a href="https://auctions.yahoo.co.jp/list4/24698-category.html">スポーツ、レジャー</a> |
+          <a href="https://auctions.yahoo.co.jp/list1/26318-category.html">自動車、オートバイ</a> |
+          <a href="https://auctions.yahoo.co.jp/list2/23000-category.html">ファッション</a> |
+          <a href="https://auctions.yahoo.co.jp/list5/23140-category.html">アクセサリー、時計</a> |
+          <a href="https://auctions.yahoo.co.jp/list3/42177-category.html">ビューティー、ヘルスケア</a> |
+          <a href="https://auctions.yahoo.co.jp/list4/23976-category.html">食品、飲料</a> |
+          <a href="https://auctions.yahoo.co.jp/list5/24198-category.html">住まい、インテリア</a> |
+          <a href="https://auctions.yahoo.co.jp/list3/2084055844-category.html">ペット、生き物</a> |
+          <a href="https://auctions.yahoo.co.jp/list5/22896-category.html">事務、店舗用品</a> |
+          <a href="https://auctions.yahoo.co.jp/list5/26086-category.html">花、園芸</a> |
+          <a href="https://auctions.yahoo.co.jp/list5/2084043920-category.html">チケット、金券、宿泊予約</a> |
+          <a href="https://auctions.yahoo.co.jp/list4/24202-category.html">ベビー用品</a> |
+          <a href="https://auctions.yahoo.co.jp/list3/2084032594-category.html">タレントグッズ</a> |
+          <a href="https://auctions.yahoo.co.jp/list5/20060-category.html">コミック、アニメグッズ</a> |
+          <a href="https://auctions.yahoo.co.jp/list3/2084217893-category.html">チャリティー</a> |
+          <a href="https://auctions.yahoo.co.jp/list3/26084-category.html">その他</a>
+        </p>
+      </div>
+      <!--
+/.untBody
+-->
+    </div>
+    <!--
+/#modSeoFooter
+-->
+
+    <!--
+FOOTER
+-->
+    <div class="cm-Footer cm-Footer--pc">
+      <div class="cm-Footer__inner">
+        <div class="cm-Footer__servicesWrap">
+          <ul class="cm-Footer__services">
+            <li class="cm-Footer__service">
+              <a class="cm-Footer__serviceLink" href="https://auctions.yahoo.co.jp"
+                data-cl-params="_cl_vmodule:footer;_cl_link:top;_cl_position:1;">Yahoo!オークション</a>
+            </li>
+            <li class="cm-Footer__service">
+              <a class="cm-Footer__serviceLink" href="https://paypayfleamarket.yahoo.co.jp/"
+                data-cl-params="_cl_vmodule:footer;_cl_link:flm;_cl_position:2;">Yahoo!フリマ</a>
+            </li>
+          </ul>
+          <ul class="cm-Footer__services">
+            <li class="cm-Footer__service">
+              <a class="cm-Footer__serviceLink" href="https://shopping.yahoo.co.jp/"
+                data-cl-params="_cl_vmodule:footer;_cl_link:shpg;_cl_position:3;">Yahoo!ショッピング</a>
+            </li>
+            <li class="cm-Footer__service">
+              <a class="cm-Footer__serviceLink" href="https://www.yahoo.co.jp/"
+                data-cl-params="_cl_vmodule:footer;_cl_link:ytop;_cl_position:4;">Yahoo! JAPAN</a>
+            </li>
+          </ul>
+        </div>
+        <div class="cm-Footer__itemsWrap">
+          <ul class="cm-Footer__items">
+            <li class="cm-Footer__item">
+              <a class="cm-Footer__itemLink" href="https://www.lycorp.co.jp/ja/company/privacypolicy/"
+                data-cl-params="_cl_vmodule:footer;_cl_link:lypol;_cl_position:5;" rel="nofollow">プライバシーポリシー</a>
+            </li>
+            <li class="cm-Footer__item">
+              <a class="cm-Footer__itemLink" href="https://privacy.lycorp.co.jp/ja/"
+                data-cl-params="_cl_vmodule:footer;_cl_link:pol;_cl_position:6;" rel="nofollow">プライバシーセンター</a>
+            </li>
+          </ul>
+          <ul class="cm-Footer__items">
+            <li class="cm-Footer__item">
+              <a class="cm-Footer__itemLink" href="https://www.lycorp.co.jp/ja/company/terms/"
+                data-cl-params="_cl_vmodule:footer;_cl_link:ag;_cl_position:7;" rel="nofollow">利用規約</a>
+            </li>
+            <li class="cm-Footer__item">
+              <a class="cm-Footer__itemLink"
+                href="https://premium.yahoo.co.jp/info/guidelines.html?sc_yprec=yyac_footer"
+                data-cl-params="_cl_vmodule:footer;_cl_link:gidpre;_cl_position:8;" rel="nofollow">LYPプレミアム利用ガイド</a>
+            </li>
+            <li class="cm-Footer__item">
+              <a class="cm-Footer__itemLink" href="https://auctions.yahoo.co.jp/special/html/guidelines.html"
+                data-cl-params="_cl_vmodule:footer;_cl_link:gidlin;_cl_position:9;">ガイドライン</a>
+            </li>
+          </ul>
+        </div>
+        <div class="cm-Footer__itemsWrap">
+          <ul class="cm-Footer__items">
+            <li class="cm-Footer__item">
+              <a class="cm-Footer__itemLink" href="https://auctions.yahoo.co.jp/special/html/tokushoho.html"
+                data-cl-params="_cl_vmodule:footer;_cl_link:toku;_cl_position:10;">特定商取引法の表示</a>
+            </li>
+            <li class="cm-Footer__item">
+              <a class="cm-Footer__itemLink" href="https://auctions.yahoo.co.jp/store/business/index.html"
+                data-cl-params="_cl_vmodule:footer;_cl_link:stropn;_cl_position:11;">ストア出店について</a>
+            </li>
+          </ul>
+          <ul class="cm-Footer__items">
+            <li class="cm-Footer__item">
+              <a class="cm-Footer__itemLink" href="https://support.yahoo-net.jp/voc/s/auctions"
+                data-cl-params="_cl_vmodule:footer;_cl_link:fdbk;_cl_position:12;" rel="nofollow">ご意見・ご要望</a>
+            </li>
+            <li class="cm-Footer__item">
+              <a class="cm-Footer__itemLink" href="https://support.yahoo-net.jp/PccAuctions/s/"
+                data-cl-params="_cl_vmodule:footer;_cl_link:help;_cl_position:13;" rel="nofollow">ヘルプ・お問い合わせ</a>
+            </li>
+          </ul>
+        </div>
+        <small class="cm-Footer__copyright">© LY Corporation</small>
+      </div>
+    </div>
+    <!--
+/FOOTER
+-->
+  </div>
+  <script src="https://s.yimg.jp/images/ds/yas/ual-2.10.2.min.js"></script>
+  <script>
+    window.ualcmds = window.ualcmds || [];
+    window.ual = window.ual || function () {
+      ualcmds.push(arguments);
+    };
+
+    ual('config', 'token', 'c7c61354-54b0-48b6-b152-a67e042b8e21');
+    if (typeof YAHOO !== 'undefined'
+      && typeof YAHOO.i13n !== 'undefined'
+      && typeof YAHOO.i13n.A_SID !== 'undefined') {
+      ual('hit', 'pageview', {
+        service: 'auctions',
+        opttype: 'pc',
+        nopv: false,
+        hierarchy_id: '2084060223',
+        ss_join_id: YAHOO.i13n.A_SID,
+
+      });
+    } else {
+      ual('hit', 'pageview', {
+        service: 'auctions',
+        opttype: 'pc',
+        nopv: false,
+        hierarchy_id: '2084060223',
+
+      });
+    }
+
+  </script>
+</body>
+
+</html>

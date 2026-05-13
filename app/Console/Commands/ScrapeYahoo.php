@@ -105,6 +105,7 @@ class ScrapeYahoo extends Command
                     $auction->update([
                         'title' => $item['title'],
                         'current_bid_yen' => $item['current_bid_yen'],
+                        'ends_at' => $item['ends_at'] ?? $auction->ends_at,
                         'thumbnail_url' => $item['thumbnail_url'] ?? null,
                         'last_synced_at' => now(),
                     ]);

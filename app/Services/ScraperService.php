@@ -88,6 +88,11 @@ class ScraperService
         }
     }
 
+    public function getHtml(string $url): ?string
+    {
+        return $this->fetch($url);
+    }
+
     private function fetch(string $url): ?string
     {
         $attempt = 0;

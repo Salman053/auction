@@ -59,12 +59,30 @@ class YahooAuctionHtmlParser
             ".//div[contains(@class, 'Price')]",
         ], $node);
 
-        $price = (int) preg_replace('/[^0-9]/', '', $priceText);
+        $price = $this->parsePrice($priceText);
+
+        // Extract ends_at from data attributes if available (very reliable in search results)
+        $endsAt = null;
+        $bonusNode = $xpath->query(".//*[contains(@data-auction-endtime, '')]", $node)->item(0);
+        if ($bonusNode instanceof \DOMElement) {
+            $timestamp = $bonusNode->getAttribute('data-auction-endtime');
+            if (is_numeric($timestamp) && intval($timestamp) > 0) {
+                $endsAt = CarbonImmutable::createFromTimestamp(intval($timestamp));
+            }
+        }
+
+        if (! $endsAt) {
+            $timeNode = $xpath->query(".//*[contains(@class, 'Product__time') or contains(@class, 'time')]", $node)->item(0);
+            if ($timeNode) {
+                $endsAt = $this->parseJapaneseDateString($timeNode->nodeValue);
+            }
+        }
 
         return [
             'yahoo_auction_id' => $auctionId,
             'title' => $this->cleanText($title),
             'current_bid_yen' => $price,
+            'ends_at' => $endsAt,
             'thumbnail_url' => $this->extractThumbnail($xpath, $node),
             'link' => $href,
         ];
@@ -86,6 +104,7 @@ class YahooAuctionHtmlParser
                         'yahoo_auction_id' => $id,
                         'title' => 'Auction '.$id,
                         'current_bid_yen' => 0,
+                        'ends_at' => null,
                         'thumbnail_url' => null,
                         'link' => "https://page.auctions.yahoo.co.jp/jp/auction/{$id}",
                     ];
@@ -131,7 +150,7 @@ class YahooAuctionHtmlParser
             "//*[contains(text(), '現在')]/following-sibling::*",
         ]);
 
-        $price = (int) preg_replace('/[^0-9]/', '', $priceText);
+        $price = $this->parsePrice($priceText);
 
         $sellerData = $this->extractSellerInfo($xpath, $html);
 
@@ -295,6 +314,23 @@ class YahooAuctionHtmlParser
     {
         $endDate = null;
 
+        // Method 0: Look for JSON data (most reliable)
+        if (preg_match('/<script id="__NEXT_DATA__" type="application\/json">(.*?)<\/script>/s', $html, $matches)) {
+            try {
+                $json = json_decode(trim($matches[1]), true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $item = $json['props']['pageProps']['initialState']['item']['detail']['item'] ?? null;
+                    if ($item && isset($item['endTime'])) {
+                        // Yahoo JSON endTime is usually ISO8601 or similar, assume JST if no TZ
+                        return CarbonImmutable::parse($item['endTime'], 'Asia/Tokyo')->setTimezone('UTC');
+                    }
+                    if ($item && isset($item['closeTime'])) {
+                         return CarbonImmutable::createFromTimestamp(intval($item['closeTime']) / 1000);
+                    }
+                }
+            } catch (\Exception $e) {}
+        }
+
         // Method 1: Look for countdown timer data
         $endDate = $this->extractFromCountdownData($xpath);
         if ($endDate) {
@@ -337,6 +373,8 @@ class YahooAuctionHtmlParser
             "//span[@class='Countdown']",
             "//div[@class='EndTime']",
             '//span[@data-endtime]',
+            '//span[@data-auction-endtime]',
+            '//*[@data-auction-endtime]',
             '//time[@datetime]',
             "//*[contains(@class, 'countdown')]",
             "//*[contains(@class, 'endtime')]",
@@ -348,22 +386,32 @@ class YahooAuctionHtmlParser
                 continue;
             }
 
-            $node = $nodes->item(0);
-            if ($node instanceof \DOMElement) {
-                // Check for data attribute
-                if ($node->hasAttribute('data-endtime')) {
-                    $timestamp = $node->getAttribute('data-endtime');
-                    if (is_numeric($timestamp)) {
-                        return CarbonImmutable::createFromTimestamp(intval($timestamp));
+            foreach ($nodes as $node) {
+                if ($node instanceof \DOMElement) {
+                    // Check for data-auction-endtime (common in search and some detail pages)
+                    if ($node->hasAttribute('data-auction-endtime')) {
+                        $timestamp = $node->getAttribute('data-auction-endtime');
+                        if (is_numeric($timestamp) && intval($timestamp) > 0) {
+                            return CarbonImmutable::createFromTimestamp(intval($timestamp));
+                        }
                     }
-                }
 
-                // Check for datetime attribute
-                if ($node->hasAttribute('datetime')) {
-                    $datetime = $node->getAttribute('datetime');
-                    try {
-                        return CarbonImmutable::parse($datetime);
-                    } catch (\Exception $e) {
+                    // Check for data-endtime attribute
+                    if ($node->hasAttribute('data-endtime')) {
+                        $timestamp = $node->getAttribute('data-endtime');
+                        if (is_numeric($timestamp) && intval($timestamp) > 0) {
+                            return CarbonImmutable::createFromTimestamp(intval($timestamp));
+                        }
+                    }
+
+                    // Check for datetime attribute
+                    if ($node->hasAttribute('datetime')) {
+                        $datetime = $node->getAttribute('datetime');
+                        try {
+                            // Yahoo Japan times are in JST
+                            return CarbonImmutable::parse($datetime, 'Asia/Tokyo')->setTimezone('UTC');
+                        } catch (\Exception $e) {
+                        }
                     }
                 }
             }
@@ -388,7 +436,8 @@ class YahooAuctionHtmlParser
             if ($node instanceof \DOMElement && $node->hasAttribute('content')) {
                 $content = $node->getAttribute('content');
                 try {
-                    return CarbonImmutable::parse($content);
+                    // Yahoo Japan times are in JST
+                    return CarbonImmutable::parse($content, 'Asia/Tokyo')->setTimezone('UTC');
                 } catch (\Exception $e) {
                 }
             }
@@ -421,7 +470,7 @@ class YahooAuctionHtmlParser
                     }
                 } else {
                     try {
-                        return CarbonImmutable::parse($value);
+                        return CarbonImmutable::parse($value, 'Asia/Tokyo')->setTimezone('UTC');
                     } catch (\Exception $e) {
                     }
                 }
@@ -510,14 +559,66 @@ class YahooAuctionHtmlParser
     }
 
     /**
-     * Parse Japanese date string with improved handling
+     * Parse Japanese date string with improved handling, including relative times.
      */
     private function parseJapaneseDateString(string $dateString): ?CarbonImmutable
     {
-        // Clean the string
-        $dateString = trim($dateString);
+        $originalString = trim($dateString);
+        if (empty($originalString)) {
+            return null;
+        }
 
-        // Remove common Japanese text
+        // If it contains "月", "年", "/" or "-", it's likely an absolute date, skip relative parsing
+        if (!preg_match('/[月年\/\-]/u', $originalString)) {
+            $now = CarbonImmutable::now();
+            $isRelative = false;
+            $days = 0;
+            $hours = 0;
+            $minutes = 0;
+            $seconds = 0;
+
+            // Handle days: "1日"
+            if (preg_match('/(\d+)\s*日/', $originalString, $m)) {
+                $days = intval($m[1]);
+                $isRelative = true;
+            }
+
+            // Handle hours: "2時間" or "08:27:09" or "13:34"
+            if (preg_match('/(\d+)\s*時間/', $originalString, $m)) {
+                $hours = intval($m[1]);
+                $isRelative = true;
+            } elseif (preg_match('/(\d{1,2}):(\d{2}):(\d{2})/', $originalString, $m)) {
+                $hours = intval($m[1]);
+                $minutes = intval($m[2]);
+                $seconds = intval($m[3]);
+                $isRelative = true;
+            } elseif (preg_match('/(\d{1,2}):(\d{2})/', $originalString, $m)) {
+                $hours = intval($m[1]);
+                $minutes = intval($m[2]);
+                $isRelative = true;
+            }
+
+            // Handle minutes: "15分"
+            if (preg_match('/(\d+)\s*分/', $originalString, $m)) {
+                $minutes = intval($m[1]);
+                $isRelative = true;
+            }
+
+            // Handle seconds: "30秒"
+            if (preg_match('/(\d+)\s*秒/', $originalString, $m)) {
+                $seconds = intval($m[1]);
+                $isRelative = true;
+            }
+
+            if ($isRelative) {
+                return $now->addDays($days)
+                           ->addHours($hours)
+                           ->addMinutes($minutes)
+                           ->addSeconds($seconds);
+            }
+        }
+
+        // Remove common Japanese text for absolute date parsing
         $replacements = [
             '年' => '-',
             '月' => '-',
@@ -536,7 +637,7 @@ class YahooAuctionHtmlParser
             '】' => '',
         ];
 
-        $cleaned = str_replace(array_keys($replacements), array_values($replacements), $dateString);
+        $cleaned = str_replace(array_keys($replacements), array_values($replacements), $originalString);
         $cleaned = preg_replace('/\s+/', ' ', $cleaned);
         $cleaned = trim($cleaned);
 
@@ -551,13 +652,18 @@ class YahooAuctionHtmlParser
             'Y-m-d\TH:i:s',
             'Y-m-d\TH:i',
             'Y年n月j日 H:i',
+            'n-j H:i',
+            'm-d H:i',
+            'n/j H:i',
+            'm/d H:i',
         ];
 
         foreach ($formats as $format) {
             try {
-                $date = CarbonImmutable::createFromFormat($format, $cleaned);
+                // Yahoo Japan times are in JST (Asia/Tokyo)
+                $date = CarbonImmutable::createFromFormat($format, $cleaned, 'Asia/Tokyo');
                 if ($date && $date->year >= 2020 && $date->year <= 2030) {
-                    return $date;
+                    return $date->setTimezone('UTC');
                 }
             } catch (\Exception $e) {
             }
@@ -565,9 +671,10 @@ class YahooAuctionHtmlParser
 
         // Try direct parse
         try {
-            $date = CarbonImmutable::parse($cleaned);
+            // Assume JST if no timezone is specified in the string
+            $date = CarbonImmutable::parse($cleaned, 'Asia/Tokyo');
             if ($date && $date->year >= 2020 && $date->year <= 2030) {
-                return $date;
+                return $date->setTimezone('UTC');
             }
         } catch (\Exception $e) {
         }
@@ -718,11 +825,87 @@ class YahooAuctionHtmlParser
         return null;
     }
 
-    private function cleanText(string $text): string
+    /**
+     * Parse category list from HTML.
+     */
+    public function parseCategoryList(string $html): array
     {
+        $categories = [];
+        $xpath = $this->xpath($html);
+
+        // Try parsing from the "Filter" section (common in search/category pages)
+        $nodes = $xpath->query("//div[contains(@class, 'Filter')]//a[contains(@href, '/category/list/')]");
+
+        if ($nodes->length === 0) {
+            // Try fallback for top-level pages or different layouts
+            $nodes = $xpath->query("//a[contains(@href, '/category/list/') or contains(@href, '-category.html')]");
+        }
+
+        foreach ($nodes as $node) {
+            if (! $node instanceof \DOMElement) {
+                continue;
+            }
+
+            $href = $node->getAttribute('href');
+            $name = trim($node->nodeValue);
+
+            // Remove counts like "(123)" from name
+            $name = preg_replace('/\(\d+(?:,\d+)*\)$/', '', $name);
+            $name = trim($name);
+
+            if (empty($name) || $name === 'さらに絞り込む' || $name === '関連カテゴリ') {
+                continue;
+            }
+
+            $yahooId = null;
+            if (preg_match('/category\/list\/(\d+)/', $href, $matches)) {
+                $yahooId = $matches[1];
+            } elseif (preg_match('/\/(\d+)-category\.html/', $href, $matches)) {
+                $yahooId = $matches[1];
+            }
+
+            if ($yahooId) {
+                $categories[$yahooId] = [
+                    'yahoo_category_id' => $yahooId,
+                    'name' => $name,
+                    'url' => $href,
+                ];
+            }
+        }
+
+        return array_values($categories);
+    }
+
+    /**
+     * Clean and normalize text from HTML.
+     */
+    private function cleanText(?string $text): string
+    {
+        if ($text === null) {
+            return '';
+        }
+
+        $text = strip_tags($text);
+
         $text = preg_replace('/\s+/', ' ', $text);
 
-        // Clean multi-byte characters if needed, but keep Japanese
         return trim($text);
+    }
+
+    /**
+     * Parse price string into integer, handling "tax included" and other suffixes.
+     */
+    private function parsePrice(?string $text): int
+    {
+        if (! $text) {
+            return 0;
+        }
+
+        // Match the first number sequence (e.g. "840,000")
+        if (preg_match('/([0-9,]+)/', $text, $matches)) {
+            return (int) str_replace(',', '', $matches[1]);
+        }
+
+        return 0;
     }
 }
