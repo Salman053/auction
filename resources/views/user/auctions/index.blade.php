@@ -3,7 +3,7 @@
         <div class="mb-8">
             <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Live Market</h1>
             <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">Direct integration with Yahoo Japan Auctions.
-                Verified luxury horology.</p>
+                Access thousands of premium Japanese listings.</p>
         </div>
 
         <x-auction-filters :filters="$filters" :route="route('user.auctions.index')" />
@@ -16,7 +16,7 @@
             <div
                 class="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-zinc-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-zinc-900 dark:ring-white/10">
                 <div class="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                    <img src="{{ $auction->thumbnail_url ?? 'https://placehold.co/400x300/1e293b/d4af37?text=WatchHub' }}"
+                    <img src="{{ $auction->thumbnail_url ?? 'https://placehold.co/400x300/1e293b/d4af37?text=AuctionHub' }}"
                         alt="{{ $auction->title }}"
                         class="h-full w-full object-contain transition duration-500 group-hover:scale-105">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
@@ -39,8 +39,8 @@
                     </div>
                 </div>
 
-                <div class="flex flex-1 flex-col p-6">
-                    <div class="flex items-center gap-2 mb-3">
+                <div class="flex flex-1 flex-col p-4">
+                    <div class="flex items-center gap-2 mb-2">
                         <span class="inline-flex h-2 w-2 rounded-full bg-brand-gold"></span>
                         <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
                             @if ($auction->ends_at)
@@ -53,14 +53,14 @@
                     </div>
 
                     <h3
-                        class="line-clamp-2 min-h-10 text-sm font-bold text-zinc-900 group-hover:text-brand-gold transition dark:text-white">
+                        class="line-clamp-2 min-h-[40px] text-sm font-bold text-zinc-900 group-hover:text-brand-gold transition dark:text-white">
                         <a href="{{ route('user.auctions.show', $auction) }}">
                             <span class="absolute inset-0"></span>
                             {{ $auction->title }}
                         </a>
                     </h3>
 
-                    <div class="mt-6 flex items-end justify-between border-t border-zinc-100 pt-4 dark:border-white/5">
+                    <div class="mt-4 flex items-end justify-between border-t border-zinc-100 pt-3 dark:border-white/5">
                         <div>
                             <p class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Current Bid</p>
                             <p class="mt-1 text-lg font-bold text-zinc-900 dark:text-brand-gold-light">
@@ -68,27 +68,7 @@
 
                         </div>
                         <div class="text-right">
-                            <div class="flex items-center justify-end gap-3 mb-1 opacity-60">
-                                <span
-                                    class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                                    <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                    {{ number_format($auction->view_count) }}
-                                </span>
-                                <span
-                                    class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                                    <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                    </svg>
-                                    {{ number_format($auction->watchlist_items_count) }}
-                                </span>
-                            </div>
-                            <p class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Intensity</p>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Activity</p>
                             <p class="mt-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">
                                 {{ number_format($auction->bid_count) }} bids</p>
                         </div>
@@ -104,8 +84,8 @@
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </div>
-                <h3 class="mt-4 text-lg font-semibold text-zinc-900 dark:text-white">No pieces found</h3>
-                <p class="mt-2 text-sm text-zinc-500">Try adjusting your search criteria or contact our concierge.</p>
+                <h3 class="mt-4 text-lg font-semibold text-zinc-900 dark:text-white">No items found</h3>
+                <p class="mt-2 text-sm text-zinc-500">Try adjusting your search criteria or contact support.</p>
             </div>
         @endforelse
     </div>

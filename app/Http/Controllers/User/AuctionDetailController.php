@@ -68,6 +68,7 @@ class AuctionDetailController extends Controller
             'canBid' => $canBid,
             'isWatched' => $isWatched,
             'multiplierPercent' => $multiplierPercent,
+            'capacityYen' => $capacityYen,
             'availableCapacityYen' => $availableCapacityYen,
         ]);
     }

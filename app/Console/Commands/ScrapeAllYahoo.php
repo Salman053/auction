@@ -82,13 +82,13 @@ class ScrapeAllYahoo extends Command
         try {
             foreach ($topLevelCategories as $id => $name) {
                 $this->info("📁 Scraping Category: {$name} ({$id})");
-                
+
                 for ($page = 1; $page <= $pages; $page++) {
                     $this->line("   📄 Page {$page}...");
                     $results = $scraper->search('', $page, $id, true, $minPrice, $maxPrice);
 
                     if (empty($results)) {
-                        $this->warn("   ⚠️ No results found. Skipping.");
+                        $this->warn('   ⚠️ No results found. Skipping.');
                         break;
                     }
 
@@ -97,6 +97,7 @@ class ScrapeAllYahoo extends Command
 
                         if ($auction) {
                             $auction->update([
+                                'yahoo_category_id' => $id,
                                 'title' => $item['title'],
                                 'current_bid_yen' => $item['current_bid_yen'],
                                 'ends_at' => $item['ends_at'] ?? $auction->ends_at,
@@ -127,6 +128,7 @@ class ScrapeAllYahoo extends Command
                         } else {
                             $auctionData = [
                                 'yahoo_auction_id' => $item['yahoo_auction_id'],
+                                'yahoo_category_id' => $id,
                                 'title' => $item['title'],
                                 'current_bid_yen' => $item['current_bid_yen'],
                                 'ends_at' => $item['ends_at'] ?? null,
@@ -156,14 +158,14 @@ class ScrapeAllYahoo extends Command
                         }
                     }
 
-                    $this->info("   ✅ Processed ".count($results)." items.");
-                    
+                    $this->info('   ✅ Processed '.count($results).' items.');
+
                     if ($page < $pages) {
                         sleep($delay);
                     }
                 }
-                
-                $this->line("");
+
+                $this->line('');
                 sleep($delay);
             }
 
@@ -174,7 +176,7 @@ class ScrapeAllYahoo extends Command
                 'auctions_updated' => $totalUpdated,
             ]);
 
-            $this->info("✨ Comprehensive scrape completed!");
+            $this->info('✨ Comprehensive scrape completed!');
             $this->info("📊 Total Created: {$totalCreated}");
             $this->info("📊 Total Updated: {$totalUpdated}");
 

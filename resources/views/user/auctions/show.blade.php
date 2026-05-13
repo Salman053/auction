@@ -173,6 +173,27 @@
                             <p class="text-[9px] font-bold uppercase tracking-widest text-white/40">Multiplier</p>
                             <p class="text-sm font-bold text-white">{{ $multiplierPercent }}%</p>
                         </div>
+                        <div class="col-span-2 mt-4 border-t border-white/10 pt-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <p class="text-[9px] font-bold uppercase tracking-widest text-white/40">Available Bidding Power</p>
+                                <span class="text-[10px] font-black text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded-md">
+                                    {{ $capacityYen > 0 ? round(($availableCapacityYen / $capacityYen) * 100) : 0 }}%
+                                </span>
+                            </div>
+                            
+                            <div class="relative h-1.5 w-full bg-white/5 rounded-full overflow-hidden mb-3">
+                                <div class="absolute inset-y-0 left-0 bg-brand-gold shadow-[0_0_10px_rgba(212,175,55,0.5)] transition-all duration-1000 ease-out" 
+                                     style="width: {{ $capacityYen > 0 ? ($availableCapacityYen / $capacityYen) * 100 : 0 }}%">
+                                </div>
+                            </div>
+
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-[10px] font-bold text-brand-gold/60">¥</span>
+                                <p class="text-2xl font-black tracking-tight text-brand-gold">
+                                    {{ number_format($availableCapacityYen) }}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                     <a href="{{ route('user.wallet.index') }}"
                         class="mt-4 block text-center text-[10px] font-bold uppercase tracking-widest text-brand-gold hover:text-white transition">Add
@@ -307,7 +328,7 @@
                                 class="text-2xl font-black uppercase tracking-tight text-emerald-900 dark:text-emerald-400">
                                 Congratulations!</h2>
                             <p class="mt-2 text-sm font-medium text-emerald-700/80 dark:text-emerald-500/60">
-                                You are the winning bidder for this exceptional timepiece.
+                                You are the winning bidder for this item.
                             </p>
 
                             @php
@@ -458,7 +479,7 @@
                                         <button type="button" data-confirm data-confirm-title="Confirm Bid Placement"
                                             data-confirm-text="Place Bid" data-confirm-type="info"
                                             data-confirm-on-confirm="#bid-form"
-                                            data-confirm-message="You are about to place a bid of ¥{amount} for this timepiece. This action will lock your wallet balance and cannot be undone."
+                                            data-confirm-message="You are about to place a bid of ¥{amount} for this item. This action will lock your wallet balance and cannot be undone."
                                             data-confirm-amount-selector="#amount_yen"
                                             class="w-full rounded-2xl bg-brand-navy px-8 py-4 text-center text-sm font-bold uppercase tracking-widest text-brand-gold transition hover:scale-[1.02] hover:bg-black dark:bg-brand-gold dark:text-brand-navy dark:hover:bg-brand-gold-light">
                                             Confirm & Place Bid
@@ -570,7 +591,7 @@
                                 @elseif($auction->ends_at && $auction->ends_at->isPast())
                                     This auction has ended.
                                 @else
-                                    This piece is no longer open for active bidding.
+                                    This item is no longer open for active bidding.
                                 @endif
                             @endif
                         </p>
@@ -622,7 +643,7 @@
                             <div class="mt-2 flex items-center gap-2">
                                 <span class="h-1.5 w-1.5 rounded-full bg-brand-gold"></span>
                                 <p class="text-[11px] font-bold text-brand-gold uppercase tracking-widest">Verified
-                                    Piece
+                                    Product
                                 </p>
                             </div>
                         </div>
@@ -639,9 +660,8 @@
                 <div class="rounded-3xl bg-brand-navy p-8 text-white">
                     <h3 class="text-xs font-bold uppercase tracking-widest text-brand-gold/60 mb-4">Concierge Support
                     </h3>
-                    <p class="text-xs leading-relaxed text-white/60">Need assistance with this particular reference?
-                        Our
-                        horology experts are standing by to verify shipping logistics and condition reports.</p>
+                    <p class="text-xs leading-relaxed text-white/60">Need assistance? Our experts are standing by to
+                        verify shipping logistics and condition reports for any Japanese listing.</p>
                     <a href="{{ route('contact') }}"
                         class="mt-6 block text-center text-[10px] font-bold uppercase tracking-widest text-brand-gold border border-brand-gold/30 rounded-xl py-3 hover:bg-brand-gold hover:text-brand-navy transition">Request
                         Consultation</a>

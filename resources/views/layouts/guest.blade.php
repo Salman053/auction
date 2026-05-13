@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ $title ?? 'Japanese Watch Auctions' }} · {{ config('app.name') }}</title>
+    <title>{{ $title ?? 'Japanese Proxy Auctions' }} · {{ config('app.name') }}</title>
 
     <script>
         (() => {
@@ -24,9 +24,9 @@
         <div class="mx-auto flex max-w-7xl  flex-wrap gap-3 items-center justify-between px-6 py-4">
             <a href="{{ route('home') }}" class="flex items-center gap-2.5">
                 <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-gold">
-                    <span class="text-xl font-black text-brand-navy">W</span>
+                    <span class="text-xl font-black text-brand-navy">A</span>
                 </div>
-                <span class="text-xl font-black tracking-tighter text-white">WatchHub</span>
+                <span class="text-xl font-black tracking-tighter text-white">AuctionHub</span>
             </a>
 
             {{-- Desktop Nav --}}
@@ -77,13 +77,13 @@
                     <a href="{{ route('home') }}" class="flex items-center gap-2.5">
                         <div
                             class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-navy dark:bg-brand-gold">
-                            <span class="text-lg font-black text-brand-gold dark:text-brand-navy">W</span>
+                            <span class="text-lg font-black text-brand-gold dark:text-brand-navy">A</span>
                         </div>
-                        <span class="text-lg font-black tracking-tighter text-slate-900 dark:text-white">WatchHub</span>
+                        <span class="text-lg font-black tracking-tighter text-slate-900 dark:text-white">AuctionHub</span>
                     </a>
                     <p class="mt-6 max-w-sm text-sm leading-relaxed text-slate-500 dark:text-zinc-400">
-                        The premier digital gateway to Japanese horology. Direct access to Yahoo Japan Auctions with
-                        professional logistics and transparent bidding.
+                        The premier digital gateway to Japanese auctions. Direct access to Yahoo Japan Auctions with
+                        professional logistics and transparent bidding across all categories.
                     </p>
                 </div>
 
@@ -95,12 +95,12 @@
                         <li><a href="#" class="hover:text-brand-navy dark:hover:text-brand-gold">Winning Bids</a>
                         </li>
                         <li><a href="#" class="hover:text-brand-navy dark:hover:text-brand-gold">Featured
-                                Pieces</a></li>
+                                Items</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white">Collectors
+                    <h4 class="text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white">Account
                     </h4>
                     <ul class="mt-6 space-y-4 text-sm text-slate-500 dark:text-zinc-400">
                         <li><a href="{{ route('login') }}"
@@ -116,7 +116,7 @@
             <div
                 class="mt-20 flex flex-col justify-between gap-6 border-t border-slate-100 pt-10 dark:border-white/5 sm:flex-row sm:items-center">
                 <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">© {{ date('Y') }}
-                    WatchHub Horology. All rights reserved.</p>
+                    AuctionHub Japan. All rights reserved.</p>
                 <div class="flex items-center gap-6">
                     <a href="#"
                         class="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-brand-navy transition">Privacy

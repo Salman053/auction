@@ -17,11 +17,10 @@ class HomeController extends Controller
                 $query->whereNull('ends_at')
                     ->orWhere('ends_at', '>', now());
             })
-            ->limit(8)
+            ->latest('last_synced_at')
+            ->limit(15)
             ->get();
 
-        return view('public.home', [
-            'featured' => $featured,
-        ]);
+        return view('public.home', compact('featured'));
     }
 }

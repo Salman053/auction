@@ -95,9 +95,6 @@
                                     d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
                                 </path>
                             </svg>
-                            {{-- <p class="text-[10px] font-bold uppercase tracking-widest text-brand-gold-light/40 italic">
-                                Worldwide secure delivery & insurance
-                            </p> --}}
                         </div>
                     </div>
                 </div>
@@ -105,14 +102,14 @@
         </div>
 
         <div class="grid grid-cols-1 gap-12 lg:grid-cols-3">
-            {{-- Technical Specifications --}}
+            {{-- Specifications --}}
             <div class="lg:col-span-2 space-y-10">
                 <div
                     class="rounded-3xl bg-white p-6 sm:p-10 shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10">
                     <h3
                         class="text-sm font-black uppercase tracking-[0.2em] text-zinc-900 dark:text-white flex items-center gap-3">
                         <span class="h-1 w-8 bg-brand-gold rounded-full"></span>
-                        Technical Provenance
+                        Item Details
                     </h3>
                     <dl class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
                         <div
@@ -132,17 +129,17 @@
                         </div>
                         <div
                             class="group flex flex-col p-5 rounded-2xl bg-zinc-50 dark:bg-white/5 border border-transparent hover:border-brand-gold/20 transition-colors">
-                            <dt class="text-[10px] font-black uppercase tracking-widest text-zinc-400">Object Condition
+                            <dt class="text-[10px] font-black uppercase tracking-widest text-zinc-400">Condition
                             </dt>
                             <dd class="mt-3 text-sm font-bold text-zinc-900 dark:text-white leading-relaxed">
-                                {{ $auction->condition ?? 'Authenticated / Pre-owned Luxury' }}</dd>
+                                {{ $auction->condition ?? 'Authenticated Japanese Product' }}</dd>
                         </div>
                         <div
                             class="group flex flex-col p-5 rounded-2xl bg-zinc-50 dark:bg-white/5 border border-transparent hover:border-brand-gold/20 transition-colors">
                             <dt class="text-[10px] font-black uppercase tracking-widest text-zinc-400">Market Intensity
                             </dt>
                             <dd class="mt-3 text-sm font-bold text-brand-gold-dark dark:text-brand-gold">
-                                {{ $auction->bids_count ?? $auction->bids->count() }} active competitive bids</dd>
+                                {{ $auction->bid_count ?? 0 }} active competitive bids</dd>
                         </div>
                     </dl>
                 </div>
@@ -162,11 +159,10 @@
                             </div>
                         </div>
                         <div>
-                            <h3 class="text-xs font-black text-brand-gold uppercase tracking-[0.2em] mb-3">WatchHub
-                                Security Escrow</h3>
+                            <h3 class="text-xs font-black text-brand-gold uppercase tracking-[0.2em] mb-3">
+                                AuctionHub Security Escrow</h3>
                             <p class="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                                All acquisitions are protected by our Japanese logistics network. We verify the
-                                authenticity
+                                All acquisitions are protected by our Japanese logistics network. We verify the items
                                 at our Tokyo hub before international dispatch. Funds remain in secure escrow until
                                 technical verification is finalized.
                             </p>
@@ -222,13 +218,13 @@
                             <span class="text-xs font-bold text-zinc-500 uppercase tracking-widest">Initial
                                 Offer</span>
                             <span
-                                class="text-sm font-black text-zinc-900 dark:text-white">¥{{ number_format($auction->start_price_yen ?? $auction->starting_bid_yen) }}</span>
+                                class="text-sm font-black text-zinc-900 dark:text-white">¥{{ number_format($auction->starting_bid_yen) }}</span>
                         </div>
                         <div class="flex justify-between items-center border-b border-brand-gold/5 pb-4">
                             <span class="text-xs font-bold text-zinc-500 uppercase tracking-widest">Total
                                 Interest</span>
                             <span
-                                class="text-sm font-black text-brand-gold">{{ $auction->bids_count ?? $auction->bids->count() }}
+                                class="text-sm font-black text-brand-gold">{{ $auction->bid_count ?? 0 }}
                                 bids</span>
                         </div>
                         <div class="flex justify-between items-center">

@@ -1,8 +1,8 @@
-﻿<x-user-layout :title="'Market Overview'">
+<x-user-layout :title="'Market Overview'">
     <div class="mb-10 flex items-center flex-wrap gap-2.5 justify-between">
         <div>
-            <h1 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Collector Console</h1>
-            <p class="mt-2 text-sm text-slate-500 dark:text-zinc-400">Welcome back, {{ $user?->name ?? 'Collector' }}.
+            <h1 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Buyer Console</h1>
+            <p class="mt-2 text-sm text-slate-500 dark:text-zinc-400">Welcome back, {{ $user?->name ?? 'User' }}.
                 Here is
                 your market standing.</p>
         </div>

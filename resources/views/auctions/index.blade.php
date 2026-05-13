@@ -5,9 +5,9 @@
                 <div>
                     <h1 class="text-xs font-black uppercase tracking-[0.3em] text-brand-gold">Real-Time Market</h1>
                     <h2 class="mt-4 text-4xl font-black tracking-tight text-slate-900 dark:text-white sm:text-5xl">Live
-                        Watch Catalog.</h2>
+                        Auction Catalog.</h2>
                     <p class="mt-4 text-sm font-medium text-slate-500 dark:text-zinc-400">Directly synchronized with
-                        Yahoo Japan Auctions.</p>
+                        Yahoo Japan Auctions across all categories.</p>
                 </div>
 
                 <div class="mt-12">
@@ -23,7 +23,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    <p class="mt-4 text-sm font-bold text-slate-400 italic">No timepieces matching those parameters
+                    <p class="mt-4 text-sm font-bold text-slate-400 italic">No listings matching those parameters
                         found in the current market pool.</p>
                 </div>
             @else
@@ -42,7 +42,7 @@
                                     <div class="absolute bottom-6 left-6 right-6">
                                         <span
                                             class="inline-flex w-full justify-center rounded-2xl bg-brand-gold py-3 text-xs font-black uppercase tracking-widest text-brand-navy opacity-0 transition-all duration-300 group-hover:opacity-100">View
-                                            Logistics</span>
+                                            Details</span>
                                     </div>
 
                                     @if ($auction->status !== 'active')
@@ -52,7 +52,7 @@
                                         </div>
                                     @endif
                                 </div>
-                                <div class="p-8">
+                                <div class="p-4">
                                     <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">
                                         @if ($auction->ends_at)
                                             {{ $auction->ends_at->isPast() ? 'Ended' : 'Ends' }}
@@ -62,24 +62,23 @@
                                         @endif
                                     </p>
                                     <h4
-                                        class="mt-2 truncate text-sm font-black transition-colors group-hover:text-brand-gold">
+                                        class="mt-1 truncate text-sm font-black transition-colors group-hover:text-brand-gold">
                                         {{ $auction->title }}
                                     </h4>
 
                                     <div
-                                        class="mt-6 flex items-center justify-between border-t border-slate-50 pt-4 dark:border-white/5">
+                                        class="mt-4 flex items-center justify-between border-t border-slate-50 pt-3 dark:border-white/5">
                                         <div>
                                             <p class="text-[8px] font-black uppercase tracking-widest text-slate-400">
-                                                Position</p>
-                                            <p class="text-xl font-black text-brand-navy dark:text-brand-gold">
+                                                Price</p>
+                                            <p class="text-lg font-black text-brand-navy dark:text-brand-gold">
                                                 ¥{{ number_format($auction->current_bid_yen) }}</p>
                                         </div>
                                         <div class="text-right">
                                             <p class="text-[8px] font-black uppercase tracking-widest text-slate-400">
-                                                Seller Hub</p>
-                                            <p
-                                                class="text-[10px] font-bold text-slate-900 dark:text-white truncate max-w-[80px]">
-                                                {{ $auction->seller_name ?? 'Trusted' }}
+                                                Bids</p>
+                                            <p class="text-sm font-bold text-slate-900 dark:text-white">
+                                                {{ $auction->bid_count ?? 0 }}
                                             </p>
                                         </div>
                                     </div>

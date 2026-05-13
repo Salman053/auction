@@ -2,17 +2,50 @@
 
 <form method="GET" action="{{ $route }}"
     class="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-xl ring-1 ring-slate-100 dark:ring-white/5 mb-10">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 items-end">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 items-end">
         {{-- Search --}}
         <div class="lg:col-span-2">
             <label for="q"
                 class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Search
-                timepieces</label>
+                auctions</label>
             <div class="relative">
                 <input type="text" name="q" id="q" value="{{ $filters['q'] ?? '' }}"
-                    placeholder="Omega, Rolex, Grand Seiko..."
+                    placeholder="Search for anything..."
                     class="w-full rounded-2xl border-none bg-slate-50 dark:bg-black/20 px-5 py-3 text-sm font-bold placeholder:text-slate-400 focus:ring-2 focus:ring-brand-gold dark:text-white" />
             </div>
+        </div>
+
+        {{-- Category --}}
+        @php
+            $topLevelCategories = [
+                '' => 'All Categories',
+                '26318' => 'Automotive',
+                '23000' => 'Fashion',
+                '23140' => 'Watches',
+                '24698' => 'Sports',
+                '23632' => 'Electronics',
+                '23336' => 'Computers',
+                '25464' => 'Toys & Games',
+                '24242' => 'Hobby',
+                '20000' => 'Antiques',
+                '21600' => 'Books',
+                '22152' => 'Music',
+                '21964' => 'Movies',
+                '24198' => 'Home & DIY',
+                '2084060731' => 'Real Estate',
+                '26084' => 'Other',
+            ];
+            $currentCategory = $filters['category'] ?? '';
+        @endphp
+        <div>
+            <label for="category"
+                class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Category</label>
+            <select name="category" id="category" onchange="this.form.submit()"
+                class="w-full rounded-xl border-none bg-slate-50 dark:bg-black/20 px-5 py-3 text-xs font-bold focus:ring-2 focus:ring-brand-gold dark:text-white appearance-none">
+                @foreach($topLevelCategories as $id => $name)
+                    <option value="{{ $id }}" {{ $currentCategory == $id ? 'selected' : '' }}>{{ $name }}</option>
+                @endforeach
+            </select>
         </div>
 
         {{-- Price Range --}}
@@ -39,24 +72,6 @@
                 <option value="active" {{ $currentStatus === 'active' ? 'selected' : '' }}>Active</option>
                 <option value="finished" {{ $currentStatus === 'finished' ? 'selected' : '' }}>Finished</option>
                 <option value="all" {{ $currentStatus === 'all' ? 'selected' : '' }}>All Auctions</option>
-            </select>
-        </div>
-
-        @php
-            $currentSort = $filters['sort'] ?? 'newest';
-        @endphp
-        <div>
-            <label for="sort"
-                class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Sort by</label>
-            <select name="sort" id="sort" onchange="this.form.submit()"
-                class="w-full rounded-xl border-none bg-slate-50 dark:bg-black/20 px-5 py-3 text-xs font-bold focus:ring-2 focus:ring-brand-gold dark:text-white appearance-none">
-                <option value="newest" {{ $currentSort === 'newest' ? 'selected' : '' }}>Recently Added</option>
-                <option value="ends_soon" {{ $currentSort === 'ends_soon' ? 'selected' : '' }}>Ending Soon</option>
-                <option value="price_asc" {{ $currentSort === 'price_asc' ? 'selected' : '' }}>Price: Low to High
-                </option>
-                <option value="price_desc" {{ $currentSort === 'price_desc' ? 'selected' : '' }}>Price: High to Low
-                </option>
-                <option value="bid_count" {{ $currentSort === 'bid_count' ? 'selected' : '' }}>Most Bids</option>
             </select>
         </div>
 
