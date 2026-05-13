@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\BidPlaceRequest;
 use App\Models\Auction;
 use App\Models\Bid;
+use App\Models\Category;
 use App\Models\ShippingRate;
 use App\Services\BiddingService;
 use App\Services\SettingService;
@@ -70,6 +71,7 @@ class AuctionDetailController extends Controller
             'multiplierPercent' => $multiplierPercent,
             'capacityYen' => $capacityYen,
             'availableCapacityYen' => $availableCapacityYen,
+            'categories' => Category::where('depth', 0)->orderBy('priority', 'desc')->orderBy('name')->limit(8)->get(),
         ]);
     }
 

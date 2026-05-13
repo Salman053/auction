@@ -476,7 +476,7 @@
                     Explore Categories</h2>
                 <p class="text-sm text-zinc-500 mt-1">Find what you're looking for across 1,000+ niches</p>
             </div>
-            <a href="{{ route('user.auctions.index') }}"
+            <a href="{{ route('user.categories.index') }}"
                 class="group flex items-center gap-2 text-xs font-black text-blue-600 uppercase tracking-widest">
                 All Categories
                 <svg class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24"
@@ -486,60 +486,29 @@
             </a>
         </div>
         <div class="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:grid-cols-8">
-            @php
-                $categories = [
-                    [
-                        'name' => 'Automotive',
-                        'img' => 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&h=200&fit=crop',
-                        'id' => '26318',
-                    ],
-                    [
-                        'name' => 'Fashion',
-                        'img' => 'https://images.unsplash.com/photo-1539109132382-381bb3f1cff6?w=200&h=200&fit=crop',
-                        'id' => '23000',
-                    ],
-                    [
-                        'name' => 'Watches',
-                        'img' => 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=200&h=200&fit=crop',
-                        'id' => '23140',
-                    ],
-                    [
-                        'name' => 'Electronics',
-                        'img' => 'https://images.unsplash.com/photo-1526733151923-85973c147ed5?w=200&h=200&fit=crop',
-                        'id' => '23632',
-                    ],
-                    [
-                        'name' => 'Antiques',
-                        'img' => 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&h=200&fit=crop',
-                        'id' => '20000',
-                    ],
-                    [
-                        'name' => 'Toys',
-                        'img' => 'https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=200&h=200&fit=crop',
-                        'id' => '25464',
-                    ],
-                    [
-                        'name' => 'Home',
-                        'img' => 'https://images.unsplash.com/photo-1616489953149-80860734e62a?w=200&h=200&fit=crop',
-                        'id' => '24198',
-                    ],
-                    [
-                        'name' => 'Luxury',
-                        'img' => 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=200&h=200&fit=crop',
-                        'id' => '23000',
-                    ],
-                ];
-            @endphp
             @foreach ($categories as $cat)
-                <a href="{{ route('user.auctions.index', ['category' => $cat['id']]) }}"
+                <a href="{{ route('user.auctions.index', ['category' => $cat->yahoo_category_id]) }}"
                     class="flex flex-col items-center gap-4 group">
                     <div
-                        class="h-24 w-24 overflow-hidden rounded-full bg-white shadow-sm ring-1 ring-zinc-200 transition-all duration-300 group-hover:scale-105 group-hover:ring-blue-500 group-hover:shadow-xl dark:bg-zinc-800 dark:ring-white/5">
-                        <img src="{{ $cat['img'] }}"
-                            class="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" />
+                        class="h-24 w-24 overflow-hidden rounded-full bg-white shadow-sm ring-1 ring-zinc-200 transition-all duration-300 group-hover:scale-105 group-hover:ring-blue-500 group-hover:shadow-xl dark:bg-zinc-800 dark:ring-white/5 flex items-center justify-center p-2">
+                        @php
+                            $placeholderImages = [
+                                '23336' => 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=200&h=200&fit=crop',
+                                '23632' => 'https://images.unsplash.com/photo-1526733151923-85973c147ed5?w=200&h=200&fit=crop',
+                                '22152' => 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop',
+                                '21600' => 'https://images.unsplash.com/photo-1589998059171-988d887df646?w=200&h=200&fit=crop',
+                                '26318' => 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&h=200&fit=crop',
+                                '23000' => 'https://images.unsplash.com/photo-1539109132382-381bb3f1cff6?w=200&h=200&fit=crop',
+                                '23140' => 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=200&h=200&fit=crop',
+                                '25464' => 'https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=200&h=200&fit=crop',
+                            ];
+                            $img = $placeholderImages[$cat->yahoo_category_id] ?? 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=200&h=200&fit=crop';
+                        @endphp
+                        <img src="{{ $img }}"
+                            class="h-full w-full object-cover rounded-full grayscale group-hover:grayscale-0 transition-all duration-300" />
                     </div>
                     <span
-                        class="text-[9px] font-black text-zinc-400 uppercase tracking-[0.2em] transition-colors group-hover:text-blue-600 dark:text-zinc-500">{{ $cat['name'] }}</span>
+                        class="text-[9px] font-black text-center text-zinc-400 uppercase tracking-[0.2em] transition-colors group-hover:text-blue-600 dark:text-zinc-500">{{ $cat->name }}</span>
                 </a>
             @endforeach
         </div>

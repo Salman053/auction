@@ -59,6 +59,16 @@
                     Live Market
                 </x-dashboard.sidebar-item>
 
+                {{-- <x-dashboard.sidebar-item href="{{ route('user.categories.index') }}" :active="request()->routeIs('user.categories.*')">
+                    <x-slot name="icon">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </x-slot>
+                    Market Explorer
+                </x-dashboard.sidebar-item> --}}
+
                 <x-dashboard.sidebar-item href="{{ route('user.bids.index') }}" :active="request()->routeIs('user.bids.*')">
                     <x-slot name="icon">
                         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">

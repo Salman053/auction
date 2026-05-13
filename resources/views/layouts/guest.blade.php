@@ -56,7 +56,15 @@
                         </svg>
                         <div>
                             <p class="text-[10px] leading-tight text-zinc-400">Deliver to</p>
-                            <p class="font-bold text-zinc-900 dark:text-white">Update Location</p>
+                            @php
+                                $shippingLocations = $shippingLocations ?? \App\Models\ShippingRate::orderBy('country')->get();
+                                $locationLabels = collect($shippingLocations)->map(fn($l) => is_string($l) ? $l : $l->country)->unique()->values();
+                            @endphp
+                            @if ($locationLabels->isNotEmpty())
+                                <p class="font-bold text-zinc-900 dark:text-white">{{ $locationLabels->join(', ') }}</p>
+                            @else
+                                <p class="font-bold text-zinc-900 dark:text-white">Worldwide</p>
+                            @endif
                         </div>
                     </div>
 
@@ -98,30 +106,21 @@
             {{-- Bottom Header Row / Nav --}}
             <nav
                 class="flex items-center gap-6 overflow-x-auto border-t border-zinc-100 py-3 text-sm font-medium scrollbar-hide dark:border-white/5">
-                <button class="flex items-center gap-1.5 whitespace-nowrap text-[11px] font-black uppercase tracking-widest text-zinc-900 dark:text-white">
+                <a href="{{ route('auctions.index') }}"
+                    class="flex items-center gap-1.5 whitespace-nowrap text-[11px] font-black uppercase tracking-widest text-zinc-900 dark:text-white hover:text-blue-600">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                     All Categories
-                </button>
-                <a href="{{ route('auctions.index') }}"
-                    class="whitespace-nowrap text-[11px] font-black uppercase tracking-widest text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400">Electronics</a>
-                <a href="{{ route('auctions.index') }}"
-                    class="whitespace-nowrap text-[11px] font-black uppercase tracking-widest text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400">Fashion</a>
-                <a href="{{ route('auctions.index') }}"
-                    class="whitespace-nowrap text-[11px] font-black uppercase tracking-widest text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400">Home</a>
-                <a href="{{ route('auctions.index') }}"
-                    class="whitespace-nowrap text-[11px] font-black uppercase tracking-widest text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400">Luxury</a>
-                <a href="{{ route('auctions.index') }}"
-                    class="whitespace-nowrap text-[11px] font-black uppercase tracking-widest text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400">Health &
-                    Beauty</a>
-                <a href="{{ route('auctions.index') }}"
-                    class="whitespace-nowrap text-[11px] font-black uppercase tracking-widest text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400">Pharmacy</a>
-                <a href="{{ route('auctions.index') }}"
-                    class="whitespace-nowrap text-[11px] font-black uppercase tracking-widest text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400">Groceries</a>
-                <a href="{{ route('auctions.index') }}"
-                    class="whitespace-nowrap text-[11px] font-black uppercase tracking-widest text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400">Best Deals</a>
+                </a>
+                @php
+                    $navCategories = $navCategories ?? \App\Models\Category::where('depth', 0)->orderBy('priority', 'desc')->orderBy('name')->limit(8)->get();
+                @endphp
+                @foreach ($navCategories as $navCat)
+                    <a href="{{ route('auctions.index', ['category' => $navCat->yahoo_category_id]) }}"
+                        class="whitespace-nowrap text-[11px] font-black uppercase tracking-widest text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400">{{ $navCat->name }}</a>
+                @endforeach
             </nav>
         </div>
     </header>

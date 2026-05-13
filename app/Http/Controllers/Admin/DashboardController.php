@@ -80,8 +80,10 @@ class DashboardController extends Controller
 
             return view('admin.dashboard', [
                 'userCount' => User::query()->where('role', 'user')->count(),
+                'usersThisWeek' => User::query()->where('role', 'user')->where('created_at', '>=', $now->startOfWeek())->count(),
                 'adminCount' => User::query()->where('role', 'admin')->count(),
                 'auctionCount' => Auction::query()->count(),
+                'auctionsToday' => Auction::query()->where('created_at', '>=', $now->startOfDay())->count(),
                 'activeProxyCount' => Proxy::query()->where('is_active', true)->count(),
                 'failedProxyCount' => $failedProxyCount,
                 'pendingDepositCount' => $pendingDepositCount,

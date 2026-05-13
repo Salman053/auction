@@ -101,88 +101,7 @@
             </div>
         </section>
 
-        {{-- Categories Section --}}
-        <section class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
-            <div class="flex items-center justify-between mb-10">
-                <div>
-                    <h2 class="text-2xl font-black tracking-tight text-zinc-900 dark:text-white">Explore Categories</h2>
-                    <p class="text-sm text-zinc-500 mt-1">Find what you're looking for across 1,000+ niches</p>
-                </div>
-                <a href="{{ route('auctions.index') }}"
-                    class="group flex items-center gap-2 text-xs font-black text-blue-600 uppercase tracking-widest">
-                    All Categories
-                    <svg class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                            d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                </a>
-            </div>
-            <div class="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:grid-cols-8">
-                @php
-                    $categories = [
-                        [
-                            'name' => 'Automotive',
-                            'img' => 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&h=200&fit=crop',
-                            'id' => '26318',
-                        ],
-                        [
-                            'name' => 'Fashion',
-                            'img' =>
-                                'https://images.unsplash.com/photo-1539109132382-381bb3f1cff6?w=200&h=200&fit=crop',
-                            'id' => '23000',
-                        ],
-                        [
-                            'name' => 'Watches',
-                            'img' =>
-                                'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=200&h=200&fit=crop',
-                            'id' => '23140',
-                        ],
-                        [
-                            'name' => 'Electronics',
-                            'img' =>
-                                'https://images.unsplash.com/photo-1526733151923-85973c147ed5?w=200&h=200&fit=crop',
-                            'id' => '23632',
-                        ],
-                        [
-                            'name' => 'Antiques',
-                            'img' =>
-                                'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=200&h=200&fit=crop',
-                            'id' => '20000',
-                        ],
-                        [
-                            'name' => 'Toys',
-                            'img' => 'https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=200&h=200&fit=crop',
-                            'id' => '25464',
-                        ],
-                        [
-                            'name' => 'Home',
-                            'img' =>
-                                'https://images.unsplash.com/photo-1616489953149-80860734e62a?w=200&h=200&fit=crop',
-                            'id' => '24198',
-                        ],
-                        [
-                            'name' => 'Luxury',
-                            'img' =>
-                                'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=200&h=200&fit=crop',
-                            'id' => '23000',
-                        ],
-                    ];
-                @endphp
-                @foreach ($categories as $cat)
-                    <a href="{{ route('auctions.index', ['category' => $cat['id']]) }}"
-                        class="flex flex-col items-center gap-4 group">
-                        <div
-                            class="h-24 w-24 overflow-hidden rounded-full bg-white shadow-sm ring-1 ring-zinc-200 transition-all duration-300 group-hover:scale-105 group-hover:ring-blue-500 group-hover:shadow-xl dark:bg-zinc-800 dark:ring-white/5">
-                            <img src="{{ $cat['img'] }}"
-                                class="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" />
-                        </div>
-                        <span
-                            class="text-[9px] font-black text-zinc-400 uppercase tracking-[0.2em] transition-colors group-hover:text-blue-600 dark:text-zinc-500">{{ $cat['name'] }}</span>
-                    </a>
-                @endforeach
-            </div>
-        </section>
+
 
         {{-- Active Auctions Grid --}}
         <section class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
@@ -209,6 +128,47 @@
             </div>
         </section>
 
+        {{-- Shipping Locations Section --}}
+        @if ($shippingLocations->isNotEmpty())
+            <section class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+                <div class="flex items-center justify-between mb-10">
+                    <div>
+                        <h2
+                            class="text-2xl font-black tracking-tight text-zinc-900 dark:text-white uppercase tracking-tighter">
+                            Import Destinations</h2>
+                        <p class="text-sm text-zinc-500 mt-1">Available shipping locations we deliver to from Japan</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    @foreach ($shippingLocations as $rate)
+                        <div
+                            class="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-6 transition-all hover:border-blue-500 hover:shadow-lg dark:border-white/5 dark:bg-zinc-900">
+                            <div class="flex items-start justify-between">
+                                <div
+                                    class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-900/20 shrink-0">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                                <span
+                                    class="inline-block rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400">
+                                    ¥{{ number_format($rate->fee_yen) }}
+                                </span>
+                            </div>
+                            <div class="mt-4">
+                                <p class="text-sm font-black text-zinc-900 dark:text-white">{{ $rate->name }}</p>
+                                <p class="mt-1 text-[11px] font-medium text-zinc-500 uppercase tracking-widest">
+                                    {{ $rate->port }} · {{ $rate->country }}
+                                </p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+        @endif
         {{-- Promotion Banners: Auction Context --}}
         <section class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">

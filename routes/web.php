@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\WithdrawalController as AdminWithdrawalController;
 use App\Http\Controllers\AuctionCatalogController;
 use App\Http\Controllers\Auth\Admin\AuthenticatedSessionController as AdminAuthenticatedSessionController;
+use App\Http\Controllers\Auth\Admin\NewPasswordController;
+use App\Http\Controllers\Auth\Admin\PasswordResetLinkController;
 use App\Http\Controllers\Auth\User\AuthenticatedSessionController as UserAuthenticatedSessionController;
 use App\Http\Controllers\Auth\User\RegisteredUserController;
 use App\Http\Controllers\Public\AuctionController as PublicAuctionController;
@@ -26,6 +28,7 @@ use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\User\AuctionController as UserAuctionController;
 use App\Http\Controllers\User\AuctionDetailController as UserAuctionDetailController;
 use App\Http\Controllers\User\BidController as UserBidController;
+use App\Http\Controllers\User\CategoryController;
 use App\Http\Controllers\User\CookieConsentController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\NotificationController as UserNotificationController;
@@ -59,6 +62,11 @@ Route::middleware('guest:user')->group(function () {
     Route::post('/login', [UserAuthenticatedSessionController::class, 'store'])->name('login.store');
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
     Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
+
+    Route::get('/forgot-password', [App\Http\Controllers\Auth\User\PasswordResetLinkController::class, 'create'])->name('password.request');
+    Route::post('/forgot-password', [App\Http\Controllers\Auth\User\PasswordResetLinkController::class, 'store'])->name('password.email');
+    Route::get('/reset-password/{token}', [App\Http\Controllers\Auth\User\NewPasswordController::class, 'create'])->name('password.reset');
+    Route::post('/reset-password', [App\Http\Controllers\Auth\User\NewPasswordController::class, 'store'])->name('password.update');
 });
 
 Route::middleware('auth:user')->group(function () {
@@ -103,6 +111,9 @@ Route::middleware('auth:user')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+
+        Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+        Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
     });
 });
 
@@ -110,6 +121,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest:admin')->group(function () {
         Route::get('/login', [AdminAuthenticatedSessionController::class, 'create'])->name('login');
         Route::post('/login', [AdminAuthenticatedSessionController::class, 'store'])->name('login.store');
+
+        Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
+        Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
+        Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+        Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
     });
 
     Route::middleware('auth:admin')->group(function () {

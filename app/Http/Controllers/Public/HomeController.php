@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Auction;
+use App\Models\Category;
+use App\Models\ShippingRate;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -17,10 +19,27 @@ class HomeController extends Controller
                 $query->whereNull('ends_at')
                     ->orWhere('ends_at', '>', now());
             })
-            ->latest('last_synced_at')
+            ->inRandomOrder()
             ->limit(15)
             ->get();
 
-        return view('public.home', compact('featured'));
+        $categories = Category::where('depth', 0)
+            ->orderBy('priority', 'desc')
+            ->orderBy('name')
+            ->limit(7)
+            ->get();
+
+        $navCategories = Category::where('depth', 0)
+            ->orderBy('priority', 'desc')
+            ->orderBy('name')
+            ->limit(8)
+            ->get();
+
+        $shippingLocations = ShippingRate::query()
+            ->orderBy('country')
+            ->orderBy('name')
+            ->get();
+
+        return view('public.home', compact('featured', 'categories', 'navCategories', 'shippingLocations'));
     }
 }

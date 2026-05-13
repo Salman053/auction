@@ -9,7 +9,8 @@
                             d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                 </a>
-                <h1 class="text-3xl font-black tracking-tight text-zinc-900 dark:text-white uppercase tracking-tighter">Support Ticket #{{ $ticket->id }}</h1>
+                <h1 class="text-3xl font-black tracking-tight text-zinc-900 dark:text-white uppercase tracking-tighter">
+                    Support Ticket #{{ $ticket->id }}</h1>
             </div>
         </div>
         <div>
@@ -28,7 +29,7 @@
             @else
                 <div class="flex items-center gap-2">
                     <span
-                        class="inline-flex items-center rounded-full bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600 ring-1 ring-inset ring-slate-500/10 dark:bg-white/5 dark:text-slate-400 dark:ring-white/10">Closed</span>
+                        class="inline-flex items-center rounded-full bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600 ring-1 ring-inset ring-slate-500/10 \ dark:text-slate-400 dark:ring-white/10">Closed</span>
                     <form action="{{ route('user.support.reopen', $ticket) }}" method="POST">
                         @csrf
                         <button type="submit"
@@ -42,9 +43,11 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 space-y-6">
-            <div class="rounded-3xl bg-white shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10 overflow-hidden">
-                <div class="border-b border-zinc-100 p-6 dark:border-white/5 lg:px-8 bg-zinc-50/50">
-                    <h2 class="text-xl font-black text-zinc-900 dark:text-white leading-tight">{{ $ticket->subject }}</h2>
+            <div
+                class="rounded-3xl bg-white shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10 overflow-hidden">
+                <div class="border-b border-zinc-100 p-6 dark:border-white/5 lg:px-8 bg-zinc-50/10">
+                    <h2 class="text-xl font-black text-zinc-900 dark:text-white leading-tight">{{ $ticket->subject }}
+                    </h2>
                 </div>
 
                 <div id="message-container" class="p-6 lg:p-8 space-y-8 max-h-[70vh] overflow-y-auto scroll-smooth">
@@ -101,7 +104,8 @@
                 <div class="space-y-4">
                     <div>
                         <p class="text-[9px] font-black uppercase tracking-widest text-zinc-400">Status</p>
-                        <p class="mt-1 text-sm font-black text-zinc-900 dark:text-white">{{ strtoupper($ticket->status) }}
+                        <p class="mt-1 text-sm font-black text-zinc-900 dark:text-white">
+                            {{ strtoupper($ticket->status) }}
                         </p>
                     </div>
                     <div>
@@ -119,15 +123,14 @@
                 </div>
             </div>
             @if ($ticket->status === 'open')
-                <div
-                    class="rounded-3xl bg-zinc-950 p-8 text-white shadow-2xl relative overflow-hidden group">
+                <div class="rounded-3xl  p-8  shadow-2xl relative overflow-hidden group">
                     <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-600/10 blur-2xl"></div>
                     <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 mb-6">Dispatch Reply</h3>
                     <form method="POST" action="{{ route('user.support.reply', $ticket) }}">
                         @csrf
                         <div>
                             <textarea name="body" rows="4"
-                                class="w-full rounded-2xl border-none bg-white/5 px-6 py-5 text-sm font-black text-white placeholder:text-white/20 focus:ring-2 focus:ring-blue-600 transition-all"
+                                class="w-full rounded-2xl border-none bg-white/5 px-6 py-5 text-sm font-black text-foreground placeholder:text-white/20 focus:ring-2 focus:ring-blue-600 transition-all"
                                 placeholder="Transmission details..." required></textarea>
                             @error('body')
                                 <p class="mt-2 text-xs font-bold text-rose-500">{{ $message }}</p>

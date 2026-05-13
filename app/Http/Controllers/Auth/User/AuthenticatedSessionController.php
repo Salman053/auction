@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
 
         if (! $authenticated) {
             throw ValidationException::withMessages([
-                'email' => __('auth.suspended'),
+                'email' => __('auth.failed'),
             ]);
         }
 

@@ -2,10 +2,7 @@
     <div class="mx-auto flex min-h-[60vh] flex-col justify-center py-20">
         <div class="mx-auto w-full max-w-md">
             <div class="text-center">
-                <div
-                    class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-navy dark:bg-brand-gold">
-                    <span class="text-3xl font-black text-brand-gold dark:text-brand-navy">A</span>
-                </div>
+
                 <h1 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Admin Control</h1>
                 <p class="mt-3 text-sm font-medium text-slate-500 dark:text-zinc-400">Manage users, deposits, scraping,
                     and platform settings.</p>
@@ -32,7 +29,7 @@
                         <div class="flex items-center justify-between mb-2">
                             <label for="password"
                                 class="block text-[10px] font-black uppercase tracking-widest text-slate-400">Pass-Key</label>
-                            <a href="#"
+                            <a href="{{ route('admin.password.request') }}"
                                 class="text-[10px] font-black uppercase tracking-widest text-brand-gold hover:text-brand-navy transition">Lost
                                 Access?</a>
                         </div>

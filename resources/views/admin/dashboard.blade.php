@@ -24,7 +24,7 @@
 
     {{-- Admin Stats Grid --}}
     <div class="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <x-dashboard.stat-card label="Total Collectors" value="{{ $userCount }}" trend="+5 this week"
+        <x-dashboard.stat-card label="Total Collectors" value="{{ $userCount }}" trend="+{{ $usersThisWeek }} this week"
             :trendUp="true">
             <x-slot name="icon">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -34,7 +34,7 @@
             </x-slot>
         </x-dashboard.stat-card>
 
-        <x-dashboard.stat-card label="Market Items" value="{{ $auctionCount }}" trend="+20 new today" :trendUp="true">
+        <x-dashboard.stat-card label="Market Items" value="{{ $auctionCount }}" trend="+{{ $auctionsToday }} new today" :trendUp="true">
             <x-slot name="icon">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
