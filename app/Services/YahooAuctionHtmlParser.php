@@ -157,11 +157,14 @@ class YahooAuctionHtmlParser
         // FIXED: Enhanced end date extraction
         $endsAt = $this->extractEndDate($xpath, $html);
 
+        $isEnded = str_contains($html, '終了しました') || str_contains($html, 'オークションは終了') || str_contains($html, 'This auction has ended');
+
         return [
             'yahoo_auction_id' => $auctionId,
             'title' => $title ? $this->cleanText($title) : null,
             'current_bid_yen' => $price ?: null,
             'ends_at' => $endsAt,
+            'status' => $isEnded ? 'finished' : 'active',
             'seller_name' => $sellerData['name'] ?? null,
             'yahoo_seller_id' => $sellerData['id'] ?? null,
             'seller_rating' => $sellerData['rating'] ?? null,
@@ -173,6 +176,7 @@ class YahooAuctionHtmlParser
                 'scraped_at' => now()->toDateTimeString(),
                 'title_raw' => $title,
                 'price_text' => $priceText,
+                'is_ended_detected' => $isEnded,
             ]),
         ];
     }
@@ -325,10 +329,11 @@ class YahooAuctionHtmlParser
                         return CarbonImmutable::parse($item['endTime'], 'Asia/Tokyo')->setTimezone('UTC');
                     }
                     if ($item && isset($item['closeTime'])) {
-                         return CarbonImmutable::createFromTimestamp(intval($item['closeTime']) / 1000);
+                        return CarbonImmutable::createFromTimestamp(intval($item['closeTime']) / 1000);
                     }
                 }
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
 
         // Method 1: Look for countdown timer data
@@ -602,7 +607,7 @@ class YahooAuctionHtmlParser
 
             // Handle HH:MM:SS or HH:MM format IF it was in a "Remaining" context
             // But usually Yahoo shows "X時間" or "X分"
-            if (!$isRelative && preg_match('/(\d{1,2}):(\d{2})(?::(\d{2}))?/', $normalized, $m)) {
+            if (! $isRelative && preg_match('/(\d{1,2}):(\d{2})(?::(\d{2}))?/', $normalized, $m)) {
                 $hours = intval($m[1]);
                 $minutes = intval($m[2]);
                 $seconds = isset($m[3]) ? intval($m[3]) : 0;
@@ -613,9 +618,9 @@ class YahooAuctionHtmlParser
                 // If it's just "X days", Yahoo often means "X days and some hours"
                 // but we stick to the provided minimum for safety in bidding.
                 return $now->addDays($days)
-                           ->addHours($hours)
-                           ->addMinutes($minutes)
-                           ->addSeconds($seconds);
+                    ->addHours($hours)
+                    ->addMinutes($minutes)
+                    ->addSeconds($seconds);
             }
         }
 
@@ -661,15 +666,15 @@ class YahooAuctionHtmlParser
             try {
                 // Yahoo Japan times are in JST (Asia/Tokyo)
                 $date = CarbonImmutable::createFromFormat($format, $cleaned, 'Asia/Tokyo');
-                
+
                 if ($date) {
                     // If format was just H:i or m-d H:i, make sure we have the correct year
                     // createFromFormat uses current year/month/day for missing parts in the JST timezone.
-                    
+
                     // If the parsed date is significantly in the past (e.g. yesterday's H:i),
                     // it might actually be for tomorrow if it's an end time.
                     // But usually Yahoo shows "5/14" if it's tomorrow.
-                    
+
                     return $date->setTimezone('UTC');
                 }
             } catch (\Exception $e) {
@@ -679,6 +684,7 @@ class YahooAuctionHtmlParser
         // Try direct parse as last resort
         try {
             $date = CarbonImmutable::parse($cleaned, 'Asia/Tokyo');
+
             return $date->setTimezone('UTC');
         } catch (\Exception $e) {
         }

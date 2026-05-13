@@ -180,7 +180,7 @@
                         </svg>
                     </button>
 
-                    @if($backUrl ?? false)
+                    @if ($backUrl ?? false)
                         <a href="{{ $backUrl }}"
                             class="flex h-9 items-center justify-center rounded-xl bg-slate-100 px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-200 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10">
                             <svg class="mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -207,7 +207,7 @@
 
                     <x-notification-dropdown />
 
-                    <div class="bg-black rounded-full">
+                    <div class=" rounded-full">
                         <x-theme-toggle />
                     </div>
 

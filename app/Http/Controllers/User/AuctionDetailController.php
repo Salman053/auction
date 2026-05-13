@@ -145,6 +145,7 @@ class AuctionDetailController extends Controller
             'current_bid_yen' => (int) $auction->current_bid_yen,
             'bid_count' => (int) $auction->bid_count,
             'highest_active_bid_id' => $highestActiveBid?->id,
+            'ends_at' => $auction->ends_at?->toISOString(),
             'ends_at_human' => $auction->ends_at?->diffForHumans(),
             'bids_html' => view('user.auctions._bid_history', ['bids' => $auction->bids])->render(),
         ]);

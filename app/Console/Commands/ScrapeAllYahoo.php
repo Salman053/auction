@@ -7,6 +7,7 @@ use App\Models\ScrapingLog;
 use App\Services\AuctionReconciliationService;
 use App\Services\ScraperService;
 use Illuminate\Console\Command;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 
 class ScrapeAllYahoo extends Command
@@ -94,7 +95,9 @@ class ScrapeAllYahoo extends Command
 
                     foreach ($results as $item) {
                         $yid = trim((string) $item['yahoo_auction_id']);
-                        if (empty($yid)) continue;
+                        if (empty($yid)) {
+                            continue;
+                        }
 
                         $auction = Auction::withTrashed()->where('yahoo_auction_id', $yid)->first();
 
@@ -108,7 +111,7 @@ class ScrapeAllYahoo extends Command
                                 'current_bid_yen' => $item['current_bid_yen'],
                                 'ends_at' => $item['ends_at'] ?? $auction->ends_at,
                                 'thumbnail_url' => $item['thumbnail_url'] ?? $auction->thumbnail_url,
-                                'status' => 'active',
+                                'status' => $item['status'] ?? 'active',
                                 'last_synced_at' => now(),
                             ]);
 
@@ -121,6 +124,7 @@ class ScrapeAllYahoo extends Command
                                 if (! empty($details)) {
                                     $auction->update([
                                         'ends_at' => $details['ends_at'] ?? $auction->ends_at,
+                                        'status' => $details['status'] ?? $auction->status,
                                         'shipping_fee_yen' => $details['shipping_fee_yen'] ?? $auction->shipping_fee_yen,
                                         'seller_name' => $details['seller_name'] ?? $auction->seller_name,
                                         'yahoo_seller_id' => $details['yahoo_seller_id'] ?? $auction->yahoo_seller_id,
@@ -140,7 +144,7 @@ class ScrapeAllYahoo extends Command
                                 'current_bid_yen' => $item['current_bid_yen'],
                                 'ends_at' => $item['ends_at'] ?? null,
                                 'thumbnail_url' => $item['thumbnail_url'] ?? null,
-                                'status' => 'active',
+                                'status' => $item['status'] ?? 'active',
                                 'last_synced_at' => now(),
                             ];
 
@@ -150,6 +154,7 @@ class ScrapeAllYahoo extends Command
                                 if (! empty($details)) {
                                     $auctionData = array_merge($auctionData, [
                                         'ends_at' => $details['ends_at'] ?? $auctionData['ends_at'],
+                                        'status' => $details['status'] ?? $auctionData['status'],
                                         'seller_name' => $details['seller_name'] ?? null,
                                         'yahoo_seller_id' => $details['yahoo_seller_id'] ?? null,
                                         'shipping_fee_yen' => $details['shipping_fee_yen'] ?? null,
@@ -163,12 +168,14 @@ class ScrapeAllYahoo extends Command
                             try {
                                 Auction::create($auctionData);
                                 $totalCreated++;
-                            } catch (\Illuminate\Database\QueryException $e) {
+                            } catch (QueryException $e) {
                                 if ($e->getCode() == 23000) {
                                     // Race condition fallback: Re-fetch and update
                                     $retryAuction = Auction::withTrashed()->where('yahoo_auction_id', $yid)->first();
                                     if ($retryAuction) {
-                                        if ($retryAuction->trashed()) $retryAuction->restore();
+                                        if ($retryAuction->trashed()) {
+                                            $retryAuction->restore();
+                                        }
                                         $retryAuction->update($auctionData);
                                         $totalUpdated++;
                                     }

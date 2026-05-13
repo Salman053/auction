@@ -7,6 +7,7 @@ use App\Models\ScrapingLog;
 use App\Services\AuctionReconciliationService;
 use App\Services\ScraperService;
 use Illuminate\Console\Command;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 
 class ScrapeYahoo extends Command
@@ -96,7 +97,9 @@ class ScrapeYahoo extends Command
 
             foreach ($results as $index => $item) {
                 $yid = trim((string) $item['yahoo_auction_id']);
-                if (empty($yid)) continue;
+                if (empty($yid)) {
+                    continue;
+                }
 
                 $titlePreview = substr($item['title'] ?? '', 0, 50);
                 $this->line('   Processing item '.($index + 1).': '.$titlePreview);
@@ -126,6 +129,7 @@ class ScrapeYahoo extends Command
                         if (! empty($details)) {
                             $auction->update([
                                 'ends_at' => $details['ends_at'] ?? $auction->ends_at,
+                                'status' => $details['status'] ?? $auction->status,
                                 'shipping_fee_yen' => $details['shipping_fee_yen'] ?? $auction->shipping_fee_yen,
                                 'seller_name' => $details['seller_name'] ?? $auction->seller_name,
                                 'yahoo_seller_id' => $details['yahoo_seller_id'] ?? $auction->yahoo_seller_id,
@@ -156,6 +160,9 @@ class ScrapeYahoo extends Command
                         if (isset($details['ends_at'])) {
                             $auctionData['ends_at'] = $details['ends_at'];
                         }
+                        if (isset($details['status'])) {
+                            $auctionData['status'] = $details['status'];
+                        }
                         if (isset($details['seller_name'])) {
                             $auctionData['seller_name'] = $details['seller_name'];
                         }
@@ -180,11 +187,13 @@ class ScrapeYahoo extends Command
                         Auction::create($auctionData);
                         $created++;
                         $this->line('      ✅ Created new auction');
-                    } catch (\Illuminate\Database\QueryException $e) {
+                    } catch (QueryException $e) {
                         if ($e->getCode() == 23000) {
                             $retryAuction = Auction::withTrashed()->where('yahoo_auction_id', $yid)->first();
                             if ($retryAuction) {
-                                if ($retryAuction->trashed()) $retryAuction->restore();
+                                if ($retryAuction->trashed()) {
+                                    $retryAuction->restore();
+                                }
                                 $retryAuction->update($auctionData);
                                 $updated++;
                                 $this->line('      🔄 Updated existing auction (collision recovery)');
@@ -253,6 +262,7 @@ class ScrapeYahoo extends Command
                         'current_bid_yen' => $details['current_bid_yen'] ?? $auction->current_bid_yen,
                         'shipping_fee_yen' => $details['shipping_fee_yen'] ?? $auction->shipping_fee_yen,
                         'ends_at' => $details['ends_at'] ?? $auction->ends_at,
+                        'status' => $details['status'] ?? $auction->status,
                         'seller_name' => $details['seller_name'] ?? $auction->seller_name,
                         'yahoo_seller_id' => $details['yahoo_seller_id'] ?? $auction->yahoo_seller_id,
                         'seller_rating' => $details['seller_rating'] ?? $auction->seller_rating,
