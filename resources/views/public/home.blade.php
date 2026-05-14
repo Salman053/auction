@@ -226,7 +226,7 @@
             <div class="mx-auto max-w-5xl">
                 <div class="aspect-video w-full rounded-3xl overflow-hidden shadow-2xl bg-slate-900">
                     <video controls class="h-full w-full object-cover">
-                        <source src="{{ asset('media/tuturial.mp4') }}" type="video/mp4">
+                        <source src="{{ asset('media/tutorial.mp4') }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                 </div>

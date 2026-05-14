@@ -44,7 +44,8 @@
                     </div>
                     <div class="lg:w-1/2">
                         <div class="overflow-hidden rounded-[3rem] bg-slate-100 p-8 dark:bg-zinc-900 shadow-xl">
-                            <img src="{{ asset('images/deposit.png') }}" alt="Fund Account Interface" class="w-full h-auto rounded-lg">
+                            <img src="{{ asset('images/deposit.png') }}" alt="Fund Account Interface"
+                                class="w-full h-auto rounded-lg">
                         </div>
                     </div>
                 </div>
@@ -90,7 +91,7 @@
                                     <span>SYNC: OK</span>
                                 </div>
                                 <div class="space-y-1">
-                                    @foreach(['#A9922 - BID: ¥450,000', '#B2819 - BID: ¥120,500', '#C1102 - BID: ¥3,200,000', '#D0091 - BID: ¥95,000'] as $item)
+                                    @foreach (['#A9922 - BID: ¥450,000', '#B2819 - BID: ¥120,500', '#C1102 - BID: ¥3,200,000', '#D0091 - BID: ¥95,000'] as $item)
                                         <div class="flex justify-between text-white/60 animate-pulse">
                                             <span>{{ $item }}</span>
                                             <span class="text-emerald-400">STATUS_LIVE</span>
@@ -138,13 +139,19 @@
                         </ul>
                     </div>
                     <div class="lg:w-1/2">
-                        <div class="overflow-hidden rounded-[3rem] bg-slate-900 p-12 text-white shadow-2xl flex flex-col items-center justify-center">
+                        <div
+                            class="overflow-hidden rounded-[3rem] bg-slate-900 p-12 text-white shadow-2xl flex flex-col items-center justify-center">
                             <div class="flex space-x-4 mb-4">
-                                <div class="w-16 h-16 rounded-full bg-brand-gold flex items-center justify-center text-brand-navy font-black">JP</div>
+                                <div
+                                    class="w-16 h-16 rounded-full bg-brand-gold flex items-center justify-center text-brand-navy font-black">
+                                    JP</div>
                                 <div class="w-8 h-16 flex items-center justify-center text-white/50">&rarr;</div>
-                                <div class="w-16 h-16 rounded-full bg-brand-navy border-2 border-brand-gold flex items-center justify-center text-brand-gold font-black">INTL</div>
+                                <div
+                                    class="w-16 h-16 rounded-full bg-brand-navy border-2 border-brand-gold flex items-center justify-center text-brand-gold font-black">
+                                    INTL</div>
                             </div>
-                            <span class="text-xs font-bold text-white/50 tracking-widest uppercase">Global Fulfillment Bridge</span>
+                            <span class="text-xs font-bold text-white/50 tracking-widest uppercase">Global Fulfillment
+                                Bridge</span>
                         </div>
                     </div>
                 </div>
@@ -154,12 +161,13 @@
             <div class="mt-32">
                 <div class="mx-auto max-w-2xl text-center mb-12">
                     <h2 class="text-3xl font-black text-slate-900 dark:text-white">Platform Walkthrough</h2>
-                    <p class="mt-4 text-slate-500 dark:text-zinc-400">See the protocol in action with a quick guided overview.</p>
+                    <p class="mt-4 text-slate-500 dark:text-zinc-400">See the protocol in action with a quick guided
+                        overview.</p>
                 </div>
                 <div class="mx-auto max-w-5xl">
                     <div class="aspect-video w-full rounded-3xl overflow-hidden shadow-2xl bg-slate-900">
                         <video controls class="h-full w-full object-cover">
-                            <source src="{{ asset('media/tuturial.mp4') }}" type="video/mp4">
+                            <source src="{{ asset('media/tutorial.mp4') }}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
                     </div>
