@@ -93,13 +93,18 @@ class ScrapeAllYahoo extends Command
                         break;
                     }
 
+                    // BATCH LOAD: Prevent N+1 queries by fetching all existing IDs at once
+                    $yids = collect($results)->pluck('yahoo_auction_id')->filter()->toArray();
+                    $existingAuctions = Auction::withTrashed()
+                        ->whereIn('yahoo_auction_id', $yids)
+                        ->get()
+                        ->keyBy('yahoo_auction_id');
+
                     foreach ($results as $item) {
                         $yid = trim((string) $item['yahoo_auction_id']);
-                        if (empty($yid)) {
-                            continue;
-                        }
+                        if (empty($yid)) continue;
 
-                        $auction = Auction::withTrashed()->where('yahoo_auction_id', $yid)->first();
+                        $auction = $existingAuctions->get($yid);
 
                         if ($auction) {
                             if ($auction->trashed()) {
@@ -115,24 +120,10 @@ class ScrapeAllYahoo extends Command
                                 'last_synced_at' => now(),
                             ]);
 
-                            // Reconcile internal bids
                             app(AuctionReconciliationService::class)->reconcile($auction);
 
                             if ($forceDetails) {
-                                $this->line("      📅 Force fetching details for {$yid}...");
-                                $details = $scraper->getAuctionDetails($yid);
-                                if (! empty($details)) {
-                                    $auction->update([
-                                        'ends_at' => $details['ends_at'] ?? $auction->ends_at,
-                                        'status' => $details['status'] ?? $auction->status,
-                                        'shipping_fee_yen' => $details['shipping_fee_yen'] ?? $auction->shipping_fee_yen,
-                                        'seller_name' => $details['seller_name'] ?? $auction->seller_name,
-                                        'yahoo_seller_id' => $details['yahoo_seller_id'] ?? $auction->yahoo_seller_id,
-                                        'seller_rating' => $details['seller_rating'] ?? $auction->seller_rating,
-                                        'image_urls' => $details['image_urls'] ?? $auction->image_urls,
-                                    ]);
-                                }
-                                sleep($delay);
+                                \App\Jobs\SyncAuctionDetails::dispatch($auction);
                             }
 
                             $totalUpdated++;
@@ -148,36 +139,23 @@ class ScrapeAllYahoo extends Command
                                 'last_synced_at' => now(),
                             ];
 
-                            if ($fetchDetails) {
-                                $this->line("      📅 Fetching details for {$yid}...");
-                                $details = $scraper->getAuctionDetails($yid);
-                                if (! empty($details)) {
-                                    $auctionData = array_merge($auctionData, [
-                                        'ends_at' => $details['ends_at'] ?? $auctionData['ends_at'],
-                                        'status' => $details['status'] ?? $auctionData['status'],
-                                        'seller_name' => $details['seller_name'] ?? null,
-                                        'yahoo_seller_id' => $details['yahoo_seller_id'] ?? null,
-                                        'shipping_fee_yen' => $details['shipping_fee_yen'] ?? null,
-                                        'seller_rating' => $details['seller_rating'] ?? null,
-                                        'image_urls' => $details['image_urls'] ?? null,
-                                    ]);
-                                }
-                                sleep($delay);
-                            }
-
                             try {
-                                Auction::create($auctionData);
+                                $newAuction = Auction::create($auctionData);
                                 $totalCreated++;
+
+                                if ($fetchDetails) {
+                                    \App\Jobs\SyncAuctionDetails::dispatch($newAuction);
+                                }
                             } catch (QueryException $e) {
                                 if ($e->getCode() == 23000) {
-                                    // Race condition fallback: Re-fetch and update
+                                    // Race condition fallback
                                     $retryAuction = Auction::withTrashed()->where('yahoo_auction_id', $yid)->first();
                                     if ($retryAuction) {
-                                        if ($retryAuction->trashed()) {
-                                            $retryAuction->restore();
-                                        }
+                                        if ($retryAuction->trashed()) $retryAuction->restore();
                                         $retryAuction->update($auctionData);
                                         $totalUpdated++;
+                                        
+                                        if ($forceDetails) \App\Jobs\SyncAuctionDetails::dispatch($retryAuction);
                                     }
                                 } else {
                                     throw $e;
@@ -207,6 +185,17 @@ class ScrapeAllYahoo extends Command
             $this->info('✨ Comprehensive scrape completed!');
             $this->info("📊 Total Created: {$totalCreated}");
             $this->info("📊 Total Updated: {$totalUpdated}");
+
+            if ($totalCreated > 0) {
+                $duration = now()->diffInSeconds($log->started_at);
+                $admins = \App\Models\User::where('is_admin', true)->get();
+                if ($admins->isNotEmpty()) {
+                    \Illuminate\Support\Facades\Notification::send(
+                        $admins, 
+                        new \App\Notifications\ScraperCompleted($totalCreated, $totalUpdated, $duration)
+                    );
+                }
+            }
 
         } catch (\Throwable $e) {
             $this->error('❌ Error: '.$e->getMessage());
