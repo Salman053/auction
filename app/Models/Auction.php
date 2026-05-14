@@ -149,6 +149,9 @@ class Auction extends Model
             $query->where('status', $status);
         }
 
+        // Always prioritize auctions that have images fetched
+        $query->orderByRaw('image_urls IS NOT NULL AND JSON_LENGTH(image_urls) > 0 DESC');
+
         $query->when($filters['sort'] ?? null, function ($query, $sort) {
             match ($sort) {
                 'price_asc' => $query->orderBy('current_bid_yen', 'asc'),
