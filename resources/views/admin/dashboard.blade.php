@@ -7,6 +7,46 @@
         </div>
 
         <div class="flex items-center gap-3">
+            <form action="{{ route('admin.scraping-logs.start') }}" method="POST"
+                onsubmit="return !{{ $isScrapingRunning ? 'true' : 'false' }} && confirm('Start full scrape (13 pages, 1s delay)? This will run in the background.')">
+                @csrf
+                <button type="submit" @if ($isScrapingRunning) disabled @endif
+                    class="flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-black text-white shadow-lg transition
+                        {{ $isScrapingRunning
+                            ? 'cursor-not-allowed bg-amber-500 shadow-amber-500/20 opacity-80'
+                            : 'bg-emerald-600 shadow-emerald-600/20 hover:bg-emerald-700' }}">
+                    @if ($isScrapingRunning)
+                        <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                        Scraper Running…
+                    @else
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        Run Manual Scrape
+                    @endif
+                </button>
+            </form>
+
+            @if($isScrapingRunning)
+                <form action="{{ route('admin.scraping-logs.stop') }}" method="POST"
+                    onsubmit="return confirm('Stop the running scraper? It will halt after the current page.')">
+                    @csrf
+                    <button type="submit"
+                        class="flex items-center gap-2 rounded-lg bg-red-600 px-5 py-3 text-sm font-black text-white shadow-lg shadow-red-600/20 transition hover:bg-red-700">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10h6v4H9z" />
+                        </svg>
+                        Stop Scraper
+                    </button>
+                </form>
+            @endif
             <a href="{{ route('admin.scraping-logs.index') }}"
                 class="flex items-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-bold shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50 dark:bg-zinc-900 dark:ring-white/10 dark:hover:bg-white/5">
                 <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -98,6 +138,11 @@
     </div>
 
     <script>
+        // (function() {
+        //     setTimeout(() => {
+        //         window.location.reload()
+        //     }, 1000);
+        // })()
         document.addEventListener('DOMContentLoaded', () => {
             const performanceData = @json($performanceData);
 

@@ -95,6 +95,27 @@
                 <div
                     class="rounded-sm bg-white dark:bg-zinc-900 p-8 shadow-lg border border-zinc-200 dark:border-white/10 relative overflow-hidden">
                     <h2 class="text-xl font-black mb-8">Place Bid</h2>
+                    
+                    @if($userHighestActiveBid)
+                        @if($highestActiveBid && $userHighestActiveBid->id === $highestActiveBid->id)
+                            <div class="mb-6 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 p-4 border border-emerald-200 dark:border-emerald-800">
+                                <p class="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    You are the current top bidder
+                                </p>
+                                <p class="text-emerald-600 dark:text-emerald-500 text-sm mt-1">Your Max Bid: ¥{{ number_format($userHighestActiveBid->max_amount_yen) }}</p>
+                            </div>
+                        @else
+                            <div class="mb-6 rounded-lg bg-amber-50 dark:bg-amber-900/20 p-4 border border-amber-200 dark:border-amber-800">
+                                <p class="text-amber-700 dark:text-amber-400 font-bold flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                    You have been outbid
+                                </p>
+                                <p class="text-amber-600 dark:text-amber-500 text-sm mt-1">Your Max Bid: ¥{{ number_format($userHighestActiveBid->max_amount_yen) }}</p>
+                            </div>
+                        @endif
+                    @endif
+
                     <form id="bid-form" method="POST" action="{{ route('user.auctions.bids.store', $auction) }}"
                         class="space-y-6">
                         @csrf

@@ -20,8 +20,8 @@ test('user auction detail shows image carousel fallback and proxy bid summary', 
         'current_bid_yen' => 1000,
         'thumbnail_url' => 'https://example.com/thumb.jpg',
         'image_urls' => [
-            'https://example.com/skipped1.jpg',
-            'https://example.com/skipped2.jpg',
+            'https://example.com/banner.jpg',
+            'https://example.com/promo.jpg',
             'https://example.com/visible.jpg',
         ],
     ]);
@@ -35,6 +35,6 @@ test('user auction detail shows image carousel fallback and proxy bid summary', 
     $response->assertSeeText('Current Bid');
     $response->assertSeeText('Your Max Bid');
     $response->assertSee('https://example.com/visible.jpg');
-    $response->assertDontSee('https://example.com/skipped1.jpg');
+    $response->assertDontSee('https://example.com/banner.jpg');
     $response->assertSeeText('You are the current top bidder');
 });

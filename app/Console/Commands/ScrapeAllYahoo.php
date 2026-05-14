@@ -2,12 +2,17 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\SyncAuctionDetails;
 use App\Models\Auction;
 use App\Models\ScrapingLog;
+use App\Models\User;
+use App\Notifications\ScraperCompleted;
 use App\Services\AuctionReconciliationService;
 use App\Services\ScraperService;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class ScrapeAllYahoo extends Command
@@ -82,9 +87,19 @@ class ScrapeAllYahoo extends Command
 
         try {
             foreach ($topLevelCategories as $id => $name) {
+                if (Cache::has('scraper:stop_requested')) {
+                    $this->warn('🛑 Stop requested by admin. Halting.');
+                    break;
+                }
+
                 $this->info("📁 Scraping Category: {$name} ({$id})");
 
                 for ($page = 1; $page <= $pages; $page++) {
+                    if (Cache::has('scraper:stop_requested')) {
+                        $this->warn('🛑 Stop requested. Halting after this category.');
+                        break 2;
+                    }
+
                     $this->line("   📄 Page {$page}...");
                     $results = $scraper->search('', $page, $id, true, $minPrice, $maxPrice);
 
@@ -102,7 +117,9 @@ class ScrapeAllYahoo extends Command
 
                     foreach ($results as $item) {
                         $yid = trim((string) $item['yahoo_auction_id']);
-                        if (empty($yid)) continue;
+                        if (empty($yid)) {
+                            continue;
+                        }
 
                         $auction = $existingAuctions->get($yid);
 
@@ -123,7 +140,7 @@ class ScrapeAllYahoo extends Command
                             app(AuctionReconciliationService::class)->reconcile($auction);
 
                             if ($forceDetails) {
-                                \App\Jobs\SyncAuctionDetails::dispatch($auction);
+                                SyncAuctionDetails::dispatch($auction);
                             }
 
                             $totalUpdated++;
@@ -144,18 +161,22 @@ class ScrapeAllYahoo extends Command
                                 $totalCreated++;
 
                                 if ($fetchDetails) {
-                                    \App\Jobs\SyncAuctionDetails::dispatch($newAuction);
+                                    SyncAuctionDetails::dispatch($newAuction);
                                 }
                             } catch (QueryException $e) {
                                 if ($e->getCode() == 23000) {
                                     // Race condition fallback
                                     $retryAuction = Auction::withTrashed()->where('yahoo_auction_id', $yid)->first();
                                     if ($retryAuction) {
-                                        if ($retryAuction->trashed()) $retryAuction->restore();
+                                        if ($retryAuction->trashed()) {
+                                            $retryAuction->restore();
+                                        }
                                         $retryAuction->update($auctionData);
                                         $totalUpdated++;
-                                        
-                                        if ($forceDetails) \App\Jobs\SyncAuctionDetails::dispatch($retryAuction);
+
+                                        if ($forceDetails) {
+                                            SyncAuctionDetails::dispatch($retryAuction);
+                                        }
                                     }
                                 } else {
                                     throw $e;
@@ -188,11 +209,11 @@ class ScrapeAllYahoo extends Command
 
             if ($totalCreated > 0) {
                 $duration = now()->diffInSeconds($log->started_at);
-                $admins = \App\Models\User::where('is_admin', true)->get();
+                $admins = User::where('is_admin', true)->get();
                 if ($admins->isNotEmpty()) {
-                    \Illuminate\Support\Facades\Notification::send(
-                        $admins, 
-                        new \App\Notifications\ScraperCompleted($totalCreated, $totalUpdated, $duration)
+                    Notification::send(
+                        $admins,
+                        new ScraperCompleted($totalCreated, $totalUpdated, $duration)
                     );
                 }
             }

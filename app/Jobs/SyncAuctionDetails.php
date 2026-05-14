@@ -14,17 +14,16 @@ class SyncAuctionDetails implements ShouldQueue
     use InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 3;
-    public int $backoff = [5, 10, 30];
 
-    public function __construct(public Auction $auction)
-    {
-    }
+    public array $backoff = [5, 10, 30];
+
+    public function __construct(public Auction $auction) {}
 
     public function handle(ScraperService $scraper): void
     {
         $details = $scraper->getAuctionDetails($this->auction->yahoo_auction_id);
-        
-        if (!empty($details)) {
+
+        if (! empty($details)) {
             $this->auction->update([
                 'ends_at' => $details['ends_at'] ?? $this->auction->ends_at,
                 'status' => $details['status'] ?? $this->auction->status,

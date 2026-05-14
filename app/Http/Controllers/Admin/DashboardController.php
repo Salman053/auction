@@ -52,6 +52,7 @@ class DashboardController extends Controller
 
             $lastRun = ScrapingLog::query()->latest('started_at')->first();
             $scraperStatus = $lastRun?->status ?? 'unknown';
+            $isScrapingRunning = ScrapingLog::query()->where('status', 'running')->exists();
 
             $failedProxyCount = Proxy::query()
                 ->where('is_active', true)
@@ -89,6 +90,7 @@ class DashboardController extends Controller
                 'pendingDepositCount' => $pendingDepositCount,
                 'approvedDepositSumYen' => $approvedDepositSumYen,
                 'scraperStatus' => $scraperStatus,
+                'isScrapingRunning' => $isScrapingRunning,
                 'recentActivity' => $recentActivity,
                 'performanceData' => [
                     'labels' => $labels,

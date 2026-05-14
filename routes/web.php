@@ -164,6 +164,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/auctions/{auction}/reject-shipment', [AuctionController::class, 'rejectShipment'])->name('auctions.reject-shipment');
         Route::get('/proxies', [AdminProxyController::class, 'index'])->name('proxies.index');
         Route::get('/scraping-logs', [AdminScrapingLogController::class, 'index'])->name('scraping-logs.index');
+        Route::post('/scraping-logs/start', [AdminScrapingLogController::class, 'startScrape'])->name('scraping-logs.start');
+        Route::post('/scraping-logs/stop', [AdminScrapingLogController::class, 'stopScrape'])->name('scraping-logs.stop');
         Route::resource('shipping_rates', ShippingRateController::class);
 
         Route::get('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'edit'])->name('profile.edit');
