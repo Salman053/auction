@@ -7,16 +7,21 @@
                 <div class="relative overflow-hidden rounded-lg lg:col-span-8 bg-zinc-900 group">
                     <div x-data="{
                         active: 0,
-                        [
-                            { title: 'Premium Designer Fashion', subtitle: 'Authentic Luxury Labels & Streetwear', cta: 'Shop Fashion', img: 'unsplash.com' },
-                            { title: 'Rare Collectible Toys', subtitle: 'Vintage Figures & Japan-Exclusive Releases', cta: 'Explore Toys', img: 'unsplash.com' },
-                            { title: 'Retro & Modern Gaming', subtitle: 'Import Consoles, Rare Games & Gear', cta: 'View Gaming', img: 'unsplash.com' },
-                            { title: 'High-End Japanese Electronics', subtitle: 'Premium Audio & Vintage Camera Gear', cta: 'Browse Electronics', img: 'unsplash.com' }
-                        ]
-                    
+                        slides: [
+                            { title: 'Exclusive Japanese Antiques', subtitle: 'Direct Access to Yahoo Japan Auctions', cta: 'Browse Antiques', img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=2070&auto=format&fit=crop' },
+                            { title: 'Luxury Timepieces', subtitle: 'Rare Watches from Tokyo Collectors', cta: 'View Watches', img: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=2080&auto=format&fit=crop' },
+                            { title: 'Classic JDM Parts', subtitle: 'Genuine Automotive Components', cta: 'Search Parts', img: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2070&auto=format&fit=crop' },
+                            { title: 'Retro Gaming & Toys', subtitle: 'Nostalgic Japanese Consoles and Collectibles', cta: 'Explore Toys', img: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop' },
+                            { title: 'High-End Electronics', subtitle: 'Cameras, Audio Gear, and Latest Tech', cta: 'Shop Electronics', img: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=2070&auto=format&fit=crop' },
+                            { title: 'Anime Figures & Merch', subtitle: 'Rare Collectibles Straight from Akihabara', cta: 'Find Figures', img: 'https://images.unsplash.com/photo-1612487528505-d2338264c821?q=80&w=2070&auto=format&fit=crop' },
+                            { title: 'Japanese Fashion', subtitle: 'Exclusive Streetwear and Designer Apparel', cta: 'Shop Fashion', img: 'https://plus.unsplash.com/premium_photo-1675186049366-64a655f8f537?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGZhc2hpb258ZW58MHx8MHx8fDA%3D' },
+                            { title: 'Rare Trading Cards', subtitle: 'Vintage Pokémon and Yu-Gi-Oh Cards', cta: 'Collect Cards', img: 'https://images.unsplash.com/photo-1621568670868-24a7dfc590e9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGFyZSUyMFRyYWRpbmclMjBDYXJkc3xlbnwwfHwwfHx8MA%3D%3D' },
+                            { title: 'Traditional Crafts', subtitle: 'Handmade Pottery and Japanese Arts', cta: 'Discover Arts', img: 'https://images.unsplash.com/photo-1641582163456-c3123a3f8063?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fFRyYWRpdGlvbmFsJTIwQ3JhZnRzfGVufDB8fDB8fHww' },
+                            { title: 'Vintage Camera Gear', subtitle: 'Classic Lenses and Film Cameras', cta: 'Browse Cameras', img: 'https://images.unsplash.com/photo-1732833661457-cd52080c0d0b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Y2FtZXJhJTIwZ2VhcnN8ZW58MHx8MHx8fDA%3D' }
+                        ],
                         next() { this.active = (this.active + 1) % this.slides.length },
                         prev() { this.active = (this.active - 1 + this.slides.length) % this.slides.length }
-                    }" x-init="setInterval(() => next(), 10000)" class="h-full">
+                    }" x-init="setInterval(() => next(), 4000)" class="h-full">
                         <template x-for="(slide, index) in slides" :key="index">
                             <div x-show="active === index" x-transition:enter="transition ease-out duration-700"
                                 x-transition:enter-start="opacity-0 scale-105"
@@ -211,6 +216,22 @@
                 </div>
             </div>
         </section>
+        {{-- Video Tutorial Section --}}
+        <div class="mt-32">
+            <div class="mx-auto max-w-2xl text-center mb-12">
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white">Platform Walkthrough</h2>
+                <p class="mt-4 text-slate-500 dark:text-zinc-400">See the protocol in action with a quick guided
+                    overview.</p>
+            </div>
+            <div class="mx-auto max-w-5xl">
+                <div class="aspect-video w-full rounded-3xl overflow-hidden shadow-2xl bg-slate-900">
+                    <video controls class="h-full w-full object-cover">
+                        <source src="{{ asset('media/tuturial.mp4') }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
 
         {{-- Final CTA --}}
         <section class="mx-auto max-w-7xl px-4 py-20 lg:px-8 text-center">
