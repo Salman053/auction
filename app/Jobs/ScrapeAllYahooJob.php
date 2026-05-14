@@ -26,12 +26,17 @@ class ScrapeAllYahooJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Artisan::call('yahoo:scrape-all', [
+        $args = [
             '--pages' => $this->pages,
             '--delay' => $this->scrapeDelay,
             '--min' => $this->min,
             '--max' => $this->max,
-            '--fetch-details' => $this->fetchDetails,
-        ]);
+        ];
+
+        if ($this->fetchDetails) {
+            $args['--fetch-details'] = true;
+        }
+
+        Artisan::call('yahoo:scrape-all', $args);
     }
 }
