@@ -18,7 +18,7 @@
                     </div>
 
                     {{-- <div class="flex flex-wrap gap-4">
-                        <div class="flex items-center gap-2 rounded-2xl bg-zinc-100 px-4 py-2 dark:bg-white/5">
+                        <div class="flex items-center gap-2 rounded-lg bg-zinc-100 px-4 py-2 dark:bg-white/5">
                             <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
                             <span class="text-xs font-bold text-zinc-600 dark:text-zinc-400">1.8M+ Active Listings</span>
                         </div>
@@ -38,7 +38,7 @@
                 <div
                     class="flex h-96 flex-col items-center justify-center rounded-[3rem] border-2 border-dashed border-zinc-200 bg-white/50 text-center dark:border-white/5 dark:bg-zinc-900/50">
                     <div
-                        class="flex h-20 w-20 items-center justify-center rounded-3xl bg-zinc-100 text-zinc-400 dark:bg-white/5">
+                        class="flex h-20 w-20 items-center justify-center rounded-lg bg-zinc-100 text-zinc-400 dark:bg-white/5">
                         <svg class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -62,4 +62,48 @@
             @endif
         </section>
     </div>
+
+    <script>
+        (function() {
+            const initScrollTracking = () => {
+                const scrollKey = 'publicAuctionIndex_' + window.location.search;
+                const scrollElement = document.querySelector('main') || window;
+                
+                // 1. Instantly restore if we have a value
+                const savedScroll = sessionStorage.getItem(scrollKey);
+                if (savedScroll) {
+                    setTimeout(() => {
+                        if (scrollElement === window) {
+                            window.scrollTo({ top: parseInt(savedScroll), behavior: 'instant' });
+                        } else {
+                            scrollElement.scrollTop = parseInt(savedScroll);
+                        }
+                    }, 50);
+                }
+
+                // 2. Track scroll events continuously (highly reliable)
+                scrollElement.addEventListener('scroll', () => {
+                    const scrollPos = scrollElement === window ? window.scrollY : scrollElement.scrollTop;
+                    sessionStorage.setItem(scrollKey, scrollPos);
+                }, { passive: true });
+            };
+
+            // Run on load
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initScrollTracking);
+            } else {
+                initScrollTracking();
+            }
+
+            // Run when restoring from back/forward cache
+            window.addEventListener('pageshow', (event) => {
+                if (event.persisted) {
+                    initScrollTracking();
+                }
+            });
+            
+            // Run on Livewire navigation
+            document.addEventListener('livewire:navigated', initScrollTracking);
+        })();
+    </script>
 </x-guest-layout>

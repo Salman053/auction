@@ -12,7 +12,7 @@
                 class="mt-12 rounded-[2.5rem] bg-white p-10 shadow-2xl ring-1 ring-slate-100 dark:bg-zinc-900 dark:ring-white/5">
                 @if (session('status'))
                     <div
-                        class="mb-8 rounded-2xl bg-emerald-50 p-4 text-xs font-bold text-emerald-600 dark:bg-emerald-500/10">
+                        class="mb-8 rounded-lg bg-emerald-50 p-4 text-xs font-bold text-emerald-600 dark:bg-emerald-500/10">
                         {{ session('status') }}
                     </div>
                 @endif
@@ -26,14 +26,14 @@
                             Email</label>
                         <input id="email" name="email" type="email" value="{{ old('email') }}" required
                             autofocus
-                            class="w-full rounded-2xl border-none bg-slate-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white">
+                            class="w-full rounded-lg border-none bg-slate-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white">
                         @error('email')
                             <p class="mt-2 text-xs font-bold text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <button type="submit"
-                        class="flex w-full items-center justify-center rounded-2xl bg-brand-navy py-4 text-[10px] font-black uppercase tracking-widest text-brand-gold shadow-xl shadow-brand-gold/10 transition hover:bg-black/10 hover:scale-[1.02] active:scale-95">
+                        class="flex w-full items-center justify-center rounded-lg bg-brand-navy py-4 text-[10px] font-black uppercase tracking-widest text-brand-gold shadow-xl shadow-brand-gold/10 transition hover:bg-black/10 hover:scale-[1.02] active:scale-95">
                         Email Recovery Link
                     </button>
 

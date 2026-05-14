@@ -1,12 +1,13 @@
 <x-user-layout :title="'Withdrawals'">
-    <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
+    <div class="rounded-lg bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h1 class="text-2xl font-semibold tracking-tight">Withdrawals</h1>
                 <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">Request withdrawals and track status.</p>
             </div>
 
-            <div class="relative overflow-hidden rounded-[2rem] bg-blue-600 p-6 shadow-xl shadow-blue-600/20 ring-1 ring-white/10 sm:w-72">
+            <div
+                class="relative overflow-hidden rounded-[2rem] bg-blue-600 p-6 shadow-xl shadow-blue-600/20 ring-1 ring-white/10 sm:w-72">
                 <div class="absolute -right-4 -top-4 opacity-10">
                     <svg class="h-24 w-24 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -14,7 +15,8 @@
                     </svg>
                 </div>
                 <div class="relative">
-                    <div class="text-[10px] font-black uppercase tracking-widest text-blue-100/80">Available for Payout</div>
+                    <div class="text-[10px] font-black uppercase tracking-widest text-blue-100/80">Available for Payout
+                    </div>
                     <div class="mt-2 text-3xl font-black text-white">
                         ¥{{ number_format((int) ($wallet?->balance_yen ?? 0)) }}</div>
                 </div>
@@ -23,15 +25,14 @@
 
         @if (session('status') === 'withdrawal-requested')
             <div
-                class="mt-4 rounded-2xl border border-blue-600/20 bg-blue-600/10 px-4 py-3 text-sm text-zinc-900 dark:text-zinc-100">
+                class="mt-4 rounded-lg border border-blue-600/20 bg-blue-600/10 px-4 py-3 text-sm text-zinc-900 dark:text-zinc-100">
                 Withdrawal requested. Admin approval pending.
             </div>
         @endif
     </div>
 
     <div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div
-            class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-zinc-900 dark:ring-white/10 lg:p-8">
+        <div class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-zinc-900 dark:ring-white/10 lg:p-8">
             <h2 class="text-xl font-black text-slate-900 dark:text-white">Pull Funds to Bank</h2>
             <p class="mt-1 text-xs font-bold text-slate-500">Initiate an instant simulated payout routing to your bank.
             </p>
@@ -48,7 +49,7 @@
                         </div>
                         <input id="amount_yen" name="amount_yen" type="number" min="1000"
                             value="{{ old('amount_yen', 10000) }}"
-                            class="block w-full rounded-2xl border-0 bg-zinc-50 py-4 pl-10 pr-4 text-lg font-bold text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 dark:bg-black/20 dark:text-white dark:ring-white/10 dark:focus:ring-blue-600" />
+                            class="block w-full rounded-lg border-0 bg-zinc-50 py-4 pl-10 pr-4 text-lg font-bold text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 dark:bg-black/20 dark:text-white dark:ring-white/10 dark:focus:ring-blue-600" />
                     </div>
                     @error('amount_yen')
                         <div class="mt-2 text-xs font-bold text-red-500">{{ $message }}</div>
@@ -60,7 +61,7 @@
                         <label for="destination_type"
                             class="text-xs font-black uppercase tracking-widest text-slate-500">Payout Method</label>
                         <select id="destination_type" name="destination_type"
-                            class="mt-2 block w-full rounded-2xl border-0 bg-zinc-50 py-4 px-5 text-sm font-bold text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 focus:ring-2 focus:ring-inset focus:ring-blue-600 dark:bg-black/20 dark:text-white dark:ring-white/10 dark:focus:ring-blue-600">
+                            class="mt-2 block w-full rounded-lg border-0 bg-zinc-50 py-4 px-5 text-sm font-bold text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 focus:ring-2 focus:ring-inset focus:ring-blue-600 dark:bg-black/20 dark:text-white dark:ring-white/10 dark:focus:ring-blue-600">
                             <option value="bank_transfer">Bank Transfer</option>
                             <option value="paypal">PayPal</option>
                             <option value="crypto">Cryptocurrency</option>
@@ -76,7 +77,7 @@
                             (Optional)</label>
                         <input id="transaction_id" name="transaction_id" value="{{ old('transaction_id') }}"
                             placeholder="e.g. My Savings Account"
-                            class="mt-2 block w-full rounded-2xl border-0 bg-zinc-50 py-4 px-4 text-sm font-bold text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 dark:bg-black/20 dark:text-white dark:ring-white/10 dark:focus:ring-blue-600" />
+                            class="mt-2 block w-full rounded-lg border-0 bg-zinc-50 py-4 px-4 text-sm font-bold text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 dark:bg-black/20 dark:text-white dark:ring-white/10 dark:focus:ring-blue-600" />
                     </div>
                 </div>
 
@@ -86,7 +87,7 @@
                         Details</label>
                     <textarea required id="account_details" name="memo" rows="3"
                         placeholder="Bank Name: ...&#10;Account Number: ...&#10;SWIFT/IBAN: ..."
-                        class="mt-2 block w-full rounded-2xl border-0 bg-zinc-50 py-4 px-4 text-sm font-bold text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 dark:bg-black/20 dark:text-white dark:ring-white/10 dark:focus:ring-blue-600">{{ old('memo') }}</textarea>
+                        class="mt-2 block w-full rounded-lg border-0 bg-zinc-50 py-4 px-4 text-sm font-bold text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 dark:bg-black/20 dark:text-white dark:ring-white/10 dark:focus:ring-blue-600">{{ old('memo') }}</textarea>
                     <p class="mt-2 text-[10px] font-medium text-slate-400">Please provide all necessary details for the
                         chosen payout method.</p>
                 </div>
@@ -95,7 +96,7 @@
                     <label for="receipt" class="text-xs font-black uppercase tracking-widest text-slate-500">Upload
                         Receipt / Screenshot (Optional)</label>
                     <div
-                        class="mt-2 flex items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 p-6 dark:border-white/10 dark:bg-black/20">
+                        class="mt-2 flex items-center justify-center rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 p-6 dark:border-white/10 dark:bg-black/20">
                         <input id="receipt" name="receipt" type="file" accept="image/*,application/pdf"
                             class="hidden"
                             onchange="document.getElementById('receipt-name').textContent = this.files[0].name" />
@@ -113,12 +114,12 @@
 
 
                 <button type="submit"
-                    class="w-full rounded-2xl bg-blue-600 px-8 py-4 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 hover:scale-[1.02]">Request
+                    class="w-full rounded-lg bg-blue-600 px-8 py-4 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 hover:scale-[1.02]">Request
                     Withdrawal</button>
             </form>
         </div>
 
-        <div class="rounded-3xl bg-white shadow-sm ring-1 ring-slate-200 dark:bg-zinc-900 dark:ring-white/10">
+        <div class="rounded-lg bg-white shadow-sm ring-1 ring-slate-200 dark:bg-zinc-900 dark:ring-white/10">
             <div class="border-b border-slate-100 p-6 dark:border-white/5 lg:px-8">
                 <h2 class="text-xl font-black text-slate-900 dark:text-white">Payout History</h2>
             </div>

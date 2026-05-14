@@ -19,7 +19,7 @@
                             Email</label>
                         <input id="email" name="email" type="email" value="{{ old('email') }}" required
                             autofocus
-                            class="w-full rounded-2xl border-none bg-slate-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white">
+                            class="w-full rounded-lg border-none bg-slate-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white">
                         @error('email')
                             <p class="mt-2 text-xs font-bold text-rose-500">{{ $message }}</p>
                         @enderror
@@ -34,7 +34,7 @@
                                 Access?</a>
                         </div>
                         <input id="password" name="password" type="password" required
-                            class="w-full rounded-2xl border-none bg-slate-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white">
+                            class="w-full rounded-lg border-none bg-slate-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white">
                         @error('password')
                             <p class="mt-2 text-xs font-bold text-rose-500">{{ $message }}</p>
                         @enderror
@@ -48,7 +48,7 @@
                     </div>
 
                     <button type="submit"
-                        class="w-full rounded-2xl bg-brand-navy py-4 text-sm font-black text-brand-gold shadow-lg transition hover:scale-[1.02] active:scale-95 dark:bg-brand-gold dark:text-brand-navy">
+                        class="w-full rounded-lg bg-brand-navy py-4 text-sm font-black text-brand-gold shadow-lg transition hover:scale-[1.02] active:scale-95 dark:bg-brand-gold dark:text-brand-navy">
                         Authorize Identity
                     </button>
                 </form>

@@ -1,5 +1,5 @@
 <x-user-layout :title="'Support'">
-    <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
+    <div class="rounded-lg bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h1 class="text-2xl font-semibold tracking-tight">Support Inquiries</h1>
@@ -8,7 +8,7 @@
             </div>
             <div>
                 <a href="{{ route('contact') }}"
-                    class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-8 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 hover:scale-[1.02]">
+                    class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 hover:scale-[1.02]">
                     New Inquiry
                 </a>
             </div>
@@ -17,7 +17,7 @@
 
     <div class="mt-6">
         <div
-            class="rounded-3xl bg-white shadow-sm ring-1 ring-slate-200 dark:bg-zinc-900 dark:ring-white/10 overflow-hidden">
+            class="rounded-lg bg-white shadow-sm ring-1 ring-slate-200 dark:bg-zinc-900 dark:ring-white/10 overflow-hidden">
             @if ($tickets->isEmpty())
                 <div class="p-12 text-center">
                     <div

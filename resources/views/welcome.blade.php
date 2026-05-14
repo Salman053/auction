@@ -9,15 +9,19 @@
 </head>
 
 <body class="bg-zinc-950 flex items-center justify-center min-h-screen text-white overflow-hidden relative"
-    x-data="{ 
-        active: 0, 
-        items: @js($featured->map(fn($a) => [
+    x-data="{
+        active: 0,
+        items: @js(
+    $featured->map(
+        fn($a) => [
             'id' => $a->id,
             'title' => Str::limit($a->title, 50),
             'price' => '¥' . number_format($a->current_bid_yen),
             'img' => $a->thumbnail_url,
-            'url' => route('auctions.show', $a)
-        ])),
+            'url' => route('auctions.show', $a),
+        ],
+    ),
+),
         next() { this.active = (this.active + 1) % this.items.length },
         init() { setInterval(() => this.next(), 8000) }
     }">
@@ -25,31 +29,33 @@
     {{-- Interactive Auction Background Carousel --}}
     <div class="absolute inset-0 z-0">
         <template x-for="(item, index) in items" :key="index">
-            <div x-show="active === index" 
-                 x-transition:enter="transition opacity duration-1000"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 x-transition:leave="transition opacity duration-1000"
-                 x-transition:leave-start="opacity-100"
-                 x-transition:leave-end="opacity-0"
-                 class="absolute inset-0">
-                <img :src="item.img" class="h-full w-full object-cover opacity-30 blur-[2px] scale-110 transition-transform duration-[8000ms]" :class="active === index ? 'scale-100' : 'scale-110'" />
-                
+            <div x-show="active === index" x-transition:enter="transition opacity duration-1000"
+                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                x-transition:leave="transition opacity duration-1000" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0" class="absolute inset-0">
+                <img :src="item.img"
+                    class="h-full w-full object-cover opacity-30 blur-[2px] scale-110 transition-transform duration-[8000ms]"
+                    :class="active === index ? 'scale-100' : 'scale-110'" />
+
                 {{-- Floating Auction Card --}}
                 <div class="absolute bottom-20 right-10 md:right-20 text-right z-30 max-w-md pointer-events-none">
-                    <div class="bg-black/40 backdrop-blur-md p-8 rounded-[2.5rem] border border-white/10 pointer-events-auto shadow-2xl transition-all hover:scale-105">
+                    <div
+                        class="bg-black/40 backdrop-blur-md p-8 rounded-[2.5rem] border border-white/10 pointer-events-auto shadow-2xl transition-all hover:scale-105">
                         <p class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500 mb-3">Now Trending</p>
                         <a :href="item.url" class="block">
-                            <h2 class="text-xl font-black text-white mb-4 leading-tight hover:text-blue-500 transition" x-text="item.title"></h2>
+                            <h2 class="text-xl font-black text-white mb-4 leading-tight hover:text-blue-500 transition"
+                                x-text="item.title"></h2>
                         </a>
                         <div class="flex items-center justify-between gap-6">
-                             <div>
-                                <p class="text-[8px] font-black uppercase tracking-widest text-zinc-500">Current Price</p>
+                            <div>
+                                <p class="text-[8px] font-black uppercase tracking-widest text-zinc-500">Current Price
+                                </p>
                                 <p class="text-2xl font-black text-blue-500" x-text="item.price"></p>
-                             </div>
-                             <a :href="item.url" class="bg-white text-zinc-950 px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-600 hover:text-white transition shadow-xl shadow-white/5">
+                            </div>
+                            <a :href="item.url"
+                                class="bg-white text-zinc-950 px-6 py-3 rounded-lg font-black text-[10px] uppercase tracking-widest hover:bg-blue-600 hover:text-white transition shadow-xl shadow-white/5">
                                 Bid Now
-                             </a>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -61,26 +67,31 @@
 
     {{-- Main Brand Overlay --}}
     <div class="relative z-20 text-left w-full max-w-7xl px-8 md:px-20">
-        <div class="flex h-20 w-20 items-center justify-center rounded-2xl bg-blue-600 mb-10 shadow-[0_20px_50px_rgba(37,99,235,0.3)]">
+        <div
+            class="flex h-20 w-20 items-center justify-center rounded-lg bg-blue-600 mb-10 shadow-[0_20px_50px_rgba(37,99,235,0.3)]">
             <span class="text-4xl font-black text-white">A</span>
         </div>
-        
+
         <h1 class="text-6xl md:text-9xl font-black mb-8 tracking-tighter leading-[0.85]">
             AUCTION<br>HUB <span class="text-blue-600">JAPAN</span>
         </h1>
-        
+
         <p class="text-zinc-300 text-lg md:text-2xl mb-12 max-w-xl font-medium leading-relaxed">
-            The professional digital gateway to the Japanese market. Direct proxy access to Yahoo Japan Auctions with technical logistics support.
+            The professional digital gateway to the Japanese market. Direct proxy access to Yahoo Japan Auctions with
+            technical logistics support.
         </p>
 
         <div class="flex flex-col sm:flex-row items-center justify-start gap-8">
-            <a href="{{ route('auctions.index') }}" class="group relative px-12 py-6 bg-blue-600 text-white font-black rounded-2xl hover:scale-105 transition active:scale-95 shadow-2xl shadow-blue-600/20 flex items-center gap-4 text-[11px] uppercase tracking-widest">
+            <a href="{{ route('auctions.index') }}"
+                class="group relative px-12 py-6 bg-blue-600 text-white font-black rounded-lg hover:scale-105 transition active:scale-95 shadow-2xl shadow-blue-600/20 flex items-center gap-4 text-[11px] uppercase tracking-widest">
                 Explore Marketplace
-                <svg class="w-6 h-6 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                <svg class="w-6 h-6 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
             </a>
-            
+
             <nav class="flex items-center gap-8 text-sm font-black uppercase tracking-widest text-zinc-400">
                 <a href="{{ route('login') }}" class="hover:text-white transition">Login</a>
                 <span class="text-zinc-800">/</span>
@@ -110,12 +121,19 @@
     </div>
 
     {{-- Category Strip --}}
-    <div class="absolute bottom-10 left-10 md:left-20 z-20 hidden md:flex items-center gap-10 opacity-40 hover:opacity-100 transition-opacity duration-500">
-        <a href="{{ route('auctions.index', ['category' => '23140']) }}" class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Timepieces</a>
-        <a href="{{ route('auctions.index', ['category' => '26318']) }}" class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Automotive</a>
-        <a href="{{ route('auctions.index', ['category' => '23000']) }}" class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Fashion</a>
-        <a href="{{ route('auctions.index', ['category' => '2084060731']) }}" class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Real Estate</a>
-        <a href="{{ route('auctions.index') }}" class="text-[9px] font-black uppercase tracking-[0.4em] text-blue-500 underline underline-offset-8">All Categories</a>
+    <div
+        class="absolute bottom-10 left-10 md:left-20 z-20 hidden md:flex items-center gap-10 opacity-40 hover:opacity-100 transition-opacity duration-500">
+        <a href="{{ route('auctions.index', ['category' => '23140']) }}"
+            class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Timepieces</a>
+        <a href="{{ route('auctions.index', ['category' => '26318']) }}"
+            class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Automotive</a>
+        <a href="{{ route('auctions.index', ['category' => '23000']) }}"
+            class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Fashion</a>
+        <a href="{{ route('auctions.index', ['category' => '2084060731']) }}"
+            class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Real Estate</a>
+        <a href="{{ route('auctions.index') }}"
+            class="text-[9px] font-black uppercase tracking-[0.4em] text-blue-500 underline underline-offset-8">All
+            Categories</a>
     </div>
 
 </body>

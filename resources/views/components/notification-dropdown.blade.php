@@ -23,7 +23,7 @@
         </button>
 
         <div id="notification-dropdown-menu"
-            class="fixed inset-x-4 top-20 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-3 w-auto sm:w-80 origin-top-right overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10 z-[100] hidden transition-all duration-200">
+            class="fixed inset-x-4 top-20 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-3 w-auto sm:w-80 origin-top-right overflow-hidden rounded-lg bg-white shadow-2xl ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10 z-[100] hidden transition-all duration-200">
 
             <div class="border-b border-black/5 bg-zinc-50 px-5 py-4 dark:border-white/10 dark:bg-white/5">
                 <div class="flex items-center justify-between">

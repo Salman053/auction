@@ -721,7 +721,14 @@ class YahooAuctionHtmlParser
         if ($img instanceof \DOMElement) {
             $src = $img->getAttribute('src');
             if ($src && ! str_starts_with($src, 'data:')) {
-                return $src;
+                $lowerUrl = strtolower($src);
+                if (! str_contains($lowerUrl, 'buyee') && 
+                    ! str_contains($lowerUrl, 's.yimg.jp') && 
+                    ! str_contains($lowerUrl, 'banner') && 
+                    ! str_contains($lowerUrl, 'promo') && 
+                    ! str_contains($lowerUrl, 'logo')) {
+                    return $src;
+                }
             }
         }
 
@@ -735,14 +742,32 @@ class YahooAuctionHtmlParser
         if ($img instanceof \DOMElement) {
             $src = $img->getAttribute('src');
 
-            return $src !== '' ? $src : null;
+            if ($src !== '') {
+                $lowerUrl = strtolower($src);
+                if (! str_contains($lowerUrl, 'buyee') && 
+                    ! str_contains($lowerUrl, 's.yimg.jp') && 
+                    ! str_contains($lowerUrl, 'banner') && 
+                    ! str_contains($lowerUrl, 'promo') && 
+                    ! str_contains($lowerUrl, 'logo')) {
+                    return $src;
+                }
+            }
         }
 
         $fallback = $xpath->query('//img')->item(0);
         if ($fallback instanceof \DOMElement) {
             $src = $fallback->getAttribute('src');
 
-            return $src !== '' ? $src : null;
+            if ($src !== '') {
+                $lowerUrl = strtolower($src);
+                if (! str_contains($lowerUrl, 'buyee') && 
+                    ! str_contains($lowerUrl, 's.yimg.jp') && 
+                    ! str_contains($lowerUrl, 'banner') && 
+                    ! str_contains($lowerUrl, 'promo') && 
+                    ! str_contains($lowerUrl, 'logo')) {
+                    return $src;
+                }
+            }
         }
 
         return null;
@@ -757,7 +782,14 @@ class YahooAuctionHtmlParser
                 if ($img instanceof \DOMElement) {
                     $src = $img->getAttribute('src');
                     if ($src && ! str_starts_with($src, 'data:')) {
-                        $urls[] = $src;
+                        $lowerUrl = strtolower($src);
+                        if (! str_contains($lowerUrl, 'buyee') && 
+                            ! str_contains($lowerUrl, 's.yimg.jp') && 
+                            ! str_contains($lowerUrl, 'banner') && 
+                            ! str_contains($lowerUrl, 'promo') && 
+                            ! str_contains($lowerUrl, 'logo')) {
+                            $urls[] = $src;
+                        }
                     }
                 }
             }

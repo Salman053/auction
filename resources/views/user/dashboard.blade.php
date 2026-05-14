@@ -8,7 +8,7 @@
 
         <div class="flex items-center gap-3">
             <a href="{{ route('user.auctions.index') }}"
-                class="flex items-center gap-2 rounded-2xl bg-blue-600 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-white shadow-xl shadow-blue-600/20 transition hover:bg-blue-700 hover:scale-[1.02] active:scale-95">
+                class="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-white shadow-xl shadow-blue-600/20 transition hover:bg-blue-700 hover:scale-[1.02] active:scale-95">
                 Explore Market
             </a>
         </div>
@@ -65,7 +65,7 @@
         <x-dashboard.card title="Capacity Composition" class="flex flex-col h-full">
             <div id="capacityRadialChart" class="flex-1 min-h-[220px] w-full"></div>
 
-            <div class="mt-6 p-4 rounded-2xl bg-zinc-50/50 dark:bg-white/2 border border-zinc-200 dark:border-white/5">
+            <div class="mt-6 p-4 rounded-lg bg-zinc-50/50 dark:bg-white/2 border border-zinc-200 dark:border-white/5">
                 <div class="flex items-end justify-between mb-3">
                     <div>
                         <p class="text-[10px] font-black uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
@@ -106,7 +106,7 @@
             @foreach ($hotAuctions as $auction)
                 @php($isWatchlisted = in_array($auction->id, $watchlistedAuctionIds ?? [], true))
                 <div
-                    class="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-zinc-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-zinc-900 dark:ring-white/10">
+                    class="group relative flex flex-col overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-zinc-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-zinc-900 dark:ring-white/10">
                     <div class="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                         <img src="{{ $auction->thumbnail_url ?? 'https://placehold.co/400x300/1e293b/d4af37?text=AuctionHub' }}"
                             alt="{{ $auction->title }}"
@@ -272,3 +272,33 @@
         });
     </script>
 </x-user-layout>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const scrollKey = 'dashboardScroll_' + window.location.search;
+        const scrollElement = document.querySelector('main') || window;
+
+        // Restore scroll position
+        const savedScroll = sessionStorage.getItem(scrollKey);
+        if (savedScroll) {
+            setTimeout(() => {
+                if (scrollElement === window) {
+                    window.scrollTo({
+                        top: parseInt(savedScroll),
+                        behavior: 'instant'
+                    });
+                } else {
+                    scrollElement.scrollTop = parseInt(savedScroll);
+                }
+            }, 50);
+        }
+
+        const saveScroll = () => {
+            const scrollPos = scrollElement === window ? window.scrollY : scrollElement.scrollTop;
+            sessionStorage.setItem(scrollKey, scrollPos);
+        };
+
+        window.addEventListener('beforeunload', saveScroll);
+        window.addEventListener('pagehide', saveScroll);
+    });
+</script>

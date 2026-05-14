@@ -3,7 +3,7 @@
         <div>
             <div class="flex items-center gap-3">
                 <a href="{{ route('user.support.index') }}"
-                    class="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-zinc-200 transition hover:bg-zinc-50 dark:bg-zinc-900 dark:ring-white/10 dark:hover:bg-white/5">
+                    class="flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-sm ring-1 ring-zinc-200 transition hover:bg-zinc-50 dark:bg-zinc-900 dark:ring-white/10 dark:hover:bg-white/5">
                     <svg class="h-4 w-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                             d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -44,7 +44,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 space-y-6">
             <div
-                class="rounded-3xl bg-white shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10 overflow-hidden">
+                class="rounded-lg bg-white shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10 overflow-hidden">
                 <div class="border-b border-zinc-100 p-6 dark:border-white/5 lg:px-8 bg-zinc-50/10">
                     <h2 class="text-xl font-black text-zinc-900 dark:text-white leading-tight">{{ $ticket->subject }}
                     </h2>
@@ -79,7 +79,7 @@
                                         class="text-[10px] text-slate-400 font-medium">{{ $message->created_at->diffForHumans() }}</span>
                                 </div>
                                 <div
-                                    class="rounded-2xl p-4 transition-all duration-300 hover:shadow-md {{ $isUser ? 'bg-blue-600 text-white rounded-tr-sm' : 'bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white rounded-tl-sm ring-1 ring-zinc-100 dark:ring-white/5' }}">
+                                    class="rounded-lg p-4 transition-all duration-300 hover:shadow-md {{ $isUser ? 'bg-blue-600 text-white rounded-tr-sm' : 'bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white rounded-tl-sm ring-1 ring-zinc-100 dark:ring-white/5' }}">
                                     <p class="whitespace-pre-wrap text-sm leading-relaxed">{{ $message->body }}</p>
                                 </div>
                             </div>
@@ -99,7 +99,7 @@
         </script>
 
         <div class="space-y-6">
-            <div class="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10">
+            <div class="rounded-lg bg-white p-8 shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10">
                 <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-6">Concierge Log</h3>
                 <div class="space-y-4">
                     <div>
@@ -123,14 +123,14 @@
                 </div>
             </div>
             @if ($ticket->status === 'open')
-                <div class="rounded-3xl  p-8  shadow-2xl relative overflow-hidden group">
+                <div class="rounded-lg  p-8  shadow-2xl relative overflow-hidden group">
                     <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-600/10 blur-2xl"></div>
                     <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 mb-6">Dispatch Reply</h3>
                     <form method="POST" action="{{ route('user.support.reply', $ticket) }}">
                         @csrf
                         <div>
                             <textarea name="body" rows="4"
-                                class="w-full rounded-2xl border-none bg-white/5 px-6 py-5 text-sm font-black text-foreground placeholder:text-white/20 focus:ring-2 focus:ring-blue-600 transition-all"
+                                class="w-full rounded-lg border-none bg-white/5 px-6 py-5 text-sm font-black text-foreground placeholder:text-white/20 focus:ring-2 focus:ring-blue-600 transition-all"
                                 placeholder="Transmission details..." required></textarea>
                             @error('body')
                                 <p class="mt-2 text-xs font-bold text-rose-500">{{ $message }}</p>
@@ -138,7 +138,7 @@
                         </div>
                         <div class="mt-4 flex justify-end">
                             <button type="submit"
-                                class="rounded-2xl bg-blue-600 px-8 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20 transition hover:scale-[1.02] active:scale-95">
+                                class="rounded-lg bg-blue-600 px-8 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20 transition hover:scale-[1.02] active:scale-95">
                                 Send Reply
                             </button>
                         </div>
@@ -146,13 +146,13 @@
                 </div>
             @else
                 <div
-                    class="rounded-3xl bg-slate-50 p-8 text-center ring-1 ring-slate-200 dark:bg-white/5 dark:ring-white/10">
+                    class="rounded-lg bg-slate-50 p-8 text-center ring-1 ring-slate-200 dark:bg-white/5 dark:ring-white/10">
                     <p class="text-sm font-bold text-slate-600 dark:text-slate-400">This ticket is closed. If you still
                         need help, you can reopen it.</p>
                     <form action="{{ route('user.support.reopen', $ticket) }}" method="POST" class="mt-4">
                         @csrf
                         <button type="submit"
-                            class="rounded-2xl bg-white px-6 py-2 text-xs font-bold text-slate-900 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50 dark:bg-zinc-900 dark:text-white dark:ring-white/10">Reopen
+                            class="rounded-lg bg-white px-6 py-2 text-xs font-bold text-slate-900 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50 dark:bg-zinc-900 dark:text-white dark:ring-white/10">Reopen
                             Ticket</button>
                     </form>
                 </div>

@@ -8,7 +8,7 @@
             <div class="p-8 sm:p-10">
                 <div class="flex items-start gap-5">
                     <div id="confirm-dialog-icon"
-                        class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-white/5 text-zinc-900 dark:text-white">
+                        class="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-zinc-100 dark:bg-white/5 text-zinc-900 dark:text-white">
                     </div>
 
                     <div class="flex-1">
@@ -21,11 +21,11 @@
 
                 <div class="mt-10 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                     <button id="confirm-dialog-cancel" type="button"
-                        class="rounded-2xl bg-zinc-100 px-6 py-3.5 text-sm font-bold text-zinc-600 transition hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700">
+                        class="rounded-lg bg-zinc-100 px-6 py-3.5 text-sm font-bold text-zinc-600 transition hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700">
                         Cancel
                     </button>
                     <button id="confirm-dialog-confirm" type="button"
-                        class="rounded-2xl bg-blue-600 px-8 py-3.5 text-sm font-black uppercase tracking-widest text-white transition hover:bg-blue-500 hover:scale-[1.02] active:scale-95 shadow-xl shadow-blue-600/20">
+                        class="rounded-lg bg-blue-600 px-8 py-3.5 text-sm font-black uppercase tracking-widest text-white transition hover:bg-blue-500 hover:scale-[1.02] active:scale-95 shadow-xl shadow-blue-600/20">
                         Confirm Action
                     </button>
                 </div>

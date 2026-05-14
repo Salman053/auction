@@ -1,5 +1,5 @@
 <x-admin-layout :title="'Withdrawals'">
-    <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
+    <div class="rounded-lg bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h1 class="text-2xl font-semibold tracking-tight">Withdrawals</h1>
@@ -18,7 +18,7 @@
     </div>
 
     <div
-        class="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
+        class="mt-6 overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
         <table class="w-full text-left text-sm">
             <thead
                 class="bg-zinc-50 border-b border-black/5 text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400">
@@ -63,7 +63,7 @@
                                             setTimeout(() => this.copied = false, 2000);
                                         }
                                     }" @click="copyMemo"
-                                        class="group relative max-w-[260px] cursor-pointer rounded-2xl border border-zinc-200 bg-zinc-50/50 p-4 transition-all hover:border-blue-600 hover:bg-white dark:border-white/10 dark:bg-black/20 dark:hover:bg-black/30">
+                                        class="group relative max-w-[260px] cursor-pointer rounded-lg border border-zinc-200 bg-zinc-50/50 p-4 transition-all hover:border-blue-600 hover:bg-white dark:border-white/10 dark:bg-black/20 dark:hover:bg-black/30">
 
                                         <!-- Added x-ref here to safely target the text -->
                                         <div x-ref="memoText"
@@ -132,14 +132,14 @@
                                         @csrf
                                         <input type="hidden" name="action" value="approve" />
                                         <button
-                                            class="rounded-xl bg-blue-600 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700"
+                                            class="rounded-lg bg-blue-600 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700"
                                             type="submit">Approve</button>
                                     </form>
                                     <form method="POST" action="{{ route('admin.withdrawals.decide', $w) }}">
                                         @csrf
                                         <input type="hidden" name="action" value="reject" />
                                         <button
-                                            class="rounded-xl bg-rose-50 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-rose-600 hover:bg-rose-100 transition"
+                                            class="rounded-lg bg-rose-50 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-rose-600 hover:bg-rose-100 transition"
                                             type="submit">Reject</button>
                                     </form>
                                 </div>

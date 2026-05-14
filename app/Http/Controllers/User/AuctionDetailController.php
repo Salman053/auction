@@ -59,12 +59,35 @@ class AuctionDetailController extends Controller
         $capacityYen = (int) floor(((int) ($wallet?->balance_yen ?? 0)) * ($multiplierPercent / 100));
         $availableCapacityYen = max(0, $capacityYen - (int) ($wallet?->locked_balance_yen ?? 0) - (int) ($wallet?->withdrawal_locked_yen ?? 0));
 
-        $similarAuctions = Auction::where('id', '!=', $auction->id)
+        $similarAuctions = Auction::active()
+            ->where('id', '!=', $auction->id)
             ->where('yahoo_category_id', $auction->yahoo_category_id)
-            ->where('status', 'active')
-            ->latest()
+            ->where(function ($query) use ($auction) {
+                $query->whereBetween('current_bid_yen', [
+                    $auction->current_bid_yen * 0.7,
+                    $auction->current_bid_yen * 1.3
+                ])->orWhere('current_bid_yen', '>=', $auction->current_bid_yen);
+            })
+            ->inRandomOrder()
             ->limit(4)
             ->get();
+
+        if ($similarAuctions->count() < 4) {
+            $remaining = 4 - $similarAuctions->count();
+            $extraAuctions = Auction::active()
+                ->where('id', '!=', $auction->id)
+                ->where('yahoo_category_id', $auction->yahoo_category_id)
+                ->whereNotIn('id', $similarAuctions->pluck('id'))
+                ->inRandomOrder()
+                ->limit($remaining)
+                ->get();
+
+            $similarAuctions = $similarAuctions->concat($extraAuctions);
+        }
+
+        $watchlistedAuctionIds = $user
+            ? $user->watchlistItems()->pluck('auction_id')->all()
+            : [];
 
         return view('user.auctions.show', [
             'auction' => $auction,
@@ -80,6 +103,7 @@ class AuctionDetailController extends Controller
             'availableCapacityYen' => $availableCapacityYen,
             'categories' => Category::where('depth', 0)->orderBy('priority', 'desc')->orderBy('name')->limit(8)->get(),
             'similarAuctions' => $similarAuctions,
+            'watchlistedAuctionIds' => $watchlistedAuctionIds,
         ]);
     }
 

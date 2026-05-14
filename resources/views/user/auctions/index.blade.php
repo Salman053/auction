@@ -1,8 +1,10 @@
 <x-user-layout :title="'Live Auctions'">
     <div class="mb-12">
         <div class="mb-10">
-            <h1 class="text-4xl font-black tracking-tight text-zinc-900 dark:text-white uppercase tracking-tighter">Live Market</h1>
-            <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">Direct integration with Yahoo Japan Auctions. Access thousands of premium Japanese listings.</p>
+            <h1 class="text-4xl font-black tracking-tight text-zinc-900 dark:text-white uppercase tracking-tighter">Live
+                Market</h1>
+            <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">Direct integration with Yahoo Japan Auctions. Access
+                thousands of premium Japanese listings.</p>
         </div>
 
         <x-auction-filters :filters="$filters" :route="route('user.auctions.index')" />
@@ -13,7 +15,7 @@
             @php($isWatchlisted = in_array($auction->id, $watchlistedAuctionIds, true))
 
             <div
-                class="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-zinc-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-zinc-900 dark:ring-white/10">
+                class="group relative flex flex-col overflow-hidden  rounded-lg visited:bg-gray-600 bg-white shadow-sm ring-1 ring-zinc-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-zinc-900 dark:ring-white/10">
                 <div class="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                     <img src="{{ $auction->thumbnail_url ?? 'https://placehold.co/400x300/1e293b/d4af37?text=AuctionHub' }}"
                         alt="{{ $auction->title }}"
@@ -40,7 +42,8 @@
 
                 <div class="flex flex-1 flex-col p-4">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="inline-flex h-2 w-2 rounded-full bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.4)]"></span>
+                        <span
+                            class="inline-flex h-2 w-2 rounded-full bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.4)]"></span>
                         <span class="text-[10px] font-black uppercase tracking-widest text-zinc-400">
                             @if ($auction->ends_at)
                                 {{ $auction->ends_at->isPast() ? 'Ended' : 'Ends' }}
@@ -76,7 +79,7 @@
             </div>
         @empty
             <div
-                class="col-span-full flex flex-col items-center justify-center rounded-3xl bg-white p-12 text-center shadow-sm dark:bg-zinc-900">
+                class="col-span-full flex flex-col items-center justify-center rounded-lg bg-white p-12 text-center shadow-sm dark:bg-zinc-900">
                 <div class="h-16 w-16 text-zinc-300 dark:text-zinc-700">
                     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"

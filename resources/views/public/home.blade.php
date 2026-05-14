@@ -4,7 +4,7 @@
         <section class="mx-auto max-w-7xl px-4 py-6 lg:px-8">
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-12 h-[300px] lg:h-[450px]">
                 {{-- Main Large Slider --}}
-                <div class="relative overflow-hidden rounded-3xl lg:col-span-8 bg-zinc-900 group">
+                <div class="relative overflow-hidden rounded-lg lg:col-span-8 bg-zinc-900 group">
                     <div x-data="{
                         active: 0,
                         slides: [
@@ -51,7 +51,7 @@
 
                 {{-- Side Banner: Current Stats --}}
                 <div
-                    class="relative overflow-hidden rounded-3xl min-h-fit lg:col-span-4 bg-white p-8 border border-zinc-200 dark:bg-zinc-900 dark:border-white/5">
+                    class="relative overflow-hidden rounded-lg min-h-fit lg:col-span-4 bg-white p-8 border border-zinc-200 dark:bg-zinc-900 dark:border-white/5">
                     <div class="relative z-10">
                         <span class="text-[10px] font-black uppercase tracking-widest text-blue-600">Market
                             Dynamics</span>
@@ -63,7 +63,7 @@
                         <div class="mt-8 space-y-6">
                             <div class="flex items-center gap-4">
                                 <div
-                                    class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-900/20">
+                                    class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-900/20">
                                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -78,7 +78,7 @@
                             </div>
                             <div class="flex items-center gap-4">
                                 <div
-                                    class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20">
+                                    class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20">
                                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -94,7 +94,7 @@
                         </div>
 
                         <a href="{{ route('register') }}"
-                            class="mt-8 flex w-full items-center justify-center rounded-2xl bg-zinc-900 py-4 text-[10px] font-black uppercase tracking-widest text-white transition-all hover:bg-black hover:scale-[1.02] dark:bg-white dark:text-zinc-900">Start
+                            class="mt-8 flex w-full items-center justify-center rounded-lg bg-zinc-900 py-4 text-[10px] font-black uppercase tracking-widest text-white transition-all hover:bg-black hover:scale-[1.02] dark:bg-white dark:text-zinc-900">Start
                             Bidding Now</a>
                     </div>
                 </div>
@@ -142,10 +142,10 @@
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     @foreach ($shippingLocations as $rate)
                         <div
-                            class="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-6 transition-all hover:border-blue-500 hover:shadow-lg dark:border-white/5 dark:bg-zinc-900">
+                            class="group relative overflow-hidden rounded-lg border border-zinc-200 bg-white p-6 transition-all hover:border-blue-500 hover:shadow-lg dark:border-white/5 dark:bg-zinc-900">
                             <div class="flex items-start justify-between">
                                 <div
-                                    class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-900/20 shrink-0">
+                                    class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-900/20 shrink-0">
                                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -220,10 +220,10 @@
                         Join thousands of international collectors today.</p>
                     <div class="mt-12 flex flex-wrap justify-center gap-4">
                         <a href="{{ route('register') }}"
-                            class="rounded-2xl bg-blue-600 px-10 py-5 text-[11px] font-black uppercase tracking-widest text-white shadow-2xl shadow-blue-600/40 transition hover:scale-105 active:scale-95">Create
+                            class="rounded-lg bg-blue-600 px-10 py-5 text-[11px] font-black uppercase tracking-widest text-white shadow-2xl shadow-blue-600/40 transition hover:scale-105 active:scale-95">Create
                             Free Account</a>
                         <a href="{{ route('auctions.index') }}"
-                            class="rounded-2xl bg-white px-10 py-5 text-[11px] font-black uppercase tracking-widest text-zinc-900 shadow-sm ring-1 ring-zinc-200 transition hover:bg-zinc-50 hover:scale-105">Explore
+                            class="rounded-lg bg-white px-10 py-5 text-[11px] font-black uppercase tracking-widest text-zinc-900 shadow-sm ring-1 ring-zinc-200 transition hover:bg-zinc-50 hover:scale-105">Explore
                             Market</a>
                     </div>
                 </div>

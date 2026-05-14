@@ -1,12 +1,15 @@
 <x-admin-layout :title="'Proxies'">
-    <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
+    <div class="rounded-lg bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
         <h1 class="text-2xl font-semibold tracking-tight">Proxy Pool</h1>
-        <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">Health and rotation metrics (CSV import + checks next).</p>
+        <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">Health and rotation metrics (CSV import + checks next).
+        </p>
     </div>
 
-    <div class="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
+    <div
+        class="mt-6 overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
         <table class="w-full text-left text-sm">
-            <thead class="bg-zinc-50 border-b border-black/5 text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400">
+            <thead
+                class="bg-zinc-50 border-b border-black/5 text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-400">
                 <tr>
                     <th class="px-6 py-4">Network Node</th>
                     <th class="px-6 py-4">Geo-Region</th>
@@ -20,8 +23,10 @@
                 @forelse ($proxies as $proxy)
                     <tr>
                         <td class="px-5 py-4">
-                            <div class="font-semibold">{{ $proxy->scheme }}://{{ $proxy->host }}:{{ $proxy->port }}</div>
-                            <div class="text-xs text-zinc-500 dark:text-zinc-400">{{ $proxy->username ? 'auth: '.$proxy->username : '' }}</div>
+                            <div class="font-semibold">{{ $proxy->scheme }}://{{ $proxy->host }}:{{ $proxy->port }}
+                            </div>
+                            <div class="text-xs text-zinc-500 dark:text-zinc-400">
+                                {{ $proxy->username ? 'auth: ' . $proxy->username : '' }}</div>
                         </td>
                         <td class="px-5 py-4">{{ $proxy->country ?? '—' }}</td>
                         <td class="px-5 py-4">{{ $proxy->is_active ? 'Yes' : 'No' }}</td>
@@ -31,7 +36,8 @@
                     </tr>
                 @empty
                     <tr>
-                        <td class="px-5 py-8 text-sm text-zinc-600 dark:text-zinc-400" colspan="6">No proxies added yet.</td>
+                        <td class="px-5 py-8 text-sm text-zinc-600 dark:text-zinc-400" colspan="6">No proxies added
+                            yet.</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -42,4 +48,3 @@
         </div>
     </div>
 </x-admin-layout>
-

@@ -8,7 +8,7 @@
 
         <div class="flex items-center gap-3">
             <a href="{{ route('admin.scraping-logs.index') }}"
-                class="flex items-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-bold shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50 dark:bg-zinc-900 dark:ring-white/10 dark:hover:bg-white/5">
+                class="flex items-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-bold shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50 dark:bg-zinc-900 dark:ring-white/10 dark:hover:bg-white/5">
                 <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -16,7 +16,7 @@
                 View Scraper Logs
             </a>
             <a href="{{ route('admin.settings.index') }}"
-                class="flex items-center gap-2 rounded-2xl bg-blue-600 px-6 py-3 text-sm font-black text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700">
+                class="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-black text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700">
                 System Settings
             </a>
         </div>
@@ -24,8 +24,8 @@
 
     {{-- Admin Stats Grid --}}
     <div class="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <x-dashboard.stat-card label="Total Collectors" value="{{ $userCount }}" trend="+{{ $usersThisWeek }} this week"
-            :trendUp="true">
+        <x-dashboard.stat-card label="Total Collectors" value="{{ $userCount }}"
+            trend="+{{ $usersThisWeek }} this week" :trendUp="true">
             <x-slot name="icon">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -34,7 +34,8 @@
             </x-slot>
         </x-dashboard.stat-card>
 
-        <x-dashboard.stat-card label="Market Items" value="{{ $auctionCount }}" trend="+{{ $auctionsToday }} new today" :trendUp="true">
+        <x-dashboard.stat-card label="Market Items" value="{{ $auctionCount }}" trend="+{{ $auctionsToday }} new today"
+            :trendUp="true">
             <x-slot name="icon">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -43,8 +44,8 @@
             </x-slot>
         </x-dashboard.stat-card>
 
-        <x-dashboard.stat-card label="Active Proxies" value="{{ $activeProxyCount }}" trend="{{ $failedProxyCount }} temporarily disabled"
-            :trendUp="true">
+        <x-dashboard.stat-card label="Active Proxies" value="{{ $activeProxyCount }}"
+            trend="{{ $failedProxyCount }} temporarily disabled" :trendUp="true">
             <x-slot name="icon">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -53,7 +54,8 @@
             </x-slot>
         </x-dashboard.stat-card>
 
-        <x-dashboard.stat-card label="Scraper Status" value="{{ strtoupper($scraperStatus) }}" trend="{{ $pendingDepositCount }} pending deposits" :trendUp="true">
+        <x-dashboard.stat-card label="Scraper Status" value="{{ strtoupper($scraperStatus) }}"
+            trend="{{ $pendingDepositCount }} pending deposits" :trendUp="true">
             <x-slot name="icon">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -89,7 +91,7 @@
             </div>
 
             <a href="{{ route('admin.audit-logs.index') }}"
-                class="mt-8 block w-full rounded-2xl bg-slate-50 py-3 text-center text-xs font-bold uppercase tracking-widest text-slate-600 transition hover:bg-slate-100 dark:bg-white/5 dark:text-zinc-400">
+                class="mt-8 block w-full rounded-lg bg-slate-50 py-3 text-center text-xs font-bold uppercase tracking-widest text-slate-600 transition hover:bg-slate-100 dark:bg-white/5 dark:text-zinc-400">
                 View All Activity
             </a>
         </x-dashboard.card>

@@ -10,7 +10,7 @@
                     activity.</p>
                 <div class="pt-4">
                     <a href="{{ route('user.withdrawals.index') }}"
-                        class="inline-flex items-center gap-2 rounded-2xl bg-zinc-100 dark:bg-white/5 px-6 py-3 text-[10px] font-black uppercase tracking-widest text-zinc-600 dark:text-zinc-400 transition hover:bg-zinc-200 dark:hover:bg-white/10 shadow-sm border border-transparent hover:border-zinc-200 dark:hover:border-zinc-700">
+                        class="inline-flex items-center gap-2 rounded-lg bg-zinc-100 dark:bg-white/5 px-6 py-3 text-[10px] font-black uppercase tracking-widest text-zinc-600 dark:text-zinc-400 transition hover:bg-zinc-200 dark:hover:bg-white/10 shadow-sm border border-transparent hover:border-zinc-200 dark:hover:border-zinc-700">
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                 d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zM17 16l4-4m0 0l-4-4m4 4H7" />
@@ -54,7 +54,7 @@
 
         @if (session('status') === 'deposit-requested')
             <div
-                class="rounded-2xl border border-blue-600/20 bg-blue-600/5 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-blue-600 animate-pulse text-center">
+                class="rounded-lg border border-blue-600/20 bg-blue-600/5 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-blue-600 animate-pulse text-center">
                 Transmission Received: Awaiting Administrative Verification
             </div>
         @endif
@@ -97,7 +97,7 @@
                                         class="block text-[9px] font-black uppercase tracking-widest dark:text-white/50 text-black/50 mb-3 ml-1">Transmission
                                         Method</label>
                                     <select id="provider" name="provider"
-                                        class="w-full rounded-2xl border-none bg-white dark:bg-gray-800 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-black dark:text-white">
+                                        class="w-full rounded-lg border-none bg-white dark:bg-gray-800 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-black dark:text-white">
                                         <option value="bank">Wire / Bank Transfer</option>
                                         <option value="card">Credit Card</option>
                                         <option value="paypal">PayPal</option>
@@ -111,7 +111,7 @@
                                         ID (Optional)</label>
                                     <input id="transaction_id" name="transaction_id" value="{{ old('transaction_id') }}"
                                         placeholder="TXN-ID-XXXX"
-                                        class="w-full rounded-2xl border-none  bg-white dark:bg-gray-800 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-black dark:text-white " />
+                                        class="w-full rounded-lg border-none  bg-white dark:bg-gray-800 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-black dark:text-white " />
                                 </div>
                             </div>
 
@@ -125,7 +125,7 @@
                                         class="hidden"
                                         onchange="document.getElementById('receipt-name').textContent = this.files[0].name" />
                                     <label for="receipt"
-                                        class="flex flex-col items-center justify-center gap-3 w-full py-8 rounded-2xl border-2 border-dashed dark:border-white/20 border-black/20 bg-black/5 cursor-pointer hover:border-blue-600 transition-all">
+                                        class="flex flex-col items-center justify-center gap-3 w-full py-8 rounded-lg border-2 border-dashed dark:border-white/20 border-black/20 bg-black/5 cursor-pointer hover:border-blue-600 transition-all">
                                         <svg class="h-6 w-6 text-black/40 dark:text-white/40 group-hover/upload:text-blue-500"
                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -142,7 +142,7 @@
                                 data-confirm-message="Initialize transmission of ¥{amount} to your bidding wallet?"
                                 data-confirm-amount-selector="#amount_yen" data-confirm-text="Authorize"
                                 data-confirm-type="info" data-confirm-on-confirm="#deposit-form"
-                                class="w-full rounded-2xl bg-blue-600 px-8 py-5 text-[11px] font-black uppercase tracking-[0.2em] text-white shadow-xl shadow-blue-600/30 transition hover:bg-blue-700 hover:scale-[1.02] active:scale-95">
+                                class="w-full rounded-lg bg-blue-600 px-8 py-5 text-[11px] font-black uppercase tracking-[0.2em] text-white shadow-xl shadow-blue-600/30 transition hover:bg-blue-700 hover:scale-[1.02] active:scale-95">
                                 Process Bidding Power
                             </button>
                         </form>
@@ -175,7 +175,7 @@
                                     class="flex items-center justify-between gap-4 p-8 transition hover:bg-zinc-50 dark:hover:bg-white/[0.02]">
                                     <div class="flex items-center gap-6">
                                         <div
-                                            class="flex h-12 w-12 items-center justify-center rounded-2xl {{ $isCredit ? 'bg-emerald-50 text-emerald-500 dark:bg-emerald-500/10' : 'bg-zinc-100 text-zinc-500 dark:bg-white/10 dark:text-zinc-400' }}">
+                                            class="flex h-12 w-12 items-center justify-center rounded-lg {{ $isCredit ? 'bg-emerald-50 text-emerald-500 dark:bg-emerald-500/10' : 'bg-zinc-100 text-zinc-500 dark:bg-white/10 dark:text-zinc-400' }}">
                                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                                 stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round"

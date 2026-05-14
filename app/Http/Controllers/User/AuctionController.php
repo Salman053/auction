@@ -13,8 +13,8 @@ class AuctionController extends Controller
     {
 
         $filters = $request->all();
-        if (! isset($filters['status'])) {
-            $filters['sort'] = 'ends_soon';
+        if (! isset($filters['sort'])) {
+            $filters['sort'] = 'random';
         }
 
         $auctions = Auction::filter($filters)

@@ -51,6 +51,49 @@ class Auction extends Model
         return (int) $this->current_bid_yen;
     }
 
+    public function getImageUrlsAttribute($value): array
+    {
+        if (empty($value)) {
+            return [];
+        }
+
+        $urls = is_string($value) ? json_decode($value, true) : $value;
+
+        if (! is_array($urls)) {
+            return [];
+        }
+
+        return array_values(array_filter($urls, function ($url) {
+            $lowerUrl = strtolower($url);
+            if (str_contains($lowerUrl, 'buyee') || 
+                str_contains($lowerUrl, 's.yimg.jp') || 
+                str_contains($lowerUrl, 'banner') || 
+                str_contains($lowerUrl, 'promo') || 
+                str_contains($lowerUrl, 'logo')) {
+                return false;
+            }
+            return true;
+        }));
+    }
+
+    public function getThumbnailUrlAttribute($value): ?string
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        $lowerUrl = strtolower($value);
+        if (str_contains($lowerUrl, 'buyee') || 
+            str_contains($lowerUrl, 's.yimg.jp') || 
+            str_contains($lowerUrl, 'banner') || 
+            str_contains($lowerUrl, 'promo') || 
+            str_contains($lowerUrl, 'logo')) {
+            return null;
+        }
+
+        return $value;
+    }
+
     public function bids(): HasMany
     {
         return $this->hasMany(Bid::class);
@@ -113,7 +156,8 @@ class Auction extends Model
                 'ends_soon' => $query->orderBy('ends_at', 'asc'),
                 'newest' => $query->orderBy('created_at', 'desc'),
                 'bid_count' => $query->orderBy('bid_count', 'desc'),
-                default => $query->orderBy('created_at', 'desc'),
+                'random' => $query->inRandomOrder(),
+                default => $query->inRandomOrder(),
             };
         });
 
@@ -127,7 +171,7 @@ class Auction extends Model
         });
 
         if (! isset($filters['sort'])) {
-            $query->orderBy('created_at', 'desc');
+            $query->inRandomOrder();
         }
 
         return $query;

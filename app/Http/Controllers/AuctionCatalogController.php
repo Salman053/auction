@@ -15,6 +15,10 @@ class AuctionCatalogController extends Controller
             $filters['status'] = 'active';
         }
 
+        if (! isset($filters['sort'])) {
+            $filters['sort'] = 'random';
+        }
+
         $auctions = Auction::filter($filters)
             ->paginate(24)
             ->withQueryString();

@@ -16,7 +16,7 @@
                     <div class="mt-12 space-y-10">
                         <div class="flex items-start gap-6">
                             <div
-                                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-navy text-brand-gold">
+                                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-brand-navy text-brand-gold">
                                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -31,7 +31,7 @@
 
                         <div class="flex items-start gap-6">
                             <div
-                                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-navy text-brand-gold">
+                                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-brand-navy text-brand-gold">
                                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -48,7 +48,7 @@
                         </div>
                     </div>
 
-                    <div class="mt-16 rounded-3xl bg-slate-50 p-8 dark:bg-zinc-900/50">
+                    <div class="mt-16 rounded-lg bg-slate-50 p-8 dark:bg-zinc-900/50">
                         <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Response Protocol</p>
                         <p class="mt-4 text-xs font-bold leading-relaxed text-slate-900 dark:text-white">Active session
                             members receive priority resolution within 60 minutes. Guest inquiries are processed within
@@ -69,7 +69,7 @@
                                     Identity</label>
                                 <input id="name" name="name" value="{{ Auth::guard('user')->user()?->name }}"
                                     type="text" required
-                                    class="w-full rounded-2xl border-none bg-slate-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white">
+                                    class="w-full rounded-lg border-none bg-slate-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white">
                             </div>
                             <div>
                                 <label for="email"
@@ -77,7 +77,7 @@
                                     Email</label>
                                 <input id="email" name="email" value="{{ Auth::guard('user')->user()?->email }}"
                                     type="email" required
-                                    class="w-full rounded-2xl border-none bg-slate-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white">
+                                    class="w-full rounded-lg border-none bg-slate-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white">
                             </div>
 
                         </div>
@@ -88,7 +88,7 @@
                                 Inquiry Type
                             </label>
                             <select id="subject" name="subject"
-                                class="w-full rounded-2xl border-none bg-slate-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white">
+                                class="w-full rounded-lg border-none bg-slate-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white">
                                 <option>Market Access Support</option>
                                 <option>Logistics & Shipping</option>
                                 <option>Custodial Wallet Verification</option>
@@ -107,11 +107,11 @@
                                 class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Inquiry
                                 Details</label>
                             <textarea id="message" name="message" rows="5" required
-                                class="w-full rounded-2xl border-none bg-slate-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white"></textarea>
+                                class="w-full rounded-lg border-none bg-slate-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-gold dark:bg-black/20 dark:ring-white/10 dark:text-white"></textarea>
                         </div>
 
                         <button type="submit"
-                            class="w-full rounded-2xl bg-brand-navy py-5 text-sm font-black text-brand-gold shadow-lg transition hover:scale-[1.02] active:scale-95 dark:bg-brand-gold dark:text-brand-navy">
+                            class="w-full rounded-lg bg-brand-navy py-5 text-sm font-black text-brand-gold shadow-lg transition hover:scale-[1.02] active:scale-95 dark:bg-brand-gold dark:text-brand-navy">
                             Transmit Message
                         </button>
                     </form>

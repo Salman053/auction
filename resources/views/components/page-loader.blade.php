@@ -8,7 +8,7 @@
         {{-- Inner pulsing ring --}}
         <div class="absolute h-16 w-16 rounded-full border border-brand-gold/30 animate-ping"></div>
         {{-- Center Logo element --}}
-        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-navy shadow-lg dark:bg-brand-gold">
+        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-navy shadow-lg dark:bg-brand-gold">
             <span class="text-xl font-black text-brand-gold dark:text-brand-navy">W</span>
         </div>
     </div>

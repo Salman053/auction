@@ -9,7 +9,7 @@
             </p>
         </div>
         <a href="{{ route('user.auctions.index') }}"
-            class="inline-flex items-center gap-2 rounded-2xl border border-zinc-200 bg-white px-5 py-3 text-[10px] font-black uppercase tracking-widest text-zinc-600 shadow-sm transition hover:bg-zinc-50 hover:text-blue-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-white/5">
+            class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-5 py-3 text-[10px] font-black uppercase tracking-widest text-zinc-600 shadow-sm transition hover:bg-zinc-50 hover:text-blue-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-white/5">
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -21,7 +21,7 @@
     @if ($items->isEmpty())
         {{-- Empty State --}}
         <div
-            class="flex flex-col items-center justify-center rounded-3xl bg-white py-20 shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10">
+            class="flex flex-col items-center justify-center rounded-lg bg-white py-20 shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10">
             <div class="flex h-20 w-20 items-center justify-center rounded-full bg-zinc-100 dark:bg-white/5">
                 <svg class="h-10 w-10 text-zinc-300 dark:text-zinc-600" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
@@ -34,7 +34,7 @@
                 Browse the live market and tap the heart icon on any auction to start tracking it here.
             </p>
             <a href="{{ route('user.auctions.index') }}"
-                class="mt-8 inline-flex items-center gap-2 rounded-2xl bg-blue-600 px-8 py-4 text-xs font-black uppercase tracking-widest text-white shadow-xl shadow-blue-600/20 transition hover:scale-[1.02] hover:bg-blue-700 active:scale-95">
+                class="mt-8 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-8 py-4 text-xs font-black uppercase tracking-widest text-white shadow-xl shadow-blue-600/20 transition hover:scale-[1.02] hover:bg-blue-700 active:scale-95">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -66,7 +66,7 @@
 
                 @if ($auction)
                     <div
-                        class="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-zinc-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-zinc-900 dark:ring-white/10">
+                        class="group relative flex flex-col overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-zinc-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-zinc-900 dark:ring-white/10">
 
                         {{-- Auction Thumbnail --}}
                         <a href="{{ route('user.auctions.show', $auction) }}"
@@ -130,7 +130,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button onclick="return stopEvent(event)" type="submit"
-                                    class="flex w-full items-center justify-center gap-2 rounded-2xl border border-rose-200 bg-rose-50 py-3 text-[10px] font-black uppercase tracking-widest text-rose-600 transition hover:bg-rose-100 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20">
+                                    class="flex w-full items-center justify-center gap-2 rounded-lg border border-rose-200 bg-rose-50 py-3 text-[10px] font-black uppercase tracking-widest text-rose-600 transition hover:bg-rose-100 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20">
                                     <svg class="h-3 w-3 fill-current" viewBox="0 0 24 24">
                                         <path
                                             d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />

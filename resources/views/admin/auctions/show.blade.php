@@ -11,16 +11,16 @@
     </div>
 
     {{-- ===== HERO HEADER ===== --}}
-    <div class="rounded-2xl bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
         <div class="flex flex-col gap-6 p-6 lg:flex-row lg:items-start">
             {{-- Thumbnail --}}
             <div class="shrink-0">
                 @if ($auction->thumbnail_url)
                     <img src="{{ $auction->thumbnail_url }}" alt="{{ $auction->title }}"
-                        class="h-40 w-40 rounded-xl object-cover ring-1 ring-black/10 dark:ring-white/10 lg:h-48 lg:w-48">
+                        class="h-40 w-40 rounded-lg object-cover ring-1 ring-black/10 dark:ring-white/10 lg:h-48 lg:w-48">
                 @else
                     <div
-                        class="flex h-40 w-40 items-center justify-center rounded-xl bg-zinc-100 dark:bg-white/5 lg:h-48 lg:w-48">
+                        class="flex h-40 w-40 items-center justify-center rounded-lg bg-zinc-100 dark:bg-white/5 lg:h-48 lg:w-48">
                         <svg class="h-16 w-16 text-zinc-300 dark:text-zinc-600" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
@@ -223,25 +223,25 @@
 
     {{-- ===== STAT CARDS ===== --}}
     <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
+        <div class="rounded-lg bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
             <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Total Bids
             </div>
             <div class="mt-2 text-3xl font-bold tabular-nums tracking-tight text-zinc-900 dark:text-white">
                 {{ $stats['total_bids'] }}</div>
         </div>
-        <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
+        <div class="rounded-lg bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
             <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Unique Bidders
             </div>
             <div class="mt-2 text-3xl font-bold tabular-nums tracking-tight text-zinc-900 dark:text-white">
                 {{ $stats['unique_bidders'] }}</div>
         </div>
-        <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
+        <div class="rounded-lg bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
             <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Highest Bid
             </div>
             <div class="mt-2 text-3xl font-bold tabular-nums tracking-tight text-rose-600 dark:text-rose-400">
                 ¥{{ number_format($stats['highest_bid']) }}</div>
         </div>
-        <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
+        <div class="rounded-lg bg-white p-5 shadow-sm ring-1 ring-black/5 dark:bg-zinc-900 dark:ring-white/10">
             <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Watchers</div>
             <div class="mt-2 text-3xl font-bold tabular-nums tracking-tight text-zinc-900 dark:text-white">
                 {{ $stats['watchers'] }}</div>
@@ -259,7 +259,7 @@
         @endphp
 
         {{-- Tab Headers --}}
-        <div class="flex gap-1 rounded-xl bg-zinc-100 p-1 dark:bg-white/5">
+        <div class="flex gap-1 rounded-lg bg-zinc-100 p-1 dark:bg-white/5">
             <button @click="tab = 'bids'"
                 :class="tab === 'bids' ? 'bg-white shadow-sm text-zinc-900 dark:bg-zinc-800 dark:text-white' :
                     'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'"
