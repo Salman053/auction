@@ -26,8 +26,7 @@ class SyncAuctionDetails implements ShouldQueue
     {
         $this->auction->refresh();
 
-        // Skip if recently synced AND we already have image details, to avoid hammering the API with duplicates
-        if (!empty($this->auction->image_urls) && $this->auction->last_synced_at && $this->auction->last_synced_at->gt(now()->subHour())) {
+        if (! empty($this->auction->image_urls) && $this->auction->last_synced_at && $this->auction->last_synced_at->gt(now()->subHour())) {
             return;
         }
 
