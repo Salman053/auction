@@ -86,6 +86,16 @@ class DashboardController extends Controller
                 ->get()
             : collect();
 
+        $hotAuctions = Auction::query()
+            ->where('status', 'active')
+            ->orderByDesc('bid_count')
+            ->limit(12)
+            ->get();
+
+        $watchlistedAuctionIds = $user
+            ? $user->watchlistItems()->pluck('auction_id')->all()
+            : [];
+
         return view('user.dashboard', [
             'user' => $user,
             'wallet' => $wallet,
@@ -101,6 +111,8 @@ class DashboardController extends Controller
                 'bids' => array_values($bidsByDay),
                 'walletNet' => array_values($netWalletByDay),
             ],
+            'hotAuctions' => $hotAuctions,
+            'watchlistedAuctionIds' => $watchlistedAuctionIds,
         ]);
     }
 }
