@@ -45,6 +45,11 @@ class AuctionController extends Controller
 
     public function show(Auction $auction): View
     {
+        // On-demand sync: trigger if stale (more than 15 minutes old)
+        if (! $auction->last_synced_at || $auction->last_synced_at->lt(now()->subMinutes(15))) {
+            \App\Jobs\SyncAuctionDetails::dispatch($auction)->onQueue('high');
+        }
+
         $auction->load([
             'bids' => fn ($q) => $q->with('user')->latest(),
             'watchlistItems' => fn ($q) => $q->with('user')->latest(),
