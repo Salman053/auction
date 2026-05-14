@@ -150,7 +150,7 @@ class Auction extends Model
         }
 
         // Always prioritize auctions that have images fetched
-        $query->orderByRaw('image_urls IS NOT NULL AND JSON_LENGTH(image_urls) > 0 DESC');
+        $query->orderByRaw('CASE WHEN image_urls IS NOT NULL THEN 1 ELSE 0 END DESC');
 
         $query->when($filters['sort'] ?? null, function ($query, $sort) {
             match ($sort) {
