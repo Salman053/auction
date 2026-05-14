@@ -66,10 +66,10 @@ class Auction extends Model
         return array_values(array_filter($urls, function ($url) {
             $lowerUrl = strtolower($url);
             if (str_contains($lowerUrl, 'buyee') || 
-                str_contains($lowerUrl, 's.yimg.jp') || 
                 str_contains($lowerUrl, 'banner') || 
                 str_contains($lowerUrl, 'promo') || 
-                str_contains($lowerUrl, 'logo')) {
+                str_contains($lowerUrl, 'logo') ||
+                (str_contains($lowerUrl, 's.yimg.jp') && !str_contains($lowerUrl, 'auc'))) {
                 return false;
             }
             return true;
@@ -84,10 +84,10 @@ class Auction extends Model
 
         $lowerUrl = strtolower($value);
         if (str_contains($lowerUrl, 'buyee') || 
-            str_contains($lowerUrl, 's.yimg.jp') || 
             str_contains($lowerUrl, 'banner') || 
             str_contains($lowerUrl, 'promo') || 
-            str_contains($lowerUrl, 'logo')) {
+            str_contains($lowerUrl, 'logo') ||
+            (str_contains($lowerUrl, 's.yimg.jp') && !str_contains($lowerUrl, 'auc'))) {
             return null;
         }
 

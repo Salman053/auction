@@ -63,7 +63,7 @@
                             value="{{ $user->bidding_multiplier_percent ?? 500 }}"
                             class="flex-1 rounded-lg border-zinc-200 bg-zinc-50 px-4 py-2 text-sm focus:border-brand-navy focus:ring-brand-navy dark:border-white/10 dark:bg-white/5">
                         <button type="submit"
-                            class="rounded-lg bg-brand-navy px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white shadow-lg transition hover:scale-105 active:scale-95">
+                            class="rounded-lg bg-brand-navy px-4 py-2 text-[10px] font-black uppercase tracking-widest text-black dark:text-white dark:bg-gray-500 shadow-lg transition hover:scale-105 active:scale-95">
                             Update
                         </button>
                     </div>

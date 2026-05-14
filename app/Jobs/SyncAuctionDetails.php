@@ -21,6 +21,12 @@ class SyncAuctionDetails implements ShouldQueue
 
     public function handle(ScraperService $scraper): void
     {
+        $this->auction->refresh();
+
+        if ($this->auction->last_synced_at && $this->auction->last_synced_at->gt(now()->subHour())) {
+            return;
+        }
+
         $details = $scraper->getAuctionDetails($this->auction->yahoo_auction_id);
 
         if (! empty($details)) {
@@ -32,6 +38,8 @@ class SyncAuctionDetails implements ShouldQueue
                 'yahoo_seller_id' => $details['yahoo_seller_id'] ?? $this->auction->yahoo_seller_id,
                 'seller_rating' => $details['seller_rating'] ?? $this->auction->seller_rating,
                 'image_urls' => $details['image_urls'] ?? $this->auction->image_urls,
+                'yahoo_watcher_count' => $details['watcher_count'] ?? $this->auction->yahoo_watcher_count,
+                'last_synced_at' => now(),
             ]);
         }
     }

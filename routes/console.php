@@ -15,7 +15,7 @@ Schedule::command('auctions:import-yahoo-html', [
     ->withoutOverlapping();
 
 Schedule::command('yahoo:scrape-all --pages=6 --delay=1 --fetch-details --min=0 --max=200')
-    ->everyMinute()
+    ->everyTenMinutes()
     ->withoutOverlapping()
     ->runInBackground();
 

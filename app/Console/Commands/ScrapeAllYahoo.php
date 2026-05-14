@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\UserRole;
 use App\Jobs\SyncAuctionDetails;
 use App\Models\Auction;
 use App\Models\ScrapingLog;
@@ -29,63 +30,72 @@ class ScrapeAllYahoo extends Command
 
     public function handle(ScraperService $scraper): int
     {
-        $pages = (int) $this->option('pages');
-        $delay = (int) $this->option('delay');
-        $minPrice = $this->option('min') !== null ? (int) $this->option('min') : null;
-        $maxPrice = $this->option('max') !== null ? (int) $this->option('max') : null;
-        $fetchDetails = (bool) $this->option('fetch-details');
-        $forceDetails = (bool) $this->option('force-details');
+        // Prevent overlapping runs
+        if (Cache::has('scraper:running')) {
+            $this->warn('⚠️ Scraper is already running. Skipping.');
 
-        $log = ScrapingLog::create([
-            'run_uuid' => (string) Str::uuid(),
-            'status' => 'running',
-            'started_at' => now(),
-            'meta' => [
-                'type' => 'all_categories',
-                'max_pages' => $pages,
-                'min_price' => $minPrice,
-                'max_price' => $maxPrice,
-                'fetch_details' => $fetchDetails,
-                'force_details' => $forceDetails,
-            ],
-        ]);
+            return self::FAILURE;
+        }
 
-        $this->info('═══════════════════════════════════════════════════════');
-        $this->info('  YAHOO AUCTIONS COMPREHENSIVE SCRAPER');
-        $this->info("═══════════════════════════════════════════════════════\n");
-
-        $topLevelCategories = [
-            '26318' => '自動車、オートバイ',
-            '23000' => 'ファッション、ブランド',
-            '23140' => 'アクセサリー、時計',
-            '24698' => 'スポーツ、レジャー',
-            '23632' => '家電、AV、カメラ',
-            '23336' => 'コンピュータ',
-            '25464' => 'おもちゃ、ゲーム',
-            '24242' => 'ホビー、カルチャー',
-            '20000' => 'アンティーク、コレクション',
-            '21600' => '本、雑誌、漫画',
-            '22152' => '音楽、CD',
-            '21964' => '映画、ビデオ、DVD',
-            '20060' => 'コミック、アニメグッズ',
-            '2084032594' => 'タレントグッズ',
-            '24198' => '住まい、インテリア、DIY',
-            '22896' => '事務、店舗用品',
-            '26086' => '花、園芸、農業',
-            '42177' => 'ビューティー、ヘルスケア',
-            '24202' => 'ベビー用品',
-            '23976' => '食品、飲料',
-            '2084055844' => 'ペット、生き物',
-            '2084043920' => 'チケット、金券、宿泊予約',
-            '2084217893' => 'チャリティー',
-            '2084060731' => '不動産',
-            '26084' => 'スキル、レンタル、その他',
-        ];
-
-        $totalCreated = 0;
-        $totalUpdated = 0;
+        Cache::put('scraper:running', true, now()->addMinutes(60));
 
         try {
+            $pages = (int) $this->option('pages');
+            $delay = (int) $this->option('delay');
+            $minPrice = $this->option('min') !== null ? (int) $this->option('min') : null;
+            $maxPrice = $this->option('max') !== null ? (int) $this->option('max') : null;
+            $fetchDetails = (bool) $this->option('fetch-details');
+            $forceDetails = (bool) $this->option('force-details');
+
+            $log = ScrapingLog::create([
+                'run_uuid' => (string) Str::uuid(),
+                'status' => 'running',
+                'started_at' => now(),
+                'meta' => [
+                    'type' => 'all_categories',
+                    'max_pages' => $pages,
+                    'min_price' => $minPrice,
+                    'max_price' => $maxPrice,
+                    'fetch_details' => $fetchDetails,
+                    'force_details' => $forceDetails,
+                ],
+            ]);
+
+            $this->info('═══════════════════════════════════════════════════════');
+            $this->info('  YAHOO AUCTIONS COMPREHENSIVE SCRAPER');
+            $this->info("═══════════════════════════════════════════════════════\n");
+
+            $topLevelCategories = [
+                '26318' => '自動車、オートバイ',
+                '23000' => 'ファッション、ブランド',
+                '23140' => 'アクセサリー、時計',
+                '24698' => 'スポーツ、レジャー',
+                '23632' => '家電、AV、カメラ',
+                '23336' => 'コンピュータ',
+                '25464' => 'おもちゃ、ゲーム',
+                '24242' => 'ホビー、カルチャー',
+                '20000' => 'アンティーク、コレクション',
+                '21600' => '本、雑誌、漫画',
+                '22152' => '音楽、CD',
+                '21964' => '映画、ビデオ、DVD',
+                '20060' => 'コミック、アニメグッズ',
+                '2084032594' => 'タレントグッズ',
+                '24198' => '住まい、インテリア、DIY',
+                '22896' => '事務、店舗用品',
+                '26086' => '花、園芸、農業',
+                '42177' => 'ビューティー、ヘルスケア',
+                '24202' => 'ベビー用品',
+                '23976' => '食品、飲料',
+                '2084055844' => 'ペット、生き物',
+                '2084043920' => 'チケット、金券、宿泊予約',
+                '2084217893' => 'チャリティー',
+                '2084060731' => '不動産',
+                '26084' => 'スキル、レンタル、その他',
+            ];
+
+            $totalCreated = 0;
+            $totalUpdated = 0;
+
             foreach ($topLevelCategories as $id => $name) {
                 if (Cache::has('scraper:stop_requested')) {
                     $this->warn('🛑 Stop requested by admin. Halting.');
@@ -209,7 +219,7 @@ class ScrapeAllYahoo extends Command
 
             if ($totalCreated > 0) {
                 $duration = now()->diffInSeconds($log->started_at);
-                $admins = User::where('is_admin', true)->get();
+                $admins = User::where('role', UserRole::Admin->value)->get();
                 if ($admins->isNotEmpty()) {
                     Notification::send(
                         $admins,
@@ -220,13 +230,17 @@ class ScrapeAllYahoo extends Command
 
         } catch (\Throwable $e) {
             $this->error('❌ Error: '.$e->getMessage());
-            $log->update([
-                'status' => 'failed',
-                'ended_at' => now(),
-                'error_message' => $e->getMessage(),
-            ]);
+            if (isset($log)) {
+                $log->update([
+                    'status' => 'failed',
+                    'ended_at' => now(),
+                    'error_message' => $e->getMessage(),
+                ]);
+            }
 
             return self::FAILURE;
+        } finally {
+            Cache::forget('scraper:running');
         }
 
         return self::SUCCESS;

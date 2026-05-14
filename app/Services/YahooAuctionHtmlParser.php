@@ -776,18 +776,48 @@ class YahooAuctionHtmlParser
     private function extractImageUrls(DOMXPath $xpath): array
     {
         $urls = [];
+
+        // 1. Try JSON extraction first (most reliable on modern pages)
+        $html = $xpath->document->saveHTML();
+        if (preg_match('/<script id="__NEXT_DATA__" type="application\/json">(.*?)<\/script>/s', $html, $matches)) {
+            try {
+                $json = json_decode(trim($matches[1]), true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $item = $json['props']['pageProps']['initialState']['item']['detail']['item'] ?? null;
+                    if ($item && isset($item['images']) && is_array($item['images'])) {
+                        foreach ($item['images'] as $imgObj) {
+                            if (isset($imgObj['full'])) {
+                                $urls[] = $imgObj['full'];
+                            } elseif (isset($imgObj['image'])) {
+                                $urls[] = $imgObj['image'];
+                            }
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+            }
+        }
+
+        // 2. DOM extraction (fallback or addition)
         $images = $xpath->query('//img');
         if ($images) {
             foreach ($images as $img) {
                 if ($img instanceof \DOMElement) {
-                    $src = $img->getAttribute('src');
+                    // Check multiple attributes for images (lazy loading support)
+                    $src = $img->getAttribute('src') ?: $img->getAttribute('data-src') ?: $img->getAttribute('data-original');
+                    
                     if ($src && ! str_starts_with($src, 'data:')) {
                         $lowerUrl = strtolower($src);
-                        if (! str_contains($lowerUrl, 'buyee') && 
-                            ! str_contains($lowerUrl, 's.yimg.jp') && 
-                            ! str_contains($lowerUrl, 'banner') && 
-                            ! str_contains($lowerUrl, 'promo') && 
-                            ! str_contains($lowerUrl, 'logo')) {
+                        
+                        // Refined filter: Block logos/banners but allow auction images even if on s.yimg.jp
+                        // Real auction images usually have 'auc' or 'images.auctions' in path
+                        $isBlacklisted = str_contains($lowerUrl, 'buyee') || 
+                                        str_contains($lowerUrl, 'banner') || 
+                                        str_contains($lowerUrl, 'promo') || 
+                                        str_contains($lowerUrl, 'logo') ||
+                                        (str_contains($lowerUrl, 's.yimg.jp') && !str_contains($lowerUrl, 'auc'));
+
+                        if (!$isBlacklisted) {
                             $urls[] = $src;
                         }
                     }
