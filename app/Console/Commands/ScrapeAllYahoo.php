@@ -118,7 +118,6 @@ class ScrapeAllYahoo extends Command
                         break;
                     }
 
-                    // BATCH LOAD: Prevent N+1 queries by fetching all existing IDs at once
                     $yids = collect($results)->pluck('yahoo_auction_id')->filter()->toArray();
                     $existingAuctions = Auction::withTrashed()
                         ->whereIn('yahoo_auction_id', $yids)
