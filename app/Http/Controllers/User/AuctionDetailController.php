@@ -19,6 +19,11 @@ class AuctionDetailController extends Controller
 {
     public function show(Request $request, Auction $auction): View
     {
+        // On-demand sync: trigger if stale (more than 15 minutes old)
+        if (! $auction->last_synced_at || $auction->last_synced_at->lt(now()->subMinutes(15))) {
+            \App\Jobs\SyncAuctionDetails::dispatch($auction)->onQueue('high');
+        }
+
         $auction->increment('view_count');
         $auction->loadCount('watchlistItems');
         $auction->load(['bids' => fn ($query) => $query->with('user')->latest()->limit(30)]);
@@ -65,7 +70,7 @@ class AuctionDetailController extends Controller
             ->where(function ($query) use ($auction) {
                 $query->whereBetween('current_bid_yen', [
                     $auction->current_bid_yen * 0.7,
-                    $auction->current_bid_yen * 1.3
+                    $auction->current_bid_yen * 1.3,
                 ])->orWhere('current_bid_yen', '>=', $auction->current_bid_yen);
             })
             ->inRandomOrder()
@@ -122,7 +127,7 @@ class AuctionDetailController extends Controller
 
         $biddingService->placeBid($user, $auction, (int) $validated['amount_yen'], $shippingRateId);
 
-        return back()->with('status', 'bid-placed');
+        return back()->with('success', 'Bid Placed Successfully on '.$auction->title.' with amount '.$validated['amount_yen']);
     }
 
     public function confirmShipment(Auction $auction, Request $request): RedirectResponse

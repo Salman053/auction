@@ -18,7 +18,7 @@ class AuctionSyncTest extends TestCase
         Queue::fake();
 
         $admin = User::factory()->admin()->create();
-        $this->actingAs($admin);
+        $this->actingAs($admin, 'admin');
 
         $auction = Auction::factory()->create([
             'last_synced_at' => now()->subMinutes(20), // Stale
@@ -38,7 +38,7 @@ class AuctionSyncTest extends TestCase
         Queue::fake();
 
         $admin = User::factory()->admin()->create();
-        $this->actingAs($admin);
+        $this->actingAs($admin, 'admin');
 
         $auction = Auction::factory()->create([
             'last_synced_at' => now()->subMinutes(5), // Fresh

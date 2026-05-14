@@ -7,11 +7,13 @@
                 <div class="relative overflow-hidden rounded-lg lg:col-span-8 bg-zinc-900 group">
                     <div x-data="{
                         active: 0,
-                        slides: [
-                            { title: 'Exclusive Japanese Antiques', subtitle: 'Direct Access to Yahoo Japan Auctions', cta: 'Browse Antiques', img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=2070&auto=format&fit=crop' },
-                            { title: 'Luxury Timepieces', subtitle: 'Rare Watches from Tokyo Collectors', cta: 'View Watches', img: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=2080&auto=format&fit=crop' },
-                            { title: 'Classic JDM Parts', subtitle: 'Genuine Automotive Components', cta: 'Search Parts', img: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2070&auto=format&fit=crop' }
-                        ],
+                        [
+                            { title: 'Premium Designer Fashion', subtitle: 'Authentic Luxury Labels & Streetwear', cta: 'Shop Fashion', img: 'unsplash.com' },
+                            { title: 'Rare Collectible Toys', subtitle: 'Vintage Figures & Japan-Exclusive Releases', cta: 'Explore Toys', img: 'unsplash.com' },
+                            { title: 'Retro & Modern Gaming', subtitle: 'Import Consoles, Rare Games & Gear', cta: 'View Gaming', img: 'unsplash.com' },
+                            { title: 'High-End Japanese Electronics', subtitle: 'Premium Audio & Vintage Camera Gear', cta: 'Browse Electronics', img: 'unsplash.com' }
+                        ]
+                    
                         next() { this.active = (this.active + 1) % this.slides.length },
                         prev() { this.active = (this.active - 1 + this.slides.length) % this.slides.length }
                     }" x-init="setInterval(() => next(), 10000)" class="h-full">
