@@ -25,6 +25,7 @@ class ScrapingLogController extends Controller
         }
 
         Cache::forget('scraper:stop_requested');
+        Cache::forget('scraper:running');
 
         ScrapeAllYahooJob::dispatch(
             pages: 13,
