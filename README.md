@@ -1,59 +1,186 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Yahoo Auctions Japan - Platform & Scraper
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A complete web platform and background scraper for mirroring, monitoring, and bidding on Yahoo Auctions Japan items in real-time. Built on Laravel 12.
 
-## About Laravel
+## 🌟 Key Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* **Automated Scraping Engine**: Automatically runs in the background pulling items from Yahoo Auctions Japan across multiple categories.
+* **Smart Synchronization**: Queues high-res images and auction details recursively to prevent blocking.
+* **Proxy Bidding Wallet System**: Users can deposit funds and place proxy bids on live items.
+* **Admin Dashboard**: Full control over scraping tasks, users, and shipment statuses.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 💻 Local Development Setup
 
-## Learning Laravel
+### Prerequisites
+* PHP 8.2 or higher
+* Composer
+* Node.js & npm
+* MySQL or MariaDB
+* Redis (Highly recommended for the background queues)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Installation Steps
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Clone the repository and install dependencies:**
+   ```bash
+   composer install
+   npm install
+   ```
 
-## Laravel Sponsors
+2. **Environment Configuration:**
+   Copy the example `.env` file:
+   ```bash
+   cp .env.example .env
+   ```
+   Generate the app key:
+   ```bash
+   php artisan key:generate
+   ```
+   *Make sure to configure your `DB_` (Database) and `REDIS_` settings in `.env`.*
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+3. **Database Setup:**
+   Run the migrations and seeders to create the admin user and necessary tables:
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
 
-### Premium Partners
+4. **Compile Assets:**
+   ```bash
+   npm run build
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+5. **Start the Local Services:**
+   You will need to run three separate terminal windows locally for everything to work:
+   ```bash
+   # Terminal 1: Run the web server
+   php artisan serve
 
-## Contributing
+   # Terminal 2: Run the Queue Worker (Processes the high-res image syncs)
+   php artisan queue:work
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   # Terminal 3: Run the Scheduler (Triggers the scrapers every 10 mins)
+   php artisan schedule:work
+   ```
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🚀 Production Hosting Guide (From Start to Finish)
 
-## Security Vulnerabilities
+To host this application in a live production environment, we recommend using a standard Ubuntu 22.04/24.04 server managed by **Laravel Forge** or **Laravel Cloud**. If you are doing it manually, follow this guide:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Step 1: Server Requirements
+Provision a VPS (DigitalOcean, AWS, Linode) with at least:
+- 2GB RAM (4GB recommended due to background scraping)
+- Ubuntu Linux
+- PHP 8.2, Nginx/Apache, MySQL 8.0+, Redis
 
-## License
+### Step 2: Deploying the Code
+1. Clone the repository into `/var/www/yahoo-auction`.
+2. Run `composer install --optimize-autoloader --no-dev`.
+3. Set your `.env` file variables. **Crucial Settings for Production:**
+   ```env
+   APP_ENV=production
+   APP_DEBUG=false
+   APP_URL=https://yourdomain.com
+   QUEUE_CONNECTION=redis
+   CACHE_STORE=redis
+   ```
+4. Run `php artisan migrate --force`.
+5. Run `npm install` and `npm run build` to compile the CSS/JS.
+6. Set correct permissions:
+   ```bash
+   chown -R www-data:www-data /var/www/yahoo-auction
+   chmod -R 775 /var/www/yahoo-auction/storage
+   chmod -R 775 /var/www/yahoo-auction/bootstrap/cache
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Step 3: Configure the Scheduler (Cron Job)
+The application relies heavily on the Laravel Scheduler to trigger the Yahoo Scraper automatically. 
+Add the following single Cron entry to your server (run `crontab -e`):
+
+```bash
+* * * * * cd /var/www/yahoo-auction && php artisan schedule:run >> /dev/null 2>&1
+```
+*This allows Laravel to evaluate `routes/console.php` every minute and launch the scraper exactly when needed.*
+
+### Step 4: Configure Queue Workers (Supervisor)
+Because scraping fetches thousands of high-res images via the `SyncAuctionDetails` job, you **must** have background queue workers running permanently.
+
+1. Install Supervisor:
+   ```bash
+   sudo apt-get install supervisor
+   ```
+
+2. Create a configuration file at `/etc/supervisor/conf.d/yahoo-worker.conf`:
+   ```ini
+   [program:yahoo-worker]
+   process_name=%(program_name)s_%(process_num)02d
+   command=php /var/www/yahoo-auction/artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
+   autostart=true
+   autorestart=true
+   stopasgroup=true
+   killasgroup=true
+   user=www-data
+   numprocs=4
+   redirect_stderr=true
+   stdout_logfile=/var/www/yahoo-auction/storage/logs/worker.log
+   stopwaitsecs=3600
+   ```
+   *Note: `numprocs=4` tells the server to run 4 concurrent workers. Do not set this higher than 5 to avoid IP Rate Limiting from Yahoo.*
+
+3. Start the workers:
+   ```bash
+   sudo supervisorctl reread
+   sudo supervisorctl update
+   sudo supervisorctl start yahoo-worker:*
+   ```
+
+### Step 5: Web Server Configuration (Nginx Example)
+Point your Nginx site configuration to the `/public` directory of the application:
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com;
+    root /var/www/yahoo-auction/public;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+
+    index index.php;
+
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+```
+
+### Updates & Maintenance
+Whenever you pull new code from Git to your server, you must run the following sequence to safely restart the scrapers:
+```bash
+git pull origin main
+composer install --no-dev
+npm run build
+php artisan migrate --force
+php artisan optimize:clear
+php artisan queue:restart   # <--- CRITICAL: Restarts background jobs to load new code
+```
+
+---
+
+## 🛑 Important Warning: IP Rate Limiting
+Yahoo Auctions Japan employs strict rate limits. If you process too many background jobs concurrently, Yahoo will temporarily block your server's IP address (returning HTTP 429 errors or captchas). 
+- Ensure your `numprocs` in Supervisor stays between `2` and `4`.
+- If you notice missing images or `null` responses in production, check your `storage/logs/worker.log` for 429 errors and reduce the number of queue workers.
