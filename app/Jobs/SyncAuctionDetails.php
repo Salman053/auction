@@ -17,7 +17,10 @@ class SyncAuctionDetails implements ShouldQueue
 
     public array $backoff = [5, 10, 30];
 
-    public function __construct(public Auction $auction) {}
+    public function __construct(public Auction $auction)
+    {
+        $this->onQueue('sync');
+    }
 
     public function handle(ScraperService $scraper): void
     {
