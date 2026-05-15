@@ -21,6 +21,13 @@
 
 <body class="h-full bg-zinc-50 antialiased dark:bg-zinc-950">
     <x-page-loader />
+
+
+
+    @if (session('error'))
+        <x-toast :message="session('error')" type="error" />
+    @endif
+
     <div class="flex h-full overflow-hidden">
         {{-- ============================================= --}}
         {{-- DESKTOP SIDEBAR (hidden on mobile) --}}
@@ -537,13 +544,16 @@
             const initGlobalScrollTracking = () => {
                 const scrollKey = 'globalScroll_' + window.location.pathname + window.location.search;
                 const scrollElement = document.querySelector('main') || window;
-                
+
                 // 1. Instantly restore if we have a value
                 const savedScroll = sessionStorage.getItem(scrollKey);
                 if (savedScroll) {
                     setTimeout(() => {
                         if (scrollElement === window) {
-                            window.scrollTo({ top: parseInt(savedScroll), behavior: 'instant' });
+                            window.scrollTo({
+                                top: parseInt(savedScroll),
+                                behavior: 'instant'
+                            });
                         } else {
                             scrollElement.scrollTop = parseInt(savedScroll);
                         }
@@ -554,7 +564,9 @@
                 scrollElement.addEventListener('scroll', () => {
                     const scrollPos = scrollElement === window ? window.scrollY : scrollElement.scrollTop;
                     sessionStorage.setItem(scrollKey, scrollPos);
-                }, { passive: true });
+                }, {
+                    passive: true
+                });
             };
 
             if (document.readyState === 'loading') {
@@ -566,9 +578,10 @@
             window.addEventListener('pageshow', (event) => {
                 if (event.persisted) initGlobalScrollTracking();
             });
-            
+
             document.addEventListener('livewire:navigated', initGlobalScrollTracking);
         })();
     </script>
 </body>
+
 </html>

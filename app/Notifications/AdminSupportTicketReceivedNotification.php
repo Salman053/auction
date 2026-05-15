@@ -18,7 +18,7 @@ class AdminSupportTicketReceivedNotification extends Notification implements Sho
 
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     public function toMail(object $notifiable): MailMessage
@@ -39,6 +39,7 @@ class AdminSupportTicketReceivedNotification extends Notification implements Sho
             'ticket_id' => $this->ticket->id,
             'subject' => $this->ticket->subject,
             'requester' => $this->ticket->requester_name,
+            'message' => 'New support inquiry from ' . ($this->ticket->requester_name ?? $this->ticket->requester_email),
         ];
     }
 }

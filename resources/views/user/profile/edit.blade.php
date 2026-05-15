@@ -37,7 +37,52 @@
                                 <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
                             @enderror
                         </div>
+                    </div>
 
+                    <div class="space-y-6 pt-6 border-t border-zinc-100 dark:border-white/5">
+                        <h4 class="text-xs font-black uppercase tracking-widest text-zinc-900 dark:text-white">Delivery
+                            Address</h4>
+
+                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            <div>
+                                <label for="postal_code"
+                                    class="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">Postal
+                                    Code</label>
+                                <input id="postal_code" name="postal_code" type="text"
+                                    value="{{ old('postal_code', $user->postal_code) }}"
+                                    class="w-full rounded-lg border-none bg-zinc-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-zinc-200 focus:ring-2 focus:ring-blue-600 dark:bg-black/20 dark:ring-white/10 dark:text-white">
+                            </div>
+                            <div>
+                                <label for="prefecture"
+                                    class="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">Prefecture</label>
+                                <input id="prefecture" name="prefecture" type="text"
+                                    value="{{ old('prefecture', $user->prefecture) }}"
+                                    class="w-full rounded-lg border-none bg-zinc-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-zinc-200 focus:ring-2 focus:ring-blue-600 dark:bg-black/20 dark:ring-white/10 dark:text-white">
+                            </div>
+                            <div>
+                                <label for="city"
+                                    class="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">City</label>
+                                <input id="city" name="city" type="text"
+                                    value="{{ old('city', $user->city) }}"
+                                    class="w-full rounded-lg border-none bg-zinc-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-zinc-200 focus:ring-2 focus:ring-blue-600 dark:bg-black/20 dark:ring-white/10 dark:text-white">
+                            </div>
+                            <div>
+                                <label for="phone_number"
+                                    class="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">Phone
+                                    Number</label>
+                                <input id="phone_number" name="phone_number" type="text"
+                                    value="{{ old('phone_number', $user->phone_number) }}"
+                                    class="w-full rounded-lg border-none bg-zinc-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-zinc-200 focus:ring-2 focus:ring-blue-600 dark:bg-black/20 dark:ring-white/10 dark:text-white">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label for="street_address"
+                                    class="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">Street
+                                    Address</label>
+                                <input id="street_address" name="street_address" type="text"
+                                    value="{{ old('street_address', $user->street_address) }}"
+                                    class="w-full rounded-lg border-none bg-zinc-50 px-5 py-4 text-sm font-bold shadow-inner ring-1 ring-zinc-200 focus:ring-2 focus:ring-blue-600 dark:bg-black/20 dark:ring-white/10 dark:text-white">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="flex items-center gap-4 pt-4">
@@ -129,13 +174,14 @@
                                 d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.952 11.952 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                         </svg>
                     </div>
-                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-200">Security Shield</h3>
-                    <p class="mt-6 text-[13px] font-medium leading-relaxed text-blue-50/80">Your account is secured with
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-white">Security Shield</h3>
+                    <p class="mt-6 text-[13px] font-medium leading-relaxed text-white">Your account is secured with
                         enterprise-grade encryption. Ensure your password is unique and contains a mix of symbols and
                         characters.</p>
                     <div class="mt-10 space-y-4 border-t border-white/10 pt-8">
-                        <div class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
-                            <span class="text-white/50">Status</span>
+                        <div
+                            class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+                            <span class="text-white/80">Status</span>
                             <span class="inline-flex items-center gap-2 text-emerald-400">
                                 <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                                 Verified

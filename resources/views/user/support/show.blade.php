@@ -18,10 +18,12 @@
                 <div class="flex items-center gap-2">
                     <span
                         class="inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-600 ring-1 ring-inset ring-amber-500/10 dark:bg-amber-400/10 dark:text-amber-400 dark:ring-amber-400/20">Open</span>
-                    <form action="{{ route('user.support.close', $ticket) }}" method="POST"
-                        onsubmit="return confirm('Are you sure you want to close this ticket?')">
+                    <form id="close-ticket-form" action="{{ route('user.support.close', $ticket) }}" method="POST">
                         @csrf
-                        <button type="submit"
+                        <button type="button" data-confirm data-confirm-title="Close Ticket"
+                            data-confirm-message="Are you sure you want to close this ticket? You can reopen it later if needed."
+                            data-confirm-text="Close Ticket" data-confirm-type="danger"
+                            data-confirm-on-confirm="#close-ticket-form"
                             class="text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-rose-600 transition">Close
                             Ticket</button>
                     </form>
@@ -38,6 +40,18 @@
                     </form>
                 </div>
             @endif
+            <div class="mt-2 text-right">
+                <form id="delete-ticket-form" action="{{ route('user.support.destroy', $ticket) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="button" data-confirm data-confirm-title="Delete Ticket History"
+                        data-confirm-message="Are you sure you want to remove this ticket history? This action is irreversible."
+                        data-confirm-text="Delete History" data-confirm-type="danger"
+                        data-confirm-on-confirm="#delete-ticket-form"
+                        class="text-[10px] font-black uppercase tracking-widest text-rose-500 hover:text-rose-700 transition py-2">Delete
+                        Ticket</button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -123,9 +137,11 @@
                 </div>
             </div>
             @if ($ticket->status === 'open')
-                <div class="rounded-lg bg-white p-8 shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10 relative overflow-hidden group">
+                <div
+                    class="rounded-lg bg-white p-8 shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10 relative overflow-hidden group">
                     <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-600/5 blur-2xl"></div>
-                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-6">Dispatch Reply</h3>
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-6">
+                        Dispatch Reply</h3>
                     <form method="POST" action="{{ route('user.support.reply', $ticket) }}">
                         @csrf
                         <div>
@@ -144,7 +160,7 @@
                         </div>
                     </form>
                 </div>
-@else
+            @else
                 <div
                     class="rounded-lg bg-slate-50 p-8 text-center ring-1 ring-slate-200 dark:bg-white/5 dark:ring-white/10">
                     <p class="text-sm font-bold text-slate-600 dark:text-slate-400">This ticket is closed. If you still

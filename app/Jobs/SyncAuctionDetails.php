@@ -36,7 +36,6 @@ class SyncAuctionDetails implements ShouldQueue
             $this->auction->update([
                 'ends_at' => $details['ends_at'] ?? $this->auction->ends_at,
                 'status' => $details['status'] ?? $this->auction->status,
-                'shipping_fee_yen' => $details['shipping_fee_yen'] ?? $this->auction->shipping_fee_yen,
                 'seller_name' => $details['seller_name'] ?? $this->auction->seller_name,
                 'yahoo_seller_id' => $details['yahoo_seller_id'] ?? $this->auction->yahoo_seller_id,
                 'seller_rating' => $details['seller_rating'] ?? $this->auction->seller_rating,

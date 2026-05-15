@@ -130,7 +130,6 @@ class ScrapeYahoo extends Command
                             $auction->update([
                                 'ends_at' => $details['ends_at'] ?? $auction->ends_at,
                                 'status' => $details['status'] ?? $auction->status,
-                                'shipping_fee_yen' => $details['shipping_fee_yen'] ?? $auction->shipping_fee_yen,
                                 'seller_name' => $details['seller_name'] ?? $auction->seller_name,
                                 'yahoo_seller_id' => $details['yahoo_seller_id'] ?? $auction->yahoo_seller_id,
                                 'seller_rating' => $details['seller_rating'] ?? $auction->seller_rating,
@@ -168,9 +167,6 @@ class ScrapeYahoo extends Command
                         }
                         if (isset($details['yahoo_seller_id'])) {
                             $auctionData['yahoo_seller_id'] = $details['yahoo_seller_id'];
-                        }
-                        if (isset($details['shipping_fee_yen'])) {
-                            $auctionData['shipping_fee_yen'] = $details['shipping_fee_yen'];
                         }
                         if (isset($details['seller_rating'])) {
                             $auctionData['seller_rating'] = $details['seller_rating'];
@@ -260,7 +256,6 @@ class ScrapeYahoo extends Command
                 } else {
                     $auction->update([
                         'current_bid_yen' => $details['current_bid_yen'] ?? $auction->current_bid_yen,
-                        'shipping_fee_yen' => $details['shipping_fee_yen'] ?? $auction->shipping_fee_yen,
                         'ends_at' => $details['ends_at'] ?? $auction->ends_at,
                         'status' => $details['status'] ?? $auction->status,
                         'seller_name' => $details['seller_name'] ?? $auction->seller_name,

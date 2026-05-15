@@ -45,6 +45,7 @@ class SupportTicketRepliedNotification extends Notification implements ShouldQue
             'ticket_id' => $this->ticket->id,
             'message_id' => $this->message->id,
             'subject' => $this->ticket->subject,
+            'message' => 'New reply on ticket: ' . $this->ticket->subject,
         ];
     }
 }

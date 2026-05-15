@@ -24,7 +24,7 @@ class ScraperCompleted extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -51,7 +51,10 @@ class ScraperCompleted extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'total_created' => $this->totalCreated,
+            'total_updated' => $this->totalUpdated,
+            'duration_seconds' => $this->durationSeconds,
+            'message' => "Scraper finished: {$this->totalCreated} new, {$this->totalUpdated} updated.",
         ];
     }
 }

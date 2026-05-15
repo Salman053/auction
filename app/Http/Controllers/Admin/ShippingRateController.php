@@ -38,7 +38,7 @@ class ShippingRateController
 
         return redirect()
             ->route('admin.shipping_rates.index')
-            ->with('status', 'Shipping rate created successfully');
+            ->with('success', 'Shipping rate created successfully');
     }
 
     /**
@@ -58,7 +58,7 @@ class ShippingRateController
 
         return redirect()
             ->route('admin.shipping_rates.index')
-            ->with('status', 'Shipping rate updated successfully');
+            ->with('success', 'Shipping rate updated successfully');
     }
 
     /**
@@ -70,6 +70,6 @@ class ShippingRateController
 
         return redirect()
             ->route('admin.shipping_rates.index')
-            ->with('status', 'Shipping rate deleted successfully');
+            ->with('success', 'Shipping rate deleted successfully');
     }
 }

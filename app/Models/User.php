@@ -33,6 +33,11 @@ class User extends Authenticatable
         'cookies_accepted',
         'cookies_settings',
         'cookies_accepted_at',
+        'postal_code',
+        'prefecture',
+        'city',
+        'street_address',
+        'phone_number',
     ];
 
     public function isAdmin(): bool

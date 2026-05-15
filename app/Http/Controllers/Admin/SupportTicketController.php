@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SupportTicketReplyRequest;
 use App\Models\SupportTicket;
+use App\Models\SupportTicketMessage;
 use App\Notifications\SupportTicketRepliedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -90,5 +91,23 @@ class SupportTicketController extends Controller
         ]);
 
         return back()->with('success', 'Ticket has been reopened.');
+    }
+
+    public function destroy(SupportTicket $supportTicket): RedirectResponse
+    {
+        $supportTicket->delete();
+
+        return redirect()->route('admin.support-tickets.index')->with('success', 'Ticket has been deleted.');
+    }
+
+    public function destroyMessage(SupportTicket $supportTicket, SupportTicketMessage $message): RedirectResponse
+    {
+        if ($message->support_ticket_id !== $supportTicket->id) {
+            abort(404);
+        }
+
+        $message->delete();
+
+        return back()->with('success', 'Message has been removed.');
     }
 }

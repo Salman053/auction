@@ -23,6 +23,10 @@ class NotificationController extends Controller
         $notification = $request->user()->notifications()->findOrFail($id);
         $notification->markAsRead();
 
+        if (isset($notification->data['ticket_id'])) {
+            return redirect()->route('admin.support-tickets.show', $notification->data['ticket_id']);
+        }
+
         $actionUrl = isset($notification->data['auction_id'])
             ? route('admin.auctions.show', $notification->data['auction_id'])
             : route('admin.notifications.index');

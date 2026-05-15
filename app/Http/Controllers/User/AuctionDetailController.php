@@ -53,7 +53,7 @@ class AuctionDetailController extends Controller
             ? $user->watchlistItems()->where('auction_id', $auction->id)->exists()
             : false;
 
-        $multiplierPercent = (int) ($user->bidding_multiplier_percent ?? 0);
+        $multiplierPercent = (int) ($user?->bidding_multiplier_percent ?? 0);
         if ($multiplierPercent <= 0) {
             $multiplierPercent = app(SettingService::class)->getInt(
                 SettingService::DEFAULT_BIDDING_MULTIPLIER_PERCENT_KEY,

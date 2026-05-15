@@ -97,6 +97,7 @@ Route::middleware('auth:user')->group(function () {
         Route::get('/support/create', [SupportTicketController::class, 'create'])->name('support.create');
         Route::post('/support', [SupportTicketController::class, 'store'])->name('support.store');
         Route::get('/support/{supportTicket}', [SupportTicketController::class, 'show'])->name('support.show');
+        Route::delete('/support/{supportTicket}', [SupportTicketController::class, 'destroy'])->name('support.destroy');
         Route::post('/support/{supportTicket}/reply', [SupportTicketController::class, 'reply'])->name('support.reply');
         Route::post('/support/{supportTicket}/close', [SupportTicketController::class, 'close'])->name('support.close');
         Route::post('/support/{supportTicket}/reopen', [SupportTicketController::class, 'reopen'])->name('support.reopen');
@@ -150,9 +151,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs.index');
         Route::get('/support-tickets', [AdminSupportTicketController::class, 'index'])->name('support-tickets.index');
         Route::get('/support-tickets/{supportTicket}', [AdminSupportTicketController::class, 'show'])->name('support-tickets.show');
+        Route::delete('/support-tickets/{supportTicket}', [AdminSupportTicketController::class, 'destroy'])->name('support-tickets.destroy');
         Route::post('/support-tickets/{supportTicket}/reply', [AdminSupportTicketController::class, 'reply'])->name('support-tickets.reply');
         Route::post('/support-tickets/{supportTicket}/close', [AdminSupportTicketController::class, 'close'])->name('support-tickets.close');
         Route::post('/support-tickets/{supportTicket}/reopen', [AdminSupportTicketController::class, 'reopen'])->name('support-tickets.reopen');
+        Route::delete('/support-tickets/{supportTicket}/messages/{message}', [AdminSupportTicketController::class, 'destroyMessage'])->name('support-tickets.messages.destroy');
 
         Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
         Route::get('/notifications/{id}/read', [AdminNotificationController::class, 'read'])->name('notifications.read');

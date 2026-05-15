@@ -129,4 +129,16 @@ class SupportTicketController extends Controller
 
         return back()->with('success', 'Ticket has been reopened.');
     }
+
+    public function destroy(Request $request, SupportTicket $supportTicket): RedirectResponse
+    {
+        $user = $request->user('user');
+        if ($supportTicket->user_id !== $user->id) {
+            abort(403);
+        }
+
+        $supportTicket->delete();
+
+        return redirect()->route('user.support.index')->with('success', 'Ticket has been removed.');
+    }
 }

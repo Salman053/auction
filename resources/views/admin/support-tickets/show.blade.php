@@ -80,7 +80,21 @@
                         @endif
                     </div>
                 </div>
-                <div class="flex shrink-0 items-center gap-2">
+                <div class="flex items-center gap-3">
+                    <form id="delete-ticket-form" action="{{ route('admin.support-tickets.destroy', $ticket) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button"
+                            data-confirm
+                            data-confirm-title="Delete Ticket"
+                            data-confirm-message="Are you sure you want to permanently delete this ticket and all its messages? This action cannot be undone."
+                            data-confirm-text="Delete Ticket"
+                            data-confirm-type="danger"
+                            data-confirm-on-confirm="#delete-ticket-form"
+                            class="rounded-lg bg-white px-4 py-3 text-xs font-black uppercase tracking-widest text-rose-600 ring-1 ring-rose-200 transition hover:bg-rose-50 dark:bg-zinc-900 dark:ring-rose-500/30">Delete
+                            Ticket</button>
+                    </form>
+
                     @if ($ticket->status === 'open')
                         <form id="close-ticket-form" action="{{ route('admin.support-tickets.close', $ticket) }}"
                             method="POST" class="inline">
@@ -203,6 +217,27 @@
                                                     d="M5 13l4 4L19 7"></path>
                                             </svg>
                                         @endif
+                                        <form id="delete-message-{{ $message->id }}"
+                                            action="{{ route('admin.support-tickets.messages.destroy', [$ticket, $message]) }}"
+                                            method="POST" class="ml-1">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button"
+                                                data-confirm
+                                                data-confirm-title="Remove Message"
+                                                data-confirm-message="Are you sure you want to remove this message from the ticket history?"
+                                                data-confirm-text="Remove"
+                                                data-confirm-type="danger"
+                                                data-confirm-on-confirm="#delete-message-{{ $message->id }}"
+                                                class="text-zinc-400 hover:text-rose-500 transition">
+                                                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

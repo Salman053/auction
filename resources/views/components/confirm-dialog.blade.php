@@ -4,7 +4,7 @@
     <div class="relative flex min-h-full items-center justify-center p-4 text-center sm:p-0">
         <div role="dialog" aria-modal="true" aria-labelledby="confirm-dialog-title"
             aria-describedby="confirm-dialog-message"
-            class="relative w-full max-w-lg overflow-hidden rounded-[2.5rem] bg-white text-left shadow-2xl transition-all dark:bg-zinc-900 ring-1 ring-zinc-200 dark:ring-white/10">
+            class="relative w-full max-w-lg overflow-hidden rounded-lg bg-white text-left shadow-2xl transition-all dark:bg-zinc-900 ring-1 ring-zinc-200 dark:ring-white/10">
             <div class="p-8 sm:p-10">
                 <div class="flex items-start gap-5">
                     <div id="confirm-dialog-icon"

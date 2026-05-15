@@ -2,7 +2,8 @@
 <ol id="sonner-toast-container" 
     position="bottom-right" 
     max-toasts="3" 
-    rich-colors="true">
+    rich-colors="true"
+    duration="4000">
 </ol>
 
 {{-- Flash Messages --}}
