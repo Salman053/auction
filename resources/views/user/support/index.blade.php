@@ -7,7 +7,7 @@
                 </p>
             </div>
             <div>
-                <a href="{{ route('contact') }}"
+                <a href="{{ route('user.support.create') }}"
                     class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 hover:scale-[1.02]">
                     New Inquiry
                 </a>

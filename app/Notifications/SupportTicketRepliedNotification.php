@@ -20,19 +20,23 @@ class SupportTicketRepliedNotification extends Notification implements ShouldQue
 
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
+        $mail = (new MailMessage)
             ->subject('Update on your Inquiry: '.$this->ticket->subject)
             ->greeting('Hello '.($this->ticket->requester_name ?? 'User').',')
             ->line('Our administrative team has replied to your inquiry.')
             ->line('Response:')
-            ->line('"'.$this->message->body.'"')
-            ->action('View Details', route('user.support.show', $this->ticket))
-            ->line('Thank you for using WatchHub.');
+            ->line('"'.$this->message->body.'"');
+
+        if ($this->ticket->user_id) {
+            $mail->action('View Details', route('user.support.show', $this->ticket));
+        }
+
+        return $mail->line('Thank you for using WatchHub.');
     }
 
     public function toArray(object $notifiable): array

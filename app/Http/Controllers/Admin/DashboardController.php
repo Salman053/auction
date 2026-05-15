@@ -7,6 +7,7 @@ use App\Models\Auction;
 use App\Models\AuditLog;
 use App\Models\Proxy;
 use App\Models\ScrapingLog;
+use App\Models\SupportTicket;
 use App\Models\User;
 use App\Models\WalletTransaction;
 use Carbon\CarbonImmutable;
@@ -68,6 +69,10 @@ class DashboardController extends Controller
                 ->where('status', 'pending')
                 ->count();
 
+            $openTicketCount = SupportTicket::query()
+                ->where('status', 'open')
+                ->count();
+
             $approvedDepositSumYen = (int) WalletTransaction::query()
                 ->where('type', 'deposit')
                 ->where('status', 'approved')
@@ -88,6 +93,7 @@ class DashboardController extends Controller
                 'activeProxyCount' => Proxy::query()->where('is_active', true)->count(),
                 'failedProxyCount' => $failedProxyCount,
                 'pendingDepositCount' => $pendingDepositCount,
+                'openTicketCount' => $openTicketCount,
                 'approvedDepositSumYen' => $approvedDepositSumYen,
                 'scraperStatus' => $scraperStatus,
                 'isScrapingRunning' => $isScrapingRunning,

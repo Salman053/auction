@@ -12,8 +12,12 @@ use Illuminate\View\View;
 
 class ContactController extends Controller
 {
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
+        if (auth('user')->check()) {
+            return redirect()->route('user.support.create');
+        }
+
         return view('public.pages.contact');
     }
 

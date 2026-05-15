@@ -94,6 +94,8 @@ Route::middleware('auth:user')->group(function () {
         Route::get('/wallet/deposits/stripe/cancel', [UserWalletController::class, 'stripeCancel'])->name('wallet.deposits.stripe.cancel');
 
         Route::get('/support', [SupportTicketController::class, 'index'])->name('support.index');
+        Route::get('/support/create', [SupportTicketController::class, 'create'])->name('support.create');
+        Route::post('/support', [SupportTicketController::class, 'store'])->name('support.store');
         Route::get('/support/{supportTicket}', [SupportTicketController::class, 'show'])->name('support.show');
         Route::post('/support/{supportTicket}/reply', [SupportTicketController::class, 'reply'])->name('support.reply');
         Route::post('/support/{supportTicket}/close', [SupportTicketController::class, 'close'])->name('support.close');

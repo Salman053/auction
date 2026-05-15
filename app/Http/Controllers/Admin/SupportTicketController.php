@@ -44,6 +44,10 @@ class SupportTicketController extends Controller
         SupportTicketReplyRequest $request,
         SupportTicket $supportTicket
     ): RedirectResponse {
+        if ($supportTicket->status === 'closed') {
+            return back()->with('error', 'You cannot reply to a closed ticket. Please reopen it first.');
+        }
+
         $supportTicket->load('user');
 
         $admin = $request->user('admin');
@@ -65,7 +69,7 @@ class SupportTicketController extends Controller
             }
         }
 
-        return back()->with('success', 'Support ticket status updated.');
+        return back()->with('success', 'Your response has been recorded.');
     }
 
     public function close(Request $request, SupportTicket $supportTicket): RedirectResponse

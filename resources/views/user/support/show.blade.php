@@ -123,14 +123,14 @@
                 </div>
             </div>
             @if ($ticket->status === 'open')
-                <div class="rounded-lg  p-8  shadow-2xl relative overflow-hidden group">
-                    <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-600/10 blur-2xl"></div>
-                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 mb-6">Dispatch Reply</h3>
+                <div class="rounded-lg bg-white p-8 shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10 relative overflow-hidden group">
+                    <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-600/5 blur-2xl"></div>
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-6">Dispatch Reply</h3>
                     <form method="POST" action="{{ route('user.support.reply', $ticket) }}">
                         @csrf
                         <div>
                             <textarea name="body" rows="4"
-                                class="w-full rounded-lg border-none bg-white/5 px-6 py-5 text-sm font-black text-foreground placeholder:text-white/20 focus:ring-2 focus:ring-blue-600 transition-all"
+                                class="w-full rounded-lg border-none bg-zinc-50 dark:bg-white/5 px-6 py-5 text-sm font-bold text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-white/20 focus:ring-2 focus:ring-blue-600 transition-all shadow-inner"
                                 placeholder="Transmission details..." required></textarea>
                             @error('body')
                                 <p class="mt-2 text-xs font-bold text-rose-500">{{ $message }}</p>
@@ -144,7 +144,7 @@
                         </div>
                     </form>
                 </div>
-            @else
+@else
                 <div
                     class="rounded-lg bg-slate-50 p-8 text-center ring-1 ring-slate-200 dark:bg-white/5 dark:ring-white/10">
                     <p class="text-sm font-bold text-slate-600 dark:text-slate-400">This ticket is closed. If you still
