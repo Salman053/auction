@@ -69,8 +69,8 @@ class AuctionDetailController extends Controller
             ->where('yahoo_category_id', $auction->yahoo_category_id)
             ->where(function ($query) use ($auction) {
                 $query->whereBetween('current_bid_yen', [
-                    $auction->current_bid_yen * 0.7,
-                    $auction->current_bid_yen * 1.3,
+                    (int) ($auction->current_bid_yen * 0.7),
+                    (int) ($auction->current_bid_yen * 1.3),
                 ])->orWhere('current_bid_yen', '>=', $auction->current_bid_yen);
             })
             ->inRandomOrder()
