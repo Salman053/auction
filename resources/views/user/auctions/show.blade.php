@@ -101,10 +101,7 @@
                             <div
                                 class="mb-6 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 p-4 border border-emerald-200 dark:border-emerald-800">
                                 <p class="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-2">
-                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>
+
                                     You are the current top bidder
                                 </p>
                                 <p class="text-emerald-600 dark:text-emerald-500 text-sm mt-1">Your Max Bid:
@@ -160,8 +157,7 @@
                     </form>
                 </div>
                 {{-- Wallet Summary --}}
-                <div
-                    class="rounded-sm bg-white dark:bg-zinc-900 p-8 shadow-sm ring-1 ring-zinc-200 dark:ring-white/10">
+                <div class="rounded-sm bg-white dark:bg-zinc-900 p-8 shadow-sm ring-1 ring-zinc-200 dark:ring-white/10">
                     <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 mb-8">Market Standing
                     </h3>
                     <div class="grid grid-cols-2 gap-8">

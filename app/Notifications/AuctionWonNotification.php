@@ -19,6 +19,11 @@ class AuctionWonNotification extends Notification implements ShouldQueue
         return ['database', 'mail'];
     }
 
+    public function queue(): string
+    {
+        return 'high';
+    }
+
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)

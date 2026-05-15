@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\SupportTicketReplyRequest;
 use App\Models\SupportTicket;
+use App\Models\User;
 use App\Notifications\AdminSupportTicketReceivedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -52,9 +53,11 @@ class SupportTicketController extends Controller
             'is_internal' => false,
         ]);
 
-        // Notify Admin
         Notification::route('mail', config('mail.from.address'))
             ->notify(new AdminSupportTicketReceivedNotification($ticket));
+
+        $admins = User::where('role', 'admin')->get();
+        Notification::send($admins, new AdminSupportTicketReceivedNotification($ticket));
 
         return redirect()->route('user.support.show', $ticket)
             ->with('success', 'Support ticket created successfully.');

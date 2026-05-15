@@ -20,6 +20,11 @@ class AdminNewWithdrawalRequestNotification extends Notification implements Shou
         return ['database', 'mail'];
     }
 
+    public function queue(): string
+    {
+        return 'high';
+    }
+
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)

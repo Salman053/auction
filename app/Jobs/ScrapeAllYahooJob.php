@@ -26,6 +26,8 @@ class ScrapeAllYahooJob implements ShouldQueue
      */
     public function handle(): void
     {
+        $this->onQueue('low');
+        
         $args = [
             '--pages' => $this->pages,
             '--delay' => $this->scrapeDelay,

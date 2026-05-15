@@ -149,7 +149,7 @@ class ScrapeAllYahoo extends Command
                             app(AuctionReconciliationService::class)->reconcile($auction);
 
                             if ($forceDetails) {
-                                SyncAuctionDetails::dispatch($auction);
+                                SyncAuctionDetails::dispatch($auction)->onQueue('low');
                             }
 
                             $totalUpdated++;
@@ -170,7 +170,7 @@ class ScrapeAllYahoo extends Command
                                 $totalCreated++;
 
                                 if ($fetchDetails) {
-                                    SyncAuctionDetails::dispatch($newAuction);
+                                    SyncAuctionDetails::dispatch($newAuction)->onQueue('low');
                                 }
                             } catch (QueryException $e) {
                                 if ($e->getCode() == 23000) {
@@ -184,7 +184,7 @@ class ScrapeAllYahoo extends Command
                                         $totalUpdated++;
 
                                         if ($forceDetails) {
-                                            SyncAuctionDetails::dispatch($retryAuction);
+                                            SyncAuctionDetails::dispatch($retryAuction)->onQueue('low');
                                         }
                                     }
                                 } else {

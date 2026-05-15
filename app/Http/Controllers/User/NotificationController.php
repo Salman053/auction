@@ -28,15 +28,22 @@ class NotificationController extends Controller
         $notification = $user->notifications()->findOrFail($id);
         $notification->markAsRead();
 
+        // Support Ticket redirection
         if (isset($notification->data['ticket_id'])) {
             return redirect()->route('user.support.show', $notification->data['ticket_id']);
         }
 
-        $actionUrl = isset($notification->data['auction_id'])
-            ? route('user.auctions.show', $notification->data['auction_id'])
-            : route('user.notifications.index');
+        // Auction redirection
+        if (isset($notification->data['auction_id'])) {
+            return redirect()->route('user.auctions.show', $notification->data['auction_id']);
+        }
 
-        return redirect($actionUrl);
+        // Wallet redirection
+        if (isset($notification->data['type']) && $notification->data['type'] === 'deposit_approved') {
+            return redirect()->route('user.wallet.index');
+        }
+
+        return redirect()->route('user.notifications.index');
     }
 
     public function markAllRead(Request $request): RedirectResponse

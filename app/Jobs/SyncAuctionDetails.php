@@ -19,7 +19,6 @@ class SyncAuctionDetails implements ShouldQueue
 
     public function __construct(public Auction $auction)
     {
-        $this->onQueue('sync');
     }
 
     public function handle(ScraperService $scraper): void

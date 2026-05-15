@@ -23,6 +23,11 @@ class SupportTicketRepliedNotification extends Notification implements ShouldQue
         return ['mail', 'database'];
     }
 
+    public function queue(): string
+    {
+        return 'high';
+    }
+
     public function toMail(object $notifiable): MailMessage
     {
         $mail = (new MailMessage)

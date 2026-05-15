@@ -20,6 +20,11 @@ class AdminNewDepositRequestNotification extends Notification implements ShouldQ
         return ['database', 'mail'];
     }
 
+    public function queue(): string
+    {
+        return 'high';
+    }
+
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)

@@ -43,7 +43,7 @@ A complete web platform and background scraper for mirroring, monitoring, and bi
     php artisan key:generate
     ```
 
-    _Make sure to configure your `DB_` (Database) and `REDIS_` settings in `.env`._
+    _Make sure to configure your `DB_`(Database) and`REDIS*`settings in`.env`.*
 
 3. **Database Setup:**
    Run the migrations and seeders to create the admin user and necessary tables:
@@ -66,7 +66,7 @@ A complete web platform and background scraper for mirroring, monitoring, and bi
     php artisan serve
 
     # Terminal 2: Run the Queue Worker (Processes the high-res image syncs)
-    php artisan queue:work --queue=default,sync
+    php artisan queue:work --queue=high,default,low,sync
 
     # Terminal 3: Run the Scheduler (Triggers the scrapers every 10 mins)
     php artisan schedule:work
@@ -74,7 +74,25 @@ A complete web platform and background scraper for mirroring, monitoring, and bi
 
 ---
 
-## 🚀 Production Hosting Guide (From Start to Finish)
+## 🔔 Notification & Messaging System
+
+The application uses Laravel's built-in Notification system to alert admins and users of system events (support tickets, auction updates, etc.).
+
+### Notification Dispatch Types
+
+- **`notify()`**: Dispatches notifications to the background queue (Recommended for non-critical, high-volume tasks).
+- **`notifyNow()`**: Bypasses the queue to process the notification immediately (Recommended for critical Admin alerts).
+
+### Operational Requirements
+
+- **Database Storage**: Notifications are persisted in the `notifications` table. Ensure `php artisan notifications:table` and `migrate` have been run.
+- **Queue Worker**: For notifications dispatched via `notify()`, the queue worker MUST be running:
+    ```bash
+    php artisan queue:work --queue=high,default,low
+    ```
+- **SMTP**: Configure `MAIL_` settings in `.env` to enable email delivery.
+
+---
 
 To host this application in a live production environment, we recommend using a standard Ubuntu 22.04/24.04 server managed by **Laravel Forge** or **Laravel Cloud**. If you are doing it manually, follow this guide:
 

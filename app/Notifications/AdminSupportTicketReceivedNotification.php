@@ -21,6 +21,11 @@ class AdminSupportTicketReceivedNotification extends Notification implements Sho
         return ['mail', 'database'];
     }
 
+    public function queue(): string
+    {
+        return 'high';
+    }
+
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
