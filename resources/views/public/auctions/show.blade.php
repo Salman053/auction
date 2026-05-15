@@ -20,6 +20,7 @@
                         <div
                             class="relative aspect-square sm:aspect-video overflow-hidden rounded-lg bg-zinc-50 dark:bg-zinc-800">
                             <img id="mainImage" src="{{ $auction->thumbnail_url }}" alt="{{ $auction->title }}"
+                                loading="lazy"
                                 class="h-full w-full object-contain transition duration-500 hover:scale-105">
 
                             {{-- Status Badge --}}
@@ -36,7 +37,8 @@
                                 @foreach ($auction->image_urls as $url)
                                     <button onclick="document.getElementById('mainImage').src='{{ $url }}'"
                                         class="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-zinc-50 ring-1 ring-zinc-200 transition-all hover:ring-2 hover:ring-blue-500 dark:bg-zinc-800 dark:ring-white/5">
-                                        <img src="{{ $url }}" class="h-full w-full object-cover">
+                                        <img loading="lazy" src="{{ $url }}"
+                                            class="h-full w-full object-cover">
                                     </button>
                                 @endforeach
                             </div>

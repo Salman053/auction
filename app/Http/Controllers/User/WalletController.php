@@ -49,6 +49,7 @@ class WalletController extends Controller
         }
 
         $validated = $request->validated();
+
         $provider = (string) $validated['provider'];
         $amountYen = (int) $validated['amount_yen'];
         $transactionId = $validated['transaction_id'] ?? null;
@@ -101,7 +102,6 @@ class WalletController extends Controller
 
                 return redirect($checkoutSession->url);
             } catch (\Exception $e) {
-                // Return back with a friendly error if Stripe fails instead of generating a 500
                 return back()->with('error', 'Stripe Payment Gateway unavailable. Please try again later. ('.$e->getMessage().')');
             }
         }

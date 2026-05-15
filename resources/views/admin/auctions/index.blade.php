@@ -43,7 +43,7 @@
                     <div class="flex items-center gap-4">
                         <div
                             class="h-12 w-12 shrink-0 rounded-lg overflow-hidden ring-1 ring-black/5 dark:ring-white/10 bg-zinc-50 dark:bg-black/20">
-                            <img src="{{ $topAuction->thumbnail_url }}" alt=""
+                            <img src="{{ $topAuction->thumbnail_url }}" loading="lazy" alt=""
                                 class="h-full w-full object-cover">
                         </div>
                         <div class="min-w-0">
@@ -89,8 +89,8 @@
                                 <div class="flex items-center gap-4">
                                     <div
                                         class="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-zinc-100 ring-1 ring-black/5 dark:bg-black/20 dark:ring-white/10">
-                                        <img src="{{ $auction->thumbnail_url }}" alt=""
-                                            class="h-full w-full object-cover">
+                                        <img src="{{ $auction->thumbnail_url }}" alt={{ $auction->title }}
+                                            loading="lazy" class="h-full w-full object-cover">
                                         <div
                                             class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end justify-center pb-1">
                                             <span

@@ -23,6 +23,9 @@ class HomeController extends Controller
             ->limit(15)
             ->get();
 
+        $carouselAuctions = $featured->take(5);
+        $secondaryCarouselAuctions = $featured->slice(8);
+
         $categories = Category::where('depth', 0)
             ->orderBy('priority', 'desc')
             ->orderBy('name')
@@ -40,6 +43,6 @@ class HomeController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('public.home', compact('featured', 'categories', 'navCategories', 'shippingLocations'));
+        return view('public.home', compact('featured', 'carouselAuctions', 'secondaryCarouselAuctions', 'categories', 'navCategories', 'shippingLocations'));
     }
 }

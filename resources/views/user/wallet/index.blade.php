@@ -109,8 +109,8 @@
                                     <label for="transaction_id"
                                         class="block text-[9px] font-black uppercase tracking-widest dark:text-white/50 text-black/50 mb-3 ml-1 ">Reference
                                         ID (Optional)</label>
-                                    <input id="transaction_id" name="transaction_id" value="{{ old('transaction_id') }}"
-                                        placeholder="TXN-ID-XXXX"
+                                    <input id="transaction_id" required name="transaction_id"
+                                        value="{{ old('transaction_id') }}" placeholder="TXN-ID-XXXX"
                                         class="w-full rounded-lg border-none  bg-white dark:bg-gray-800 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-black dark:text-white " />
                                 </div>
                             </div>
@@ -121,8 +121,8 @@
                                     class="block text-[9px] font-black uppercase tracking-widest dark:text-white/50 text-black/50 mb-3 ml-1">Verification
                                     Receipt</label>
                                 <div class="relative group/upload">
-                                    <input id="receipt" name="receipt" type="file" accept="image/*,application/pdf"
-                                        class="hidden"
+                                    <input id="receipt" required name="receipt" type="file"
+                                        accept="image/*,application/pdf" class="hidden"
                                         onchange="document.getElementById('receipt-name').textContent = this.files[0].name" />
                                     <label for="receipt"
                                         class="flex flex-col items-center justify-center gap-3 w-full py-8 rounded-lg border-2 border-dashed dark:border-white/20 border-black/20 bg-black/5 cursor-pointer hover:border-blue-600 transition-all">

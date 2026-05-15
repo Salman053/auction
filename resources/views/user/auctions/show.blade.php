@@ -20,7 +20,8 @@
                     class="relative overflow-hidden rounded-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 shadow-sm">
                     <div class="aspect-[4/3] relative flex items-center justify-center p-8 bg-zinc-50 dark:bg-black/20">
                         <template x-for="(image, index) in images" :key="index">
-                            <img x-show="activeImage === index" :src="image" alt="{{ $auction->title }}"
+                            <img loading="lazy" x-show="activeImage === index" :src="image"
+                                alt="{{ $auction->title }}"
                                 class="max-h-full max-w-full object-contain drop-shadow-2xl transition-opacity duration-500">
                         </template>
 
@@ -46,7 +47,7 @@
                             <button @click="activeImage = index"
                                 :class="activeImage === index ? 'ring-2 ring-blue-600' : ''"
                                 class="w-20 h-20 shrink-0 rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-800">
-                                <img :src="image" class="w-full h-full object-cover">
+                                <img loading="lazy" :src="image" class="w-full h-full object-cover">
                             </button>
                         </template>
                     </div>
@@ -186,7 +187,8 @@
                         <div
                             class="group relative flex flex-col overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-zinc-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-zinc-900 dark:ring-white/10">
                             <div class="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                                <img src="{{ $similar->thumbnail_url ?? 'https://placehold.co/400x300/1e293b/d4af37?text=AuctionHub' }}"
+                                <img loading="lazy"
+                                    src="{{ $similar->thumbnail_url ?? 'https://placehold.co/400x300/1e293b/d4af37?text=AuctionHub' }}"
                                     alt="{{ $similar->title }}"
                                     class="h-full w-full object-contain transition duration-500 group-hover:scale-105">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>

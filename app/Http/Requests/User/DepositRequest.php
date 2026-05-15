@@ -26,8 +26,8 @@ class DepositRequest extends FormRequest
             'amount_yen' => ['required', 'integer', 'min:1000'],
             'provider' => ['required', 'string', 'in:bank,card,paypal,stripe'],
             'memo' => ['nullable', 'string', 'max:255'],
-            'transaction_id' => ['nullable', 'string', 'max:100'],
-            'receipt' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'], // Max 5MB
+            'transaction_id' => ['required_if:provider,bank,card,paypal', 'string', 'max:100'],
+            'receipt' => ['required_if:provider,bank,card,paypal', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'], // Max 5MB
         ];
     }
 }

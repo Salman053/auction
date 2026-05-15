@@ -33,7 +33,7 @@
                 x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                 x-transition:leave="transition opacity duration-1000" x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0" class="absolute inset-0">
-                <img :src="item.img"
+                <img :src="item.img" loading="lazy"
                     class="h-full w-full object-cover opacity-30 blur-[2px] scale-110 transition-transform duration-[8000ms]"
                     :class="active === index ? 'scale-100' : 'scale-110'" />
 

@@ -216,7 +216,7 @@ class ScrapeAllYahoo extends Command
             $this->info("📊 Total Created: {$totalCreated}");
             $this->info("📊 Total Updated: {$totalUpdated}");
 
-            if ($totalCreated > 0) {
+            if ($totalCreated >= 10) {
                 $duration = now()->diffInSeconds($log->started_at);
                 $admins = User::where('role', UserRole::Admin->value)->get();
                 if ($admins->isNotEmpty()) {

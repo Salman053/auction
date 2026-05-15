@@ -1,8 +1,11 @@
 <x-guest-layout :title="'Japanese Proxy Auctions & Marketplace'">
     <div class="bg-zinc-50 dark:bg-zinc-950 pb-20">
+
         {{-- Hero Slider Section --}}
-        <section class="mx-auto max-w-7xl px-4 py-6 lg:px-8">
-            <div class="grid grid-cols-1 gap-4 lg:grid-cols-12 h-[300px] lg:h-[450px]">
+        <section class="mx-auto max-w-7xl  px-4 py-6 lg:px-8">
+
+
+            <div class="grid grid-cols-1 gap-4 lg:grid-cols-12 min-h-fit">
                 {{-- Main Large Slider --}}
                 <div class="relative overflow-hidden rounded-lg lg:col-span-8 bg-zinc-900 group">
                     <div x-data="{
@@ -27,7 +30,7 @@
                                 x-transition:enter-start="opacity-0 scale-105"
                                 x-transition:enter-end="opacity-100 scale-100"
                                 class="absolute inset-0 flex items-center px-12">
-                                <img :src="slide.img"
+                                <img :src="slide.img" :alt="slide.title" loading="lazy"
                                     class="absolute inset-0 h-full w-full object-cover opacity-60" />
                                 <div
                                     class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent">
@@ -106,12 +109,17 @@
                     </div>
                 </div>
             </div>
-        </section>
+            {{-- Secondary Carousel --}}
+            <div class="mt-12">
+                <x-auction-featured-carousel :auctions="$secondaryCarouselAuctions" />
+            </div>
 
+        </section>
 
 
         {{-- Active Auctions Grid --}}
         <section class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+
             <div class="flex items-center justify-between mb-10">
                 <div>
                     <h2 class="text-2xl font-black tracking-tight text-zinc-900 dark:text-white">Hot Live Auctions</h2>

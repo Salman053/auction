@@ -108,7 +108,8 @@
                 <div
                     class="group relative flex flex-col overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-zinc-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-zinc-900 dark:ring-white/10">
                     <div class="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                        <img src="{{ $auction->thumbnail_url ?? 'https://placehold.co/400x300/1e293b/d4af37?text=AuctionHub' }}"
+                        <img loading="lazy"
+                            src="{{ $auction->thumbnail_url ?? 'https://placehold.co/400x300/1e293b/d4af37?text=AuctionHub' }}"
                             alt="{{ $auction->title }}"
                             class="h-full w-full object-contain transition duration-500 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>

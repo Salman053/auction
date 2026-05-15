@@ -44,7 +44,7 @@
                     </div>
                     <div class="lg:w-1/2">
                         <div class="overflow-hidden rounded-[3rem] bg-slate-100 p-8 dark:bg-zinc-900 shadow-xl">
-                            <img src="{{ asset('images/deposit.png') }}" alt="Fund Account Interface"
+                            <img loading="lazy" src="{{ asset('images/deposit.png') }}" alt="Fund Account Interface"
                                 class="w-full h-auto rounded-lg">
                         </div>
                     </div>

@@ -61,7 +61,7 @@
                                 @if ($bid->auction?->image_url)
                                     <div
                                         class="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-zinc-100 dark:bg-black/20">
-                                        <img src="{{ $bid->auction->image_url }}" alt=""
+                                        <img loading="lazy" src="{{ $bid->auction->image_url }}" alt=""
                                             class="h-full w-full object-cover">
                                     </div>
                                 @else

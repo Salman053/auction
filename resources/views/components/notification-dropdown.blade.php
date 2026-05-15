@@ -1,8 +1,21 @@
 @php
-    $user = auth('admin')->user() ?? (auth('user')->user() ?? auth()->user());
+    // Determine which guard to prioritize based on the current area
+    $isAdminArea = request()->is('admin*');
+    $isUserArea = request()->is('app*') || request()->is('dashboard*');
+
+    if ($isAdminArea) {
+        $user = auth('admin')->user();
+        $prefix = 'admin';
+    } elseif ($isUserArea) {
+        $user = auth('user')->user();
+        $prefix = 'user';
+    } else {
+        // Public pages: prefer user if logged in to both, otherwise whichever is active
+        $user = auth('user')->user() ?? (auth('admin')->user() ?? auth()->user());
+        $prefix = auth('user')->check() ? 'user' : (auth('admin')->check() ? 'admin' : 'user');
+    }
+
     $unreadCount = $user ? $user->unreadNotifications->count() : 0;
-    $isAdmin = $user && ((isset($user->role) && $user->role === \App\Enums\UserRole::Admin) || request()->is('admin*'));
-    $prefix = $isAdmin ? 'admin' : 'user';
 @endphp
 
 <div class="relative">

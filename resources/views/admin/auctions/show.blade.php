@@ -18,7 +18,7 @@
             {{-- Thumbnail --}}
             <div class="shrink-0">
                 @if ($auction->thumbnail_url)
-                    <img src="{{ $auction->thumbnail_url }}" alt="{{ $auction->title }}"
+                    <img src="{{ $auction->thumbnail_url }}" alt="{{ $auction->title }}" loading="lazy"
                         class="h-40 w-40 rounded-lg object-cover ring-1 ring-black/10 dark:ring-white/10 lg:h-48 lg:w-48">
                 @else
                     <div

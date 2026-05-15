@@ -39,7 +39,7 @@ class ScraperService
         }
 
         if ($newOnly) {
-            $url .= "&new=1";
+            $url .= '&new=1';
         }
 
         if ($minPrice !== null) {

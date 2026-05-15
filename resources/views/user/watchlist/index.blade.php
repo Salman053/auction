@@ -71,7 +71,8 @@
                         {{-- Auction Thumbnail --}}
                         <a href="{{ route('user.auctions.show', $auction) }}"
                             class="relative block aspect-[4/3] overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                            <img src="{{ $auction->thumbnail_url ?? 'https://placehold.co/400x300/1e293b/d4af37?text=WatchHub' }}"
+                            <img loading="lazy"
+                                src="{{ $auction->thumbnail_url ?? 'https://placehold.co/400x300/1e293b/d4af37?text=WatchHub' }}"
                                 alt="{{ $auction->title }}"
                                 class="h-full w-full object-contain transition duration-500 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>

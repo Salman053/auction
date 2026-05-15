@@ -213,7 +213,8 @@
 
                     <a href="{{ route('admin.profile.edit') }}"
                         class="flex h-9 w-9 overflow-hidden rounded-full ring-2 ring-blue-600/20 transition hover:ring-blue-600 sm:h-10 sm:w-10">
-                        <img src="https://ui-avatars.com/api/?name=Admin&background=2563EB&color=FFFFFF"
+                        <img loading="lazy"
+                            src="https://ui-avatars.com/api/?name=Admin&background=2563EB&color=FFFFFF"
                             alt="Admin">
                     </a>
                 </div>

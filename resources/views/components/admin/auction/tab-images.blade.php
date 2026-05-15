@@ -7,7 +7,7 @@
             @foreach ($auction->image_urls as $idx => $imageUrl)
                 <a href="{{ $imageUrl }}" target="_blank" rel="noopener"
                     class="group relative overflow-hidden rounded-lg ring-1 ring-black/10 transition hover:ring-rose-500 dark:ring-white/10 dark:hover:ring-rose-500">
-                    <img src="{{ $imageUrl }}" alt="Image {{ $idx + 1 }}"
+                    <img src="{{ $imageUrl }}" alt="Image {{ $idx + 1 }}" loading="lazy"
                         class="aspect-square w-full object-cover transition group-hover:scale-105">
                     <div
                         class="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/50 to-transparent opacity-0 transition group-hover:opacity-100">
