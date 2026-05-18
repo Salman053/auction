@@ -16,27 +16,25 @@
                                 d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zM17 16l4-4m0 0l-4-4m4 4H7" />
                         </svg>
                         Request Liquidation
-                    </a>
+                    </a>s
                 </div>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full lg:w-auto">
                 {{-- Stat Cards --}}
-                <div class="rounded-[2rem] bg-blue-600 p-6 shadow-xl shadow-blue-600/20 text-white">
+                <div class="rounded-lg bg-blue-600 p-6 shadow-xl shadow-blue-600/20 text-white">
                     <div class="text-[10px] font-black uppercase tracking-widest text-blue-100/60 mb-2">Available</div>
                     <div class="text-2xl font-black">¥{{ number_format((int) ($wallet?->balance_yen ?? 0)) }}</div>
                 </div>
 
-                <div
-                    class="rounded-[2rem] bg-white dark:bg-zinc-900 p-6 shadow-sm ring-1 ring-zinc-200 dark:ring-white/10">
+                <div class="rounded-lg bg-white dark:bg-zinc-900 p-6 shadow-sm ring-1 ring-zinc-200 dark:ring-white/10">
                     <div class="text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-2">
                         Committed</div>
                     <div class="text-2xl font-black text-zinc-900 dark:text-white">
                         ¥{{ number_format((int) ($wallet?->locked_balance_yen ?? 0)) }}</div>
                 </div>
 
-                <div
-                    class="rounded-[2rem] bg-white dark:bg-zinc-900 p-6 shadow-sm ring-1 ring-zinc-200 dark:ring-white/10">
+                <div class="rounded-lg bg-white dark:bg-zinc-900 p-6 shadow-sm ring-1 ring-zinc-200 dark:ring-white/10">
                     <div class="text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-2">
                         Total Power</div>
                     <div class="text-2xl font-black text-zinc-900 dark:text-white">¥{{ number_format($capacityYen) }}
@@ -45,7 +43,7 @@
                         {{ $multiplierPercent }}% Factor</div>
                 </div>
 
-                <div class="rounded-[2rem] bg-zinc-950 p-6 shadow-2xl">
+                <div class="rounded-lg bg-zinc-950 p-6 shadow-2xl">
                     <div class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-2">Limit</div>
                     <div class="text-2xl font-black text-white">¥{{ number_format($availableCapacityYen) }}</div>
                 </div>
@@ -83,7 +81,7 @@
                                     class="block text-[9px] font-black uppercase tracking-widest dark:text-white/50 text-black/50 mb-3 ml-1">Target
                                     Amount (JPY)</label>
                                 <div
-                                    class="relative flex items-center dark:bg-gray-800 bg-white rounded-[2rem] border border-white/10 p-2">
+                                    class="relative flex items-center dark:bg-gray-800 bg-white rounded-lg border border-white/10 p-2">
                                     <span class="pl-4 text-2xl font-black text-blue-600">¥</span>
                                     <input id="amount_yen" name="amount_yen" type="number" min="1000"
                                         value="{{ old('amount_yen', 10000) }}"
