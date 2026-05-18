@@ -40,7 +40,7 @@
         class="flex gap-5 overflow-x-auto pb-6 pt-2 px-1 snap-x snap-mandatory scrollbar-hide scroll-smooth outline-none rounded-2xl">
 
         @forelse($auctions as $auction)
-            <a href="{{ route('auctions.show', $auction->yahoo_auction_id) }}"
+            <a href="{{ route('auctions.show', $auction->id) }}"
                 class="snap-start flex-none w-60 group/card focus:outline-none rounded-3xl" @click="pauseAutoScroll()">
 
                 <article
@@ -144,7 +144,8 @@
                 });
             },
             updateButtons() {
-                /* Logic for button state disabled could be added here */ }
+                /* Logic for button state disabled could be added here */
+            }
         }));
     });
 </script>

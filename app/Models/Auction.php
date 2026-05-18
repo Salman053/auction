@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\SyncAuctionDetails;
 use Database\Factories\AuctionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,24 @@ class Auction extends Model
     use HasFactory;
 
     use SoftDeletes;
+
+    protected static function booted(): void
+    {
+        static::retrieved(function (Auction $auction) {
+            // Prevent spamming the sync queue during automated testing
+            if (app()->runningUnitTests()) {
+                return;
+            }
+
+            if ($auction->status === 'active') {
+                // If the auction data is older than 5 minutes, quietly push an update job
+                // to the background 'sync' queue so the database stays fresh as users browse.
+                if (! $auction->last_synced_at || $auction->last_synced_at->lt(now()->subMinutes(5))) {
+                    SyncAuctionDetails::dispatch($auction)->onQueue('sync');
+                }
+            }
+        });
+    }
 
     /**
      * @var list<string>
@@ -65,13 +84,14 @@ class Auction extends Model
 
         return array_values(array_filter($urls, function ($url) {
             $lowerUrl = strtolower($url);
-            if (str_contains($lowerUrl, 'buyee') || 
-                str_contains($lowerUrl, 'banner') || 
-                str_contains($lowerUrl, 'promo') || 
+            if (str_contains($lowerUrl, 'buyee') ||
+                str_contains($lowerUrl, 'banner') ||
+                str_contains($lowerUrl, 'promo') ||
                 str_contains($lowerUrl, 'logo') ||
-                (str_contains($lowerUrl, 's.yimg.jp') && !str_contains($lowerUrl, 'auc'))) {
+                (str_contains($lowerUrl, 's.yimg.jp') && ! str_contains($lowerUrl, 'auc'))) {
                 return false;
             }
+
             return true;
         }));
     }
@@ -83,11 +103,11 @@ class Auction extends Model
         }
 
         $lowerUrl = strtolower($value);
-        if (str_contains($lowerUrl, 'buyee') || 
-            str_contains($lowerUrl, 'banner') || 
-            str_contains($lowerUrl, 'promo') || 
+        if (str_contains($lowerUrl, 'buyee') ||
+            str_contains($lowerUrl, 'banner') ||
+            str_contains($lowerUrl, 'promo') ||
             str_contains($lowerUrl, 'logo') ||
-            (str_contains($lowerUrl, 's.yimg.jp') && !str_contains($lowerUrl, 'auc'))) {
+            (str_contains($lowerUrl, 's.yimg.jp') && ! str_contains($lowerUrl, 'auc'))) {
             return null;
         }
 
