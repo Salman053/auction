@@ -165,6 +165,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/auctions', [AuctionController::class, 'index'])->name('auctions.index');
         Route::get('/auctions/{auction}', [AuctionController::class, 'show'])->name('auctions.show');
+        Route::post('/auctions/{auction}/sync', [AuctionController::class, 'sync'])->name('auctions.sync');
         Route::post('/auctions/{auction}/approve-shipment', [AuctionController::class, 'approveShipment'])->name('auctions.approve-shipment');
         Route::post('/auctions/{auction}/reject-shipment', [AuctionController::class, 'rejectShipment'])->name('auctions.reject-shipment');
         Route::get('/proxies', [AdminProxyController::class, 'index'])->name('proxies.index');

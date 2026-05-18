@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SyncAuctionDetails;
 use App\Models\Auction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -47,7 +48,7 @@ class AuctionController extends Controller
     {
         // On-demand sync: trigger if stale (more than 15 minutes old)
         if (! $auction->last_synced_at || $auction->last_synced_at->lt(now()->subMinutes(15))) {
-            \App\Jobs\SyncAuctionDetails::dispatch($auction)->onQueue('high');
+            SyncAuctionDetails::dispatch($auction)->onQueue('high');
         }
 
         $auction->load([
@@ -94,5 +95,12 @@ class AuctionController extends Controller
         ]);
 
         return back()->with('success', 'Shipment state has been reset to pending.');
+    }
+
+    public function sync(Auction $auction): RedirectResponse
+    {
+        SyncAuctionDetails::dispatchSync($auction);
+
+        return back()->with('success', 'Auction successfully synced with Yahoo Auctions!');
     }
 }
