@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\BidPlaceRequest;
+use App\Jobs\SyncAuctionDetails;
 use App\Models\Auction;
 use App\Models\Bid;
 use App\Models\Category;
@@ -21,7 +22,7 @@ class AuctionDetailController extends Controller
     {
         // On-demand sync: trigger if stale (more than 15 minutes old)
         if (! $auction->last_synced_at || $auction->last_synced_at->lt(now()->subMinutes(15))) {
-            \App\Jobs\SyncAuctionDetails::dispatch($auction)->onQueue('high');
+            SyncAuctionDetails::dispatch($auction)->onQueue('high');
         }
 
         $auction->increment('view_count');
@@ -168,8 +169,13 @@ class AuctionDetailController extends Controller
         return back()->with('success', 'Shipment request has been rejected.');
     }
 
-    public function getUpdates(Auction $auction): JsonResponse
+    public function getUpdates(Request $request, Auction $auction): JsonResponse
     {
+        // Trigger background sync if active and stale (more than 10 seconds since last sync)
+        if ($auction->status === 'active' && (! $auction->last_synced_at || $auction->last_synced_at->lt(now()->subSeconds(10)))) {
+            SyncAuctionDetails::dispatch($auction)->onQueue('high');
+        }
+
         $auction->load(['bids' => fn ($query) => $query->with('user')->latest()->limit(30)]);
 
         $highestActiveBid = Bid::where('auction_id', $auction->id)
@@ -178,6 +184,18 @@ class AuctionDetailController extends Controller
             ->orderBy('created_at')
             ->first();
 
+        $user = $request->user('user');
+        $userHighestActiveBid = $user
+            ? Bid::where('auction_id', $auction->id)
+                ->where('user_id', $user->id)
+                ->where('status', 'active')
+                ->orderByDesc('max_amount_yen')
+                ->orderBy('created_at')
+                ->first()
+            : null;
+
+        $isTopBidder = $userHighestActiveBid && $highestActiveBid && $userHighestActiveBid->id === $highestActiveBid->id;
+
         return response()->json([
             'current_bid_yen' => (int) $auction->current_bid_yen,
             'bid_count' => (int) $auction->bid_count,
@@ -185,6 +203,11 @@ class AuctionDetailController extends Controller
             'ends_at' => $auction->ends_at?->toISOString(),
             'ends_at_human' => $auction->ends_at?->diffForHumans(),
             'bids_html' => view('user.auctions._bid_history', ['bids' => $auction->bids])->render(),
+            'user_bid_status' => [
+                'has_bid' => $userHighestActiveBid !== null,
+                'is_top_bidder' => $isTopBidder,
+                'user_max_bid' => $userHighestActiveBid ? (int) $userHighestActiveBid->max_amount_yen : 0,
+            ],
         ]);
     }
 }

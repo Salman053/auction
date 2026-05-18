@@ -128,12 +128,19 @@ class ScrapeYahoo extends Command
                         $details = $scraper->getAuctionDetails($yid);
                         if (! empty($details)) {
                             $auction->update([
+                                'title' => $details['title'] ?? $auction->title,
+                                'current_bid_yen' => $details['current_bid_yen'] ?? $auction->current_bid_yen,
+                                'starting_bid_yen' => $details['starting_bid_yen'] ?? $auction->starting_bid_yen,
+                                'bid_count' => $details['bid_count'] ?? $auction->bid_count,
+                                'starts_at' => $details['starts_at'] ?? $auction->starts_at,
+                                'auto_extension' => $details['auto_extension'] ?? $auction->auto_extension,
                                 'ends_at' => $details['ends_at'] ?? $auction->ends_at,
                                 'status' => $details['status'] ?? $auction->status,
                                 'seller_name' => $details['seller_name'] ?? $auction->seller_name,
                                 'yahoo_seller_id' => $details['yahoo_seller_id'] ?? $auction->yahoo_seller_id,
                                 'seller_rating' => $details['seller_rating'] ?? $auction->seller_rating,
                                 'image_urls' => $details['image_urls'] ?? $auction->image_urls,
+                                'yahoo_watcher_count' => $details['watcher_count'] ?? $auction->yahoo_watcher_count,
                             ]);
                             $this->line("      👤 Seller: {$auction->seller_name} | ⭐: {$auction->seller_rating}");
                         }
@@ -156,23 +163,22 @@ class ScrapeYahoo extends Command
                     if ($fetchDetails) {
                         $this->line('      📅 Fetching details for end date...');
                         $details = $scraper->getAuctionDetails($yid);
-                        if (isset($details['ends_at'])) {
-                            $auctionData['ends_at'] = $details['ends_at'];
-                        }
-                        if (isset($details['status'])) {
-                            $auctionData['status'] = $details['status'];
-                        }
-                        if (isset($details['seller_name'])) {
-                            $auctionData['seller_name'] = $details['seller_name'];
-                        }
-                        if (isset($details['yahoo_seller_id'])) {
-                            $auctionData['yahoo_seller_id'] = $details['yahoo_seller_id'];
-                        }
-                        if (isset($details['seller_rating'])) {
-                            $auctionData['seller_rating'] = $details['seller_rating'];
-                        }
-                        if (isset($details['image_urls'])) {
-                            $auctionData['image_urls'] = $details['image_urls'];
+                        if (! empty($details)) {
+                            $auctionData = array_merge($auctionData, [
+                                'title' => $details['title'] ?? $auctionData['title'],
+                                'current_bid_yen' => $details['current_bid_yen'] ?? $auctionData['current_bid_yen'],
+                                'starting_bid_yen' => $details['starting_bid_yen'] ?? null,
+                                'bid_count' => $details['bid_count'] ?? 0,
+                                'starts_at' => $details['starts_at'] ?? null,
+                                'auto_extension' => $details['auto_extension'] ?? null,
+                                'ends_at' => $details['ends_at'] ?? $auctionData['ends_at'] ?? null,
+                                'status' => $details['status'] ?? $auctionData['status'],
+                                'seller_name' => $details['seller_name'] ?? null,
+                                'yahoo_seller_id' => $details['yahoo_seller_id'] ?? null,
+                                'seller_rating' => $details['seller_rating'] ?? null,
+                                'image_urls' => $details['image_urls'] ?? null,
+                                'yahoo_watcher_count' => $details['watcher_count'] ?? null,
+                            ]);
                         }
 
                         $this->line('      👤 Seller: '.($details['seller_name'] ?? 'N/A'));
@@ -255,13 +261,19 @@ class ScrapeYahoo extends Command
                     $this->warn('  🚫 Marked as closed');
                 } else {
                     $auction->update([
+                        'title' => $details['title'] ?? $auction->title,
                         'current_bid_yen' => $details['current_bid_yen'] ?? $auction->current_bid_yen,
+                        'starting_bid_yen' => $details['starting_bid_yen'] ?? $auction->starting_bid_yen,
+                        'bid_count' => $details['bid_count'] ?? $auction->bid_count,
+                        'starts_at' => $details['starts_at'] ?? $auction->starts_at,
+                        'auto_extension' => $details['auto_extension'] ?? $auction->auto_extension,
                         'ends_at' => $details['ends_at'] ?? $auction->ends_at,
                         'status' => $details['status'] ?? $auction->status,
                         'seller_name' => $details['seller_name'] ?? $auction->seller_name,
                         'yahoo_seller_id' => $details['yahoo_seller_id'] ?? $auction->yahoo_seller_id,
                         'seller_rating' => $details['seller_rating'] ?? $auction->seller_rating,
                         'image_urls' => $details['image_urls'] ?? $auction->image_urls,
+                        'yahoo_watcher_count' => $details['watcher_count'] ?? $auction->yahoo_watcher_count,
                         'last_synced_at' => now(),
                     ]);
 

@@ -136,46 +136,114 @@ class YahooAuctionHtmlParser
             $auctionId = $this->extractAuctionIdFromCanonical($xpath);
         }
 
-        $title = $this->firstText($xpath, [
-            "//h1[contains(@class, 'ProductTitle')]",
-            "//h1[contains(@class, 'ItemTitle')]",
-            '//h1',
-            '//title',
-        ]);
-
-        $priceText = $this->firstText($xpath, [
-            "//span[contains(@class, 'Price')]",
-            "//dd[contains(@class, 'price')]",
-            "//div[contains(@class, 'CurrentPrice')]",
-            "//*[contains(text(), '現在')]/following-sibling::*",
-        ]);
-
-        $price = $this->parsePrice($priceText);
-
-        $sellerData = $this->extractSellerInfo($xpath, $html);
-
-        // FIXED: Enhanced end date extraction
-        $endsAt = $this->extractEndDate($xpath, $html);
-
+        // Initialize variables with defaults or parsed from JSON
+        $title = null;
+        $price = 0;
+        $startingBid = 0;
+        $bidCount = 0;
+        $watcherCount = null;
+        $startsAt = null;
+        $endsAt = null;
+        $autoExtension = null;
+        $sellerData = [];
         $isEnded = str_contains($html, '終了しました') || str_contains($html, 'オークションは終了') || str_contains($html, 'This auction has ended');
+
+        $jsonParsed = false;
+        if (preg_match('/<script id="__NEXT_DATA__" type="application\/json">(.*?)<\/script>/s', $html, $matches)) {
+            try {
+                $json = json_decode(trim($matches[1]), true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $item = $json['props']['pageProps']['initialState']['item']['detail']['item'] ?? null;
+                    if ($item) {
+                        $jsonParsed = true;
+                        $title = $item['title'] ?? null;
+                        $price = isset($item['price']) ? (int) $item['price'] : 0;
+                        $bidCount = isset($item['bids']) ? (int) $item['bids'] : 0;
+                        $watcherCount = isset($item['watchListNum']) ? (int) $item['watchListNum'] : null;
+                        $startingBid = isset($item['initPrice']) ? (int) $item['initPrice'] : 0;
+                        $autoExtension = isset($item['isAutomaticExtension']) ? (bool) $item['isAutomaticExtension'] : null;
+
+                        if (isset($item['startTime'])) {
+                            try {
+                                $startsAt = CarbonImmutable::parse($item['startTime'])->setTimezone('UTC');
+                            } catch (\Exception $e) {
+                            }
+                        }
+
+                        if (isset($item['endTime'])) {
+                            try {
+                                $endsAt = CarbonImmutable::parse($item['endTime'])->setTimezone('UTC');
+                            } catch (\Exception $e) {
+                            }
+                        }
+
+                        if (isset($item['status']) && $item['status'] !== 'open') {
+                            $isEnded = true;
+                        }
+
+                        if (isset($item['seller'])) {
+                            $seller = $item['seller'];
+                            $sellerData = [
+                                'name' => $seller['displayName'] ?? null,
+                                'id' => $seller['id'] ?? null,
+                                'rating' => isset($seller['rating']['goodRating']) ? (float) str_replace('%', '', $seller['rating']['goodRating']) : null,
+                                'watch_count' => $watcherCount,
+                                'raw' => [
+                                    'seller_json' => $seller,
+                                    'item_json_partial' => array_intersect_key($item, array_flip(['id', 'title', 'price', 'category', 'condition', 'watchCount', 'watchListNum'])),
+                                ],
+                            ];
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::error('Yahoo Scraper Detail JSON: '.$e->getMessage());
+            }
+        }
+
+        if (! $jsonParsed) {
+            $titleText = $this->firstText($xpath, [
+                "//h1[contains(@class, 'ProductTitle')]",
+                "//h1[contains(@class, 'ItemTitle')]",
+                '//h1',
+                '//title',
+            ]);
+            $title = $titleText ? $this->cleanText($titleText) : null;
+
+            $priceText = $this->firstText($xpath, [
+                "//span[contains(@class, 'Price')]",
+                "//dd[contains(@class, 'price')]",
+                "//div[contains(@class, 'CurrentPrice')]",
+                "//*[contains(text(), '現在')]/following-sibling::*",
+            ]);
+            $price = $this->parsePrice($priceText);
+
+            $sellerData = $this->extractSellerInfo($xpath, $html);
+            $endsAt = $this->extractEndDate($xpath, $html);
+            $watcherCount = $sellerData['watch_count'] ?? null;
+        }
 
         return [
             'yahoo_auction_id' => $auctionId,
             'title' => $title ? $this->cleanText($title) : null,
             'current_bid_yen' => $price ?: null,
+            'starting_bid_yen' => $startingBid ?: null,
+            'bid_count' => $bidCount,
+            'starts_at' => $startsAt,
+            'auto_extension' => $autoExtension,
             'ends_at' => $endsAt,
             'status' => $isEnded ? 'finished' : 'active',
             'seller_name' => $sellerData['name'] ?? null,
             'yahoo_seller_id' => $sellerData['id'] ?? null,
             'seller_rating' => $sellerData['rating'] ?? null,
-            'watcher_count' => $sellerData['watch_count'] ?? null,
+            'watcher_count' => $watcherCount,
             'thumbnail_url' => $this->extractMainImage($xpath),
             'image_urls' => $this->extractImageUrls($xpath),
             'raw' => array_merge($sellerData['raw'] ?? [], [
                 'source_url' => $sourceUrl,
                 'scraped_at' => now()->toDateTimeString(),
                 'title_raw' => $title,
-                'price_text' => $priceText,
+                'price_text' => $price,
                 'is_ended_detected' => $isEnded,
             ]),
         ];
@@ -227,7 +295,7 @@ class YahooAuctionHtmlParser
                     $item = $json['props']['pageProps']['initialState']['item']['detail']['item'] ?? null;
                     if ($item && isset($item['seller'])) {
                         $seller = $item['seller'];
-                        $watchCount = $item['watchCount'] ?? null;
+                        $watchCount = $item['watchListNum'] ?? $item['watchCount'] ?? null;
 
                         return [
                             'name' => $seller['displayName'] ?? null,
@@ -236,7 +304,7 @@ class YahooAuctionHtmlParser
                             'watch_count' => $watchCount,
                             'raw' => [
                                 'seller_json' => $seller,
-                                'item_json_partial' => array_intersect_key($item, array_flip(['id', 'title', 'price', 'category', 'condition', 'watchCount'])),
+                                'item_json_partial' => array_intersect_key($item, array_flip(['id', 'title', 'price', 'category', 'condition', 'watchCount', 'watchListNum'])),
                             ],
                         ];
                     }

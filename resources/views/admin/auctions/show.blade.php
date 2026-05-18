@@ -51,7 +51,7 @@
                             'cancelled' =>
                                 'bg-red-50 text-red-700 ring-red-600/10 dark:bg-red-500/10 dark:text-red-400',
                         ];
-                        $color = $statusColors[$auction->status] ?? $statusColors['ended'];
+                        $color = $statusColors[$auction->status] ?? $statusColors['closed'];
                     @endphp
                     <span
                         class="mt-1 inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ring-1 ring-inset {{ $color }}">

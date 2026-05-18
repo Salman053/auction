@@ -2,12 +2,19 @@
 
     <div x-data="biddingConsole({
         currentBid: {{ $auction->current_bid_yen }},
+        bidCount: {{ $auction->bid_count }},
+        endsAtHuman: '{{ $auction->ends_at?->format('M d, H:i') ?? 'N/A' }}',
         availableCapacity: {{ $availableCapacityYen }},
         capacity: {{ $capacityYen ?? 0 }},
         shippingFee: {{ $userShippingRate?->fee_yen ?? 0 }},
         auctionId: {{ $auction->id }},
         minBid: {{ (int) $auction->current_bid_yen + 1 }},
-        images: {{ json_encode($auction->image_urls ?: ($auction->thumbnail_url ? [$auction->thumbnail_url] : []), JSON_UNESCAPED_SLASHES) }}
+        images: {{ json_encode($auction->image_urls ?: ($auction->thumbnail_url ? [$auction->thumbnail_url] : []), JSON_UNESCAPED_SLASHES) }},
+        userBidStatus: {
+            has_bid: {{ $userHighestActiveBid ? 'true' : 'false' }},
+            is_top_bidder: {{ ($userHighestActiveBid && $highestActiveBid && $userHighestActiveBid->id === $highestActiveBid->id) ? 'true' : 'false' }},
+            user_max_bid: {{ $userHighestActiveBid ? (int) $userHighestActiveBid->max_amount_yen : 0 }}
+        }
     })" class="mx-auto px-4 py-8 lg:px-8">
 
         {{-- Main Auction Grid --}}
@@ -62,7 +69,10 @@
                             History</h2>
                     </div>
                     <div class="max-h-[300px] overflow-y-auto">
-                        @include('user.auctions._bid_history', ['bids' => $auction->bids])
+                        <div x-show="!bidsHtml">
+                            @include('user.auctions._bid_history', ['bids' => $auction->bids])
+                        </div>
+                        <div x-show="bidsHtml" x-html="bidsHtml"></div>
                     </div>
                 </div>
             </div>
@@ -77,17 +87,15 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div class="p-4 bg-zinc-50 dark:bg-zinc-800 rounded-lg">
                             <p class="text-[10px] font-black uppercase text-zinc-500">Current Bid</p>
-                            <p class="text-xl font-black text-blue-600">¥{{ number_format($auction->current_bid_yen) }}
-                            </p>
+                            <p class="text-xl font-black text-blue-600">¥<span x-text="currentBid.toLocaleString()"></span></p>
                         </div>
                         <div class="p-4 bg-zinc-50 dark:bg-zinc-800 rounded-lg">
                             <p class="text-[10px] font-black uppercase text-zinc-500">Bid Count</p>
-                            <p class="text-xl font-black">{{ $auction->bid_count }}</p>
+                            <p class="text-xl font-black" x-text="bidCount"></p>
                         </div>
                         <div class="col-span-2 p-4 bg-zinc-50 dark:bg-zinc-800 rounded-lg">
                             <p class="text-[10px] font-black uppercase text-zinc-500">Ends</p>
-                            <p class="text-lg font-black text-rose-500">
-                                {{ $auction->ends_at?->format('M d, H:i') ?? 'N/A' }}</p>
+                            <p class="text-lg font-black text-rose-500" x-text="endsAtHuman"></p>
                         </div>
                     </div>
                 </div>
@@ -97,33 +105,27 @@
                     class="rounded-sm bg-white dark:bg-zinc-900 p-8 shadow-lg border border-zinc-200 dark:border-white/10 relative overflow-hidden">
                     <h2 class="text-xl font-black mb-8">Place Bid</h2>
 
-                    @if ($userHighestActiveBid)
-                        @if ($highestActiveBid && $userHighestActiveBid->id === $highestActiveBid->id)
-                            <div
-                                class="mb-6 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 p-4 border border-emerald-200 dark:border-emerald-800">
-                                <p class="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-2">
-
-                                    You are the current top bidder
-                                </p>
-                                <p class="text-emerald-600 dark:text-emerald-500 text-sm mt-1">Your Max Bid:
-                                    ¥{{ number_format($userHighestActiveBid->max_amount_yen) }}</p>
-                            </div>
-                        @else
-                            <div
-                                class="mb-6 rounded-lg bg-amber-50 dark:bg-amber-900/20 p-4 border border-amber-200 dark:border-amber-800">
-                                <p class="text-amber-700 dark:text-amber-400 font-bold flex items-center gap-2">
-                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
-                                        </path>
-                                    </svg>
-                                    You have been outbid
-                                </p>
-                                <p class="text-amber-600 dark:text-amber-500 text-sm mt-1">Your Max Bid:
-                                    ¥{{ number_format($userHighestActiveBid->max_amount_yen) }}</p>
-                            </div>
-                        @endif
-                    @endif
+                    <div x-show="userBidStatus.has_bid && userBidStatus.is_top_bidder" x-cloak
+                        class="mb-6 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 p-4 border border-emerald-200 dark:border-emerald-800">
+                        <p class="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-2">
+                            You are the current top bidder
+                        </p>
+                        <p class="text-emerald-600 dark:text-emerald-500 text-sm mt-1">Your Max Bid:
+                            ¥<span x-text="userBidStatus.user_max_bid.toLocaleString()"></span></p>
+                    </div>
+                    <div x-show="userBidStatus.has_bid && !userBidStatus.is_top_bidder" x-cloak
+                        class="mb-6 rounded-lg bg-amber-50 dark:bg-amber-900/20 p-4 border border-amber-200 dark:border-amber-800">
+                        <p class="text-amber-700 dark:text-amber-400 font-bold flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                </path>
+                            </svg>
+                            You have been outbid
+                        </p>
+                        <p class="text-amber-600 dark:text-amber-500 text-sm mt-1">Your Max Bid:
+                            ¥<span x-text="userBidStatus.user_max_bid.toLocaleString()"></span></p>
+                    </div>
 
                     <form id="bid-form" method="POST" action="{{ route('user.auctions.bids.store', $auction) }}"
                         class="space-y-6">
@@ -263,6 +265,41 @@
                 minBid: config.minBid,
                 images: config.images,
                 activeImage: 0,
+
+                // Real-time properties
+                currentBid: config.currentBid,
+                bidCount: config.bidCount,
+                endsAtHuman: config.endsAtHuman,
+                userBidStatus: config.userBidStatus,
+                bidsHtml: '',
+
+                init() {
+                    setInterval(() => {
+                        this.fetchUpdates();
+                    }, 5000);
+                },
+
+                fetchUpdates() {
+                    fetch(`/auctions/${config.auctionId}/updates`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.currentBid = data.current_bid_yen;
+                            this.bidCount = data.bid_count;
+                            this.endsAtHuman = data.ends_at_human;
+                            this.bidsHtml = data.bids_html;
+                            this.minBid = data.current_bid_yen + 1;
+                            
+                            if (this.bidAmount < this.minBid) {
+                                this.bidAmount = this.currentBid + 500;
+                            }
+                            
+                            if (data.user_bid_status) {
+                                this.userBidStatus = data.user_bid_status;
+                            }
+                        })
+                        .catch(err => console.error('Error fetching auction updates:', err));
+                },
+
                 prevImage() {
                     this.activeImage = (this.activeImage - 1 + this.images.length) % this.images.length;
                 },

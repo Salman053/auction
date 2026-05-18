@@ -436,7 +436,6 @@
     {{-- ============================================= --}}
     <script>
         (function() {
-            // DOM Elements
             const mobileMenuToggle = document.getElementById('mobileMenuToggle');
             const mobileMoreButton = document.getElementById('mobileMoreButton');
             const drawerOverlay = document.getElementById('mobileDrawerOverlay');
@@ -444,12 +443,10 @@
             const closeDrawerBtn = document.getElementById('closeDrawerBtn');
             const body = document.body;
 
-            // Helper: prevent body scroll when drawer open
             function preventScroll(e) {
                 e.preventDefault();
             }
 
-            // Open drawer
             function openDrawer() {
                 if (!drawer || !drawerOverlay) return;
                 drawer.classList.remove('-translate-x-full');
@@ -460,7 +457,6 @@
                 });
             }
 
-            // Close drawer
             function closeDrawer() {
                 if (!drawer || !drawerOverlay) return;
                 drawer.classList.add('-translate-x-full');
@@ -469,22 +465,18 @@
                 document.removeEventListener('touchmove', preventScroll);
             }
 
-            // Event listeners for opening drawer
             if (mobileMenuToggle) mobileMenuToggle.addEventListener('click', openDrawer);
             if (mobileMoreButton) mobileMoreButton.addEventListener('click', openDrawer);
 
-            // Close drawer events
             if (closeDrawerBtn) closeDrawerBtn.addEventListener('click', closeDrawer);
             if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
 
-            // Close on Escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && drawer && !drawer.classList.contains('-translate-x-full')) {
                     closeDrawer();
                 }
             });
 
-            // Close drawer after clicking any navigation link inside drawer (smooth UX)
             const drawerLinks = document.querySelectorAll('.drawer-nav-link');
             drawerLinks.forEach(link => {
                 link.addEventListener('click', function() {
@@ -492,7 +484,6 @@
                 });
             });
 
-            // Adjust main content bottom padding when bottom navigation is visible on mobile
             function adjustMainPadding() {
                 const mainElement = document.querySelector('main');
                 const bottomNav = document.getElementById('mobileBottomNav');
@@ -503,20 +494,15 @@
                 }
             }
 
-            // Run on load and resize
             adjustMainPadding();
             window.addEventListener('resize', function() {
                 adjustMainPadding();
-                // Auto-close drawer if screen becomes desktop size
                 if (window.innerWidth >= 1024) {
                     closeDrawer();
                     body.style.overflow = '';
                 }
             });
 
-            // Optional: Add active state tracking for bottom nav items via route detection
-            // (already handled by Blade @class conditions, but ensures dynamic updates)
-            // Also handle finance bottom nav highlighting for deposits/withdrawals routes
             const financeNav = document.querySelector('a[href="{{ route('admin.deposits.index') }}"]');
             if (financeNav) {
                 const isFinanceRoute =

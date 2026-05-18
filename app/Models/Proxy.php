@@ -47,6 +47,9 @@ class Proxy extends Model
             'last_checked_at' => 'datetime',
             'disabled_until' => 'datetime',
             'meta' => 'array',
+            'failure_count' => 'integer',
+            'success_count' => 'integer',
+            'avg_response_ms' => 'integer',
         ];
     }
 }
