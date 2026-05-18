@@ -181,14 +181,14 @@
                     </button>
 
                     @if ($backUrl ?? false)
-                        <a href="{{ $backUrl }}"
+                        <button onclick="window.history.back()"
                             class="flex h-9 items-center justify-center rounded-lg bg-slate-100 px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-200 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10">
                             <svg class="mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                             </svg>
                             Back
-                        </a>
+                        </button>
                     @endif
 
                     <h2 class="text-lg font-bold text-slate-900 dark:text-white">
