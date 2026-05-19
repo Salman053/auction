@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AuctionHub Japan · Luxury Gateway</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -120,15 +121,20 @@
         </div>
     </div>
 
-    {{-- Category Strip --}}
     <div
-        class="absolute bottom-10 left-10 md:left-20 z-20 hidden md:flex items-center gap-10 opacity-40 hover:opacity-100 transition-opacity duration-500">
+        class="absolute bottom-10 left-10 md:left-20 z-20 hidden md:flex items-center gap-6 opacity-40 hover:opacity-100 transition-opacity duration-500 overflow-x-auto max-w-[80vw] whitespace-nowrap scrollbar-hide">
         <a href="{{ route('auctions.index', ['category' => '23140']) }}"
             class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Timepieces</a>
         <a href="{{ route('auctions.index', ['category' => '26318']) }}"
             class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Automotive</a>
         <a href="{{ route('auctions.index', ['category' => '23000']) }}"
             class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Fashion</a>
+        <a href="{{ route('auctions.index', ['category' => '20060']) }}"
+            class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Art & Design</a>
+        <a href="{{ route('auctions.index', ['category' => '23632']) }}"
+            class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Electronics</a>
+        <a href="{{ route('auctions.index', ['category' => '24242']) }}"
+            class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Collectibles</a>
         <a href="{{ route('auctions.index', ['category' => '2084060731']) }}"
             class="text-[9px] font-black uppercase tracking-[0.4em] hover:text-blue-500 transition">Real Estate</a>
         <a href="{{ route('auctions.index') }}"

@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{{ $title ?? 'Dashboard' }} · {{ config('app.name') }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
 
     <script>
         (() => {

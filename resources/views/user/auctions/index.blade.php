@@ -10,6 +10,7 @@
         <x-auction-filters :filters="$filters" :route="route('user.auctions.index')" />
     </div>
 
+    <div id="auction-results-container">
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
         @forelse ($auctions as $auction)
             @php($isWatchlisted = in_array($auction->id, $watchlistedAuctionIds, true))
@@ -96,4 +97,84 @@
     <div class="mt-12">
         {{ $auctions->links() }}
     </div>
+    </div>
+
+    <script>
+        (function() {
+            const initScrollTracking = () => {
+                const scrollKey = 'userAuctionIndex_' + window.location.search;
+                const scrollElement = document.querySelector('main') || window;
+                
+                // 1. Instantly restore if we have a value
+                const savedScroll = sessionStorage.getItem(scrollKey);
+                if (savedScroll) {
+                    setTimeout(() => {
+                        if (scrollElement === window) {
+                            window.scrollTo({ top: parseInt(savedScroll), behavior: 'instant' });
+                        } else {
+                            scrollElement.scrollTop = parseInt(savedScroll);
+                        }
+                    }, 50);
+                }
+
+                // 2. Track scroll events continuously (highly reliable)
+                scrollElement.addEventListener('scroll', () => {
+                    const scrollPos = scrollElement === window ? window.scrollY : scrollElement.scrollTop;
+                    sessionStorage.setItem(scrollKey, scrollPos);
+                }, { passive: true });
+            };
+
+            // Run on load
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initScrollTracking);
+            } else {
+                initScrollTracking();
+            }
+
+            const isBackNavigation = () => {
+                if (window.performance && window.performance.getEntriesByType) {
+                    const entries = window.performance.getEntriesByType("navigation");
+                    if (entries.length > 0) {
+                        return entries[0].type === "back_forward";
+                    }
+                }
+                return false;
+            };
+
+            const refreshData = async () => {
+                try {
+                    const res = await fetch(window.location.href, {
+                        headers: { 
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Cache-Control': 'no-cache',
+                            'Pragma': 'no-cache'
+                        },
+                        cache: 'no-store'
+                    });
+                    const html = await res.text();
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    const currentEl = document.getElementById('auction-results-container');
+                    const newEl = doc.getElementById('auction-results-container');
+                    if (currentEl && newEl) {
+                        currentEl.innerHTML = newEl.innerHTML;
+                    } else {
+                        window.location.reload();
+                    }
+                } catch(e) {
+                    window.location.reload();
+                }
+            };
+
+            // Run when restoring from back/forward cache or normal back navigation
+            window.addEventListener('pageshow', (event) => {
+                if (event.persisted || isBackNavigation()) {
+                    initScrollTracking();
+                    refreshData();
+                }
+            });
+            
+            // Run on Livewire navigation
+            document.addEventListener('livewire:navigated', initScrollTracking);
+        })();
+    </script>
 </x-user-layout>

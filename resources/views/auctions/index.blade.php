@@ -33,7 +33,7 @@
         </section>
 
         {{-- Main Content --}}
-        <section class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+        <section class="mx-auto max-w-7xl px-4 py-12 lg:px-8" id="auction-results-container">
             @if ($auctions->isEmpty())
                 <div
                     class="flex h-96 flex-col items-center justify-center rounded-[3rem] border-2 border-dashed border-zinc-200 bg-white/50 text-center dark:border-white/5 dark:bg-zinc-900/50">
@@ -95,10 +95,45 @@
                 initScrollTracking();
             }
 
-            // Run when restoring from back/forward cache
+            const isBackNavigation = () => {
+                if (window.performance && window.performance.getEntriesByType) {
+                    const entries = window.performance.getEntriesByType("navigation");
+                    if (entries.length > 0) {
+                        return entries[0].type === "back_forward";
+                    }
+                }
+                return false;
+            };
+
+            const refreshData = async () => {
+                try {
+                    const res = await fetch(window.location.href, {
+                        headers: { 
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Cache-Control': 'no-cache',
+                            'Pragma': 'no-cache'
+                        },
+                        cache: 'no-store'
+                    });
+                    const html = await res.text();
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    const currentEl = document.getElementById('auction-results-container');
+                    const newEl = doc.getElementById('auction-results-container');
+                    if (currentEl && newEl) {
+                        currentEl.innerHTML = newEl.innerHTML;
+                    } else {
+                        window.location.reload();
+                    }
+                } catch(e) {
+                    window.location.reload();
+                }
+            };
+
+            // Run when restoring from back/forward cache or normal back navigation
             window.addEventListener('pageshow', (event) => {
-                if (event.persisted) {
+                if (event.persisted || isBackNavigation()) {
                     initScrollTracking();
+                    refreshData();
                 }
             });
             

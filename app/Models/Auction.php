@@ -170,7 +170,7 @@ class Auction extends Model
         }
 
         // Always prioritize auctions that have images fetched
-        $query->orderByRaw('CASE WHEN image_urls IS NOT NULL THEN 1 ELSE 0 END DESC');
+        $query->orderBy('has_images', 'desc');
 
         $query->when($filters['sort'] ?? null, function ($query, $sort) {
             match ($sort) {
