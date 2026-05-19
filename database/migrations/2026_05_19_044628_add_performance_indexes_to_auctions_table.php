@@ -15,7 +15,7 @@ return new class extends Migration
             $table->index('current_bid_yen');
             $table->index('bid_count');
             $table->index('created_at');
-            $table->boolean('has_images')->virtualAs('image_urls IS NOT NULL')->index();
+            $table->boolean('has_images')->storedAs('image_urls IS NOT NULL')->index();
         });
     }
 
