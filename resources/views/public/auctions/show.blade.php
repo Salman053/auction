@@ -15,34 +15,19 @@
             <div class="grid grid-cols-1 gap-12 lg:grid-cols-12">
                 {{-- Left: Image Gallery --}}
                 <div class="lg:col-span-7 space-y-6">
-                    <div
-                        class="relative overflow-hidden rounded-[2.5rem] bg-white p-4 shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-white/10">
-                        <div
-                            class="relative aspect-square sm:aspect-video overflow-hidden rounded-lg bg-zinc-50 dark:bg-zinc-800">
-                            <img id="mainImage" src="{{ $auction->thumbnail_url }}" alt="{{ $auction->title }}"
-                                loading="lazy"
-                                class="h-full w-full object-contain transition duration-500 hover:scale-105">
+                    <div class="relative">
+                        <x-image-magnifier 
+                            :images="$auction->image_urls ?: ($auction->thumbnail_url ? [$auction->thumbnail_url] : [])" 
+                            :title="$auction->title" 
+                            aspect-ratio="aspect-square sm:aspect-video" />
 
-                            {{-- Status Badge --}}
-                            <div class="absolute left-6 top-6">
-                                <span
-                                    class="rounded-full bg-blue-600 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-white shadow-xl">
-                                    {{ $auction->status }}
-                                </span>
-                            </div>
+                        {{-- Status Badge --}}
+                        <div class="absolute left-6 top-6 z-40 pointer-events-none">
+                            <span
+                                class="rounded-full bg-blue-600 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-white shadow-xl">
+                                {{ $auction->status }}
+                            </span>
                         </div>
-
-                        @if (!empty($auction->image_urls))
-                            <div class="mt-4 flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                                @foreach ($auction->image_urls as $url)
-                                    <button onclick="document.getElementById('mainImage').src='{{ $url }}'"
-                                        class="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-zinc-50 ring-1 ring-zinc-200 transition-all hover:ring-2 hover:ring-blue-500 dark:bg-zinc-800 dark:ring-white/5">
-                                        <img loading="lazy" src="{{ $url }}"
-                                            class="h-full w-full object-cover">
-                                    </button>
-                                @endforeach
-                            </div>
-                        @endif
                     </div>
 
                     {{-- Description / Details --}}

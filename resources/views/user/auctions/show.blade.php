@@ -22,43 +22,11 @@
 
             {{-- Left Column: Gallery & History --}}
             <div class="space-y-8 lg:col-span-7 xl:col-span-8">
-                {{-- Hero Gallery --}}
-                <div
-                    class="relative overflow-hidden rounded-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 shadow-sm">
-                    <div class="aspect-[4/3] relative flex items-center justify-center p-8 bg-zinc-50 dark:bg-black/20">
-                        <template x-for="(image, index) in images" :key="index">
-                            <img loading="lazy" x-show="activeImage === index" :src="image"
-                                alt="{{ $auction->title }}"
-                                class="max-h-full max-w-full object-contain drop-shadow-2xl transition-opacity duration-500">
-                        </template>
-
-                        {{-- Arrows --}}
-                        <button @click="prevImage()"
-                            class="absolute left-4 p-3 bg-white/80 dark:bg-zinc-900/80 rounded-full shadow-lg backdrop-blur hover:scale-110">
-                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 19l-7-7 7-7" />
-                            </svg>
-                        </button>
-                        <button @click="nextImage()"
-                            class="absolute right-4 p-3 bg-white/80 dark:bg-zinc-900/80 rounded-full shadow-lg backdrop-blur hover:scale-110">
-                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
-                    </div>
-                    {{-- Thumbnails --}}
-                    <div class="flex gap-4 p-6 overflow-x-auto">
-                        <template x-for="(image, index) in images" :key="index">
-                            <button @click="activeImage = index"
-                                :class="activeImage === index ? 'ring-2 ring-blue-600' : ''"
-                                class="w-20 h-20 shrink-0 rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-800">
-                                <img loading="lazy" :src="image" class="w-full h-full object-cover">
-                            </button>
-                        </template>
-                    </div>
-                </div>
+                {{-- Hero Gallery with Zoom Magnifier --}}
+                <x-image-magnifier 
+                    :images="$auction->image_urls ?: ($auction->thumbnail_url ? [$auction->thumbnail_url] : [])" 
+                    :title="$auction->title" 
+                    aspect-ratio="aspect-[4/3]" />
 
                 {{-- Bid History --}}
                 <div
