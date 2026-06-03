@@ -8,6 +8,11 @@ use App\Models\Auction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Notifications\AdminShipmentApprovedNotification;
+use App\Notifications\AdminShipmentRejectedNotification;
+use App\Models\AuditLog;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class AuctionController extends Controller
 {
@@ -81,6 +86,27 @@ class AuctionController extends Controller
             'admin_approved_at' => now(),
         ]);
 
+        AuditLog::create([
+            'user_id' => $request->user('admin')->id,
+            'log_name' => 'shipment',
+            'description' => "Admin {$request->user('admin')->name} (#{$request->user('admin')->id}) approved shipment for auction #{$auction->id} (Yahoo ID: {$auction->yahoo_auction_id}).",
+            'subject_id' => $auction->id,
+            'subject_type' => Auction::class,
+            'properties' => ['old_status' => 'bidder_confirmed', 'new_status' => 'admin_approved'],
+        ]);
+
+        // Notify winner
+        if ($auction->winner_user_id) {
+            $winner = User::find($auction->winner_user_id);
+            if ($winner) {
+                try {
+                    $winner->notify(new AdminShipmentApprovedNotification($auction));
+                } catch (\Exception $e) {
+                    Log::error("Failed to notify winner {$winner->id} about admin shipment approval for auction {$auction->id}: ".$e->getMessage());
+                }
+            }
+        }
+
         return back()->with('success', 'Shipment approved successfully!');
     }
 
@@ -90,10 +116,32 @@ class AuctionController extends Controller
             return back()->with('error', 'Shipment must be confirmed or rejected by the bidder first.');
         }
 
+        $oldStatus = $auction->shipment_status;
         $auction->update([
             'shipment_status' => 'pending',
             'bidder_confirmed_at' => null,
         ]);
+
+        AuditLog::create([
+            'user_id' => $request->user('admin')->id,
+            'log_name' => 'shipment',
+            'description' => "Admin {$request->user('admin')->name} (#{$request->user('admin')->id}) reset shipment for auction #{$auction->id} (Yahoo ID: {$auction->yahoo_auction_id}) to pending.",
+            'subject_id' => $auction->id,
+            'subject_type' => Auction::class,
+            'properties' => ['old_status' => $oldStatus, 'new_status' => 'pending'],
+        ]);
+
+        // Notify winner
+        if ($auction->winner_user_id) {
+            $winner = User::find($auction->winner_user_id);
+            if ($winner) {
+                try {
+                    $winner->notify(new AdminShipmentRejectedNotification($auction));
+                } catch (\Exception $e) {
+                    Log::error("Failed to notify winner {$winner->id} about admin shipment rejection for auction {$auction->id}: ".$e->getMessage());
+                }
+            }
+        }
 
         return back()->with('success', 'Shipment state has been reset to pending.');
     }

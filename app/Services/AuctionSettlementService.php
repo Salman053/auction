@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Auction;
 use App\Models\Bid;
 use App\Notifications\AuctionWonNotification;
+use App\Notifications\AdminAuctionSettledNotification;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -115,16 +117,36 @@ class AuctionSettlementService
                 }
             }
 
-            if ($isYahooOutbid) {
-                $auction->update(['status' => 'ended_outbid_on_yahoo']);
-            } elseif (! $highestBid) {
-                if ($bids->isNotEmpty()) {
-                    $auction->update(['status' => 'ended_outbid_on_yahoo']); // They were all 'outbid' already
-                } else {
-                    $auction->update(['status' => 'ended_no_bids']);
-                }
+            // Determine final status and winner details for admin notification
+            $finalStatus = $auction->status; // Initialize with current status
+            $winner = null;
+            $winningBidAmount = null;
+
+            if ($auction->status === 'finished') {
+                $winner = User::find($auction->winner_user_id);
+                // Ensure winningBid relationship is loaded or retrieve explicitly
+                // Since winning_bid_id is set, we can eagerly load or access
+                $winningBidAmount = $auction->winningBid ? $auction->winningBid->amount_yen : null;
             }
 
+            $this->notifyAdmins($auction, $finalStatus, $winner, $winningBidAmount);
         });
     }
+
+    /**
+     * Notify all administrators about the settled auction.
+     */
+    private function notifyAdmins(Auction $auction, string $status, ?User $winner, ?int $winningBidAmount): void
+    {
+        $admins = User::where('role', \App\Enums\UserRole::Admin->value)->get();
+
+        foreach ($admins as $admin) {
+            try {
+                $admin->notify(new AdminAuctionSettledNotification($auction, $status, $winner, $winningBidAmount));
+            } catch (\Exception $e) {
+                Log::error("Failed to notify admin {$admin->id} about settled auction {$auction->id}: ".$e->getMessage());
+            }
+        }
+    }
 }
+

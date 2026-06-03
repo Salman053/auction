@@ -15,6 +15,11 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Notifications\UserShipmentConfirmedNotification;
+use App\Notifications\UserShipmentRejectedNotification;
+use App\Models\AuditLog;
+use App\Models\User;
+use App\Enums\UserRole;
 
 class AuctionDetailController extends Controller
 {
@@ -148,6 +153,25 @@ class AuctionDetailController extends Controller
             'bidder_confirmed_at' => now(),
         ]);
 
+        AuditLog::create([
+            'user_id' => $user->id,
+            'log_name' => 'shipment',
+            'description' => "User {$user->name} (#{$user->id}) confirmed shipment for auction #{$auction->id} (Yahoo ID: {$auction->yahoo_auction_id}).",
+            'subject_id' => $auction->id,
+            'subject_type' => Auction::class,
+            'properties' => ['old_status' => 'pending', 'new_status' => 'bidder_confirmed'],
+        ]);
+
+        // Notify admins
+        $admins = User::where('role', UserRole::Admin->value)->get();
+        foreach ($admins as $admin) {
+            try {
+                $admin->notify(new UserShipmentConfirmedNotification($auction, $user));
+            } catch (\Exception $e) {
+                \Log::error("Failed to notify admin {$admin->id} about user shipment confirmation for auction {$auction->id}: ".$e->getMessage());
+            }
+        }
+
         return back()->with('success', 'Shipment details confirmed! Waiting for admin approval.');
     }
 
@@ -166,6 +190,25 @@ class AuctionDetailController extends Controller
             'shipment_status' => 'bidder_rejected',
             'bidder_confirmed_at' => null,
         ]);
+
+        AuditLog::create([
+            'user_id' => $user->id,
+            'log_name' => 'shipment',
+            'description' => "User {$user->name} (#{$user->id}) rejected shipment for auction #{$auction->id} (Yahoo ID: {$auction->yahoo_auction_id}).",
+            'subject_id' => $auction->id,
+            'subject_type' => Auction::class,
+            'properties' => ['old_status' => 'pending', 'new_status' => 'bidder_rejected'],
+        ]);
+
+        // Notify admins
+        $admins = User::where('role', UserRole::Admin->value)->get();
+        foreach ($admins as $admin) {
+            try {
+                $admin->notify(new UserShipmentRejectedNotification($auction, $user));
+            } catch (\Exception $e) {
+                \Log::error("Failed to notify admin {$admin->id} about user shipment rejection for auction {$auction->id}: ".$e->getMessage());
+            }
+        }
 
         return back()->with('success', 'Shipment request has been rejected.');
     }
