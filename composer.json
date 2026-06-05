@@ -18,7 +18,7 @@
         "barryvdh/laravel-debugbar": "^4.2",
         "barryvdh/laravel-ide-helper": "^3.7",
         "fakerphp/faker": "^1.23",
-        "laravel/boost": "^2.2",
+        "laravel/boost": "^2.4",
         "laravel/dusk": "^8.6",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
