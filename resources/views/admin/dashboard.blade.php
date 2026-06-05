@@ -144,9 +144,12 @@
         //     }, 1000);
         // })()
         document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector("#scrapingTimelineChart");
+            if (!container) return;
+
             const performanceData = @json($performanceData);
 
-            new ApexCharts(document.querySelector("#scrapingTimelineChart"), {
+            new ApexCharts(container, {
                 series: [{
                     name: 'Requests/Hr',
                     data: performanceData.scrapes

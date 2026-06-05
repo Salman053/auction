@@ -175,101 +175,107 @@
             const chartData = @json($chartData);
 
             // Bid Intensity Chart
-            new ApexCharts(document.querySelector("#bidIntensityChart"), {
-                series: [{
-                    name: 'Your Bids',
-                    data: chartData.bids
-                }, {
-                    name: 'Wallet Net (¥)',
-                    data: chartData.walletNet
-                }],
-                chart: {
-                    type: 'area',
-                    height: 300,
-                    toolbar: {
-                        show: false
+            const bidIntensityContainer = document.querySelector("#bidIntensityChart");
+            if (bidIntensityContainer) {
+                new ApexCharts(bidIntensityContainer, {
+                    series: [{
+                        name: 'Your Bids',
+                        data: chartData.bids
+                    }, {
+                        name: 'Wallet Net (¥)',
+                        data: chartData.walletNet
+                    }],
+                    chart: {
+                        type: 'area',
+                        height: 300,
+                        toolbar: {
+                            show: false
+                        },
+                        zoom: {
+                            enabled: false
+                        },
+                        fontFamily: 'inherit',
+                        background: 'transparent'
                     },
-                    zoom: {
+                    colors: ['#2563EB', '#10B981'],
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            shadeIntensity: 1,
+                            opacityFrom: 0.45,
+                            opacityTo: 0.05,
+                            stops: [20, 100]
+                        }
+                    },
+                    dataLabels: {
                         enabled: false
                     },
-                    fontFamily: 'inherit',
-                    background: 'transparent'
-                },
-                colors: ['#2563EB', '#10B981'],
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shadeIntensity: 1,
-                        opacityFrom: 0.45,
-                        opacityTo: 0.05,
-                        stops: [20, 100]
-                    }
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                stroke: {
-                    curve: 'smooth',
-                    width: 3
-                },
-                grid: {
-                    borderColor: 'rgba(0,0,0,0.05)'
-                },
-                xaxis: {
-                    categories: chartData.labels,
-                    axisBorder: {
-                        show: false
+                    stroke: {
+                        curve: 'smooth',
+                        width: 3
                     },
-                    axisTicks: {
-                        show: false
+                    grid: {
+                        borderColor: 'rgba(0,0,0,0.05)'
+                    },
+                    xaxis: {
+                        categories: chartData.labels,
+                        axisBorder: {
+                            show: false
+                        },
+                        axisTicks: {
+                            show: false
+                        }
+                    },
+                    legend: {
+                        position: 'top',
+                        horizontalAlign: 'right'
+                    },
+                    theme: {
+                        mode: document.documentElement.classList.contains('dark') ? 'dark' : 'light'
                     }
-                },
-                legend: {
-                    position: 'top',
-                    horizontalAlign: 'right'
-                },
-                theme: {
-                    mode: document.documentElement.classList.contains('dark') ? 'dark' : 'light'
-                }
-            }).render();
+                }).render();
+            }
 
             // Capacity Radial Chart
-            new ApexCharts(document.querySelector("#capacityRadialChart"), {
-                series: [
-                    {{ $capacityYen > 0 ? round((($wallet?->locked_balance_yen ?? 0) / $capacityYen) * 100) : 0 }}
-                ],
-                chart: {
-                    type: 'radialBar',
-                    height: 250,
-                    fontFamily: 'inherit'
-                },
-                plotOptions: {
-                    radialBar: {
-                        hollow: {
-                            size: '65%'
-                        },
-                        track: {
-                            background: 'rgba(0,0,0,0.05)'
-                        },
-                        dataLabels: {
-                            name: {
-                                show: false
+            const capacityContainer = document.querySelector("#capacityRadialChart");
+            if (capacityContainer) {
+                new ApexCharts(capacityContainer, {
+                    series: [
+                        {{ $capacityYen > 0 ? round((($wallet?->locked_balance_yen ?? 0) / $capacityYen) * 100) : 0 }}
+                    ],
+                    chart: {
+                        type: 'radialBar',
+                        height: 250,
+                        fontFamily: 'inherit'
+                    },
+                    plotOptions: {
+                        radialBar: {
+                            hollow: {
+                                size: '65%'
                             },
-                            value: {
-                                color: '#2563EB',
-                                fontSize: '24px',
-                                fontWeight: '900',
-                                formatter: (val) => val + '%'
+                            track: {
+                                background: 'rgba(0,0,0,0.05)'
+                            },
+                            dataLabels: {
+                                name: {
+                                    show: false
+                                },
+                                value: {
+                                    color: '#2563EB',
+                                    fontSize: '24px',
+                                    fontWeight: '900',
+                                    formatter: (val) => val + '%'
+                                }
                             }
                         }
+                    },
+                    colors: ['#2563EB'],
+                    labels: ['Committed Capacity'],
+                    theme: {
+                        mode: document.documentElement.classList.contains('dark') ? 'dark' : 'light'
                     }
-                },
-                colors: ['#2563EB'],
-                labels: ['Committed Capacity'],
-                theme: {
-                    mode: document.documentElement.classList.contains('dark') ? 'dark' : 'light'
-                }
-            }).render();
+                }).render();
+            }
         });
     </script>
 </x-user-layout>
