@@ -19,14 +19,12 @@ class Auction extends Model
     protected static function booted(): void
     {
         static::retrieved(function (Auction $auction) {
-            // Prevent spamming the sync queue during automated testing
             if (app()->runningUnitTests()) {
                 return;
             }
 
             if ($auction->status === 'active') {
-                // If the auction data is older than 5 minutes, quietly push an update job
-                // to the background 'sync' queue so the database stays fresh as users browse.
+                
                 if (! $auction->last_synced_at || $auction->last_synced_at->lt(now()->subMinutes(5))) {
                     SyncAuctionDetails::dispatch($auction)->onQueue('sync');
                 }
@@ -237,11 +235,9 @@ class Auction extends Model
 
         $diff = now()->diff($this->ends_at);
 
-        // Match Yahoo's "Ceiling" style display for units
+      
         if ($diff->days > 0) {
-            // If it's e.g. 2 days and 1 hour, Yahoo often shows "2日" but sometimes "3日"
-            // depending on exact end time. We'll show days and hours for clarity.
-            // But to avoid the "1 day less" issue, we ensure we don't floor prematurely.
+            
             return "{$diff->days}d ".($diff->h > 0 ? "{$diff->h}h" : '');
         }
 

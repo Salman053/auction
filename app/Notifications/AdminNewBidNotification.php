@@ -18,7 +18,7 @@ class AdminNewBidNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        return ['database'];
     }
 
     public function queue(): string
