@@ -164,6 +164,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/analytics', [AdminAnalyticsController::class, 'index'])->name('analytics.index');
 
         Route::get('/auctions', [AuctionController::class, 'index'])->name('auctions.index');
+        Route::get('/auctions/export', [AuctionController::class, 'export'])->name('auctions.export');
         Route::get('/auctions/{auction}', [AuctionController::class, 'show'])->name('auctions.show');
         Route::post('/auctions/{auction}/sync', [AuctionController::class, 'sync'])->name('auctions.sync');
         Route::post('/auctions/{auction}/approve-shipment', [AuctionController::class, 'approveShipment'])->name('auctions.approve-shipment');

@@ -5,14 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Jobs\SyncAuctionDetails;
 use App\Models\Auction;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use App\Notifications\AdminShipmentApprovedNotification;
-use App\Notifications\AdminShipmentRejectedNotification;
 use App\Models\AuditLog;
 use App\Models\User;
+use App\Notifications\AdminShipmentApprovedNotification;
+use App\Notifications\AdminShipmentRejectedNotification;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AuctionController extends Controller
 {
@@ -87,12 +88,16 @@ class AuctionController extends Controller
         ]);
 
         AuditLog::create([
-            'user_id' => $request->user('admin')->id,
-            'log_name' => 'shipment',
-            'description' => "Admin {$request->user('admin')->name} (#{$request->user('admin')->id}) approved shipment for auction #{$auction->id} (Yahoo ID: {$auction->yahoo_auction_id}).",
-            'subject_id' => $auction->id,
-            'subject_type' => Auction::class,
-            'properties' => ['old_status' => 'bidder_confirmed', 'new_status' => 'admin_approved'],
+            'actor_user_id' => $request->user('admin')->id,
+            'guard' => 'admin',
+            'event' => 'shipment_approved',
+            'meta' => [
+                'description' => "Admin {$request->user('admin')->name} (#{$request->user('admin')->id}) approved shipment for auction #{$auction->id} (Yahoo ID: {$auction->yahoo_auction_id}).",
+                'subject_id' => $auction->id,
+                'subject_type' => Auction::class,
+                'old_status' => 'bidder_confirmed',
+                'new_status' => 'admin_approved',
+            ],
         ]);
 
         // Notify winner
@@ -123,12 +128,16 @@ class AuctionController extends Controller
         ]);
 
         AuditLog::create([
-            'user_id' => $request->user('admin')->id,
-            'log_name' => 'shipment',
-            'description' => "Admin {$request->user('admin')->name} (#{$request->user('admin')->id}) reset shipment for auction #{$auction->id} (Yahoo ID: {$auction->yahoo_auction_id}) to pending.",
-            'subject_id' => $auction->id,
-            'subject_type' => Auction::class,
-            'properties' => ['old_status' => $oldStatus, 'new_status' => 'pending'],
+            'actor_user_id' => $request->user('admin')->id,
+            'guard' => 'admin',
+            'event' => 'shipment_reset',
+            'meta' => [
+                'description' => "Admin {$request->user('admin')->name} (#{$request->user('admin')->id}) reset shipment for auction #{$auction->id} (Yahoo ID: {$auction->yahoo_auction_id}) to pending.",
+                'subject_id' => $auction->id,
+                'subject_type' => Auction::class,
+                'old_status' => $oldStatus,
+                'new_status' => 'pending',
+            ],
         ]);
 
         // Notify winner
@@ -151,5 +160,90 @@ class AuctionController extends Controller
         SyncAuctionDetails::dispatchSync($auction);
 
         return back()->with('success', 'Auction successfully synced with Yahoo Auctions!');
+    }
+
+    public function export(Request $request): StreamedResponse
+    {
+        $tab = $request->query('tab', 'active');
+        $query = Auction::query();
+
+        if ($tab === 'won') {
+            $query->where(function ($q) {
+                $q->where('status', 'ended')
+                    ->orWhere('ends_at', '<=', now());
+            })->where('bid_count', '>', 0);
+        } elseif ($tab === 'shipment_pending') {
+            $query->where('shipment_status', 'bidder_confirmed');
+        } elseif ($tab === 'active') {
+            $query->active();
+        }
+
+        $auctions = $query->filter($request->all())->get();
+
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=auctions_export.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () use ($auctions) {
+            $file = fopen('php://output', 'w');
+
+            fwrite($file, "\xEF\xBB\xBF"); // BOM for Excel UTF-8
+
+            fputcsv($file, [
+                'ID',
+                'Yahoo Auction ID',
+                'Category ID',
+                'Title',
+                'Condition',
+                'Starting Bid (Yen)',
+                'Current Bid (Yen)',
+                'Bids Count',
+                'Status',
+                'Starts At',
+                'Ends At',
+                'Seller Name',
+                'Yahoo Seller ID',
+                'Seller Rating',
+                'Thumbnail URL',
+                'View Count',
+                'Shipment Status',
+                'Winner User ID',
+                'Yahoo Watcher Count',
+                'Created At',
+            ]);
+
+            foreach ($auctions as $auction) {
+                fputcsv($file, [
+                    $auction->id,
+                    $auction->yahoo_auction_id,
+                    $auction->yahoo_category_id,
+                    $auction->title,
+                    $auction->condition,
+                    $auction->starting_bid_yen,
+                    $auction->current_bid_yen,
+                    $auction->bid_count,
+                    $auction->status,
+                    $auction->starts_at?->toDateTimeString(),
+                    $auction->ends_at?->toDateTimeString(),
+                    $auction->seller_name,
+                    $auction->yahoo_seller_id,
+                    $auction->seller_rating,
+                    $auction->thumbnail_url,
+                    $auction->view_count,
+                    $auction->shipment_status,
+                    $auction->winner_user_id,
+                    $auction->yahoo_watcher_count,
+                    $auction->created_at?->toDateTimeString(),
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

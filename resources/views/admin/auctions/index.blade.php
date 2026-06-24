@@ -9,22 +9,31 @@
                     auctions and bidding activity.</p>
             </div>
 
-            <div class="flex flex-wrap items-center gap-2 p-1 bg-zinc-100 dark:bg-white/5 rounded-lg w-fit">
-                <a href="{{ route('admin.auctions.index', ['tab' => 'all']) }}"
-                    class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all {{ $currentTab === 'all' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
-                    All
-                </a>
-                <a href="{{ route('admin.auctions.index', ['tab' => 'active']) }}"
-                    class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all {{ $currentTab === 'active' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
-                    Active
-                </a>
-                <a href="{{ route('admin.auctions.index', ['tab' => 'won']) }}"
-                    class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all {{ $currentTab === 'won' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
-                    Winning Bids
-                </a>
-                <a href="{{ route('admin.auctions.index', ['tab' => 'shipment_pending']) }}"
-                    class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all {{ $currentTab === 'shipment_pending' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
-                    Shipment Pending
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex flex-wrap items-center gap-2 p-1 bg-zinc-100 dark:bg-white/5 rounded-lg w-fit">
+                    <a href="{{ route('admin.auctions.index', ['tab' => 'all']) }}"
+                        class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all {{ $currentTab === 'all' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
+                        All
+                    </a>
+                    <a href="{{ route('admin.auctions.index', ['tab' => 'active']) }}"
+                        class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all {{ $currentTab === 'active' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
+                        Active
+                    </a>
+                    <a href="{{ route('admin.auctions.index', ['tab' => 'won']) }}"
+                        class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all {{ $currentTab === 'won' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
+                        Winning Bids
+                    </a>
+                    <a href="{{ route('admin.auctions.index', ['tab' => 'shipment_pending']) }}"
+                        class="px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all {{ $currentTab === 'shipment_pending' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300' }}">
+                        Shipment Pending
+                    </a>
+                </div>
+                <a href="{{ route('admin.auctions.export', request()->all()) }}"
+                    class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2 text-[10px] font-black uppercase tracking-widest text-white shadow-lg shadow-emerald-600/20 transition hover:bg-emerald-700">
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    Export Excel
                 </a>
             </div>
         </div>

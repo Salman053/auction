@@ -122,7 +122,13 @@ class AuctionSettlementService
             $winner = null;
             $winningBidAmount = null;
 
-            if ($auction->status === 'finished') {
+            if ($isYahooOutbid) {
+                $auction->update(['status' => 'ended_outbid_on_yahoo']);
+                $finalStatus = 'ended_outbid_on_yahoo';
+            } elseif ($bids->isEmpty()) {
+                $auction->update(['status' => 'ended_no_bids']);
+                $finalStatus = 'ended_no_bids';
+            } elseif ($auction->status === 'finished') {
                 $winner = User::find($auction->winner_user_id);
                 // Ensure winningBid relationship is loaded or retrieve explicitly
                 // Since winning_bid_id is set, we can eagerly load or access

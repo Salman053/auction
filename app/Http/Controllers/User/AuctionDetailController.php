@@ -154,12 +154,16 @@ class AuctionDetailController extends Controller
         ]);
 
         AuditLog::create([
-            'user_id' => $user->id,
-            'log_name' => 'shipment',
-            'description' => "User {$user->name} (#{$user->id}) confirmed shipment for auction #{$auction->id} (Yahoo ID: {$auction->yahoo_auction_id}).",
-            'subject_id' => $auction->id,
-            'subject_type' => Auction::class,
-            'properties' => ['old_status' => 'pending', 'new_status' => 'bidder_confirmed'],
+            'actor_user_id' => $user->id,
+            'guard' => 'user',
+            'event' => 'shipment_confirmed',
+            'meta' => [
+                'description' => "User {$user->name} (#{$user->id}) confirmed shipment for auction #{$auction->id} (Yahoo ID: {$auction->yahoo_auction_id}).",
+                'subject_id' => $auction->id,
+                'subject_type' => Auction::class,
+                'old_status' => 'pending',
+                'new_status' => 'bidder_confirmed',
+            ],
         ]);
 
         // Notify admins
@@ -192,12 +196,16 @@ class AuctionDetailController extends Controller
         ]);
 
         AuditLog::create([
-            'user_id' => $user->id,
-            'log_name' => 'shipment',
-            'description' => "User {$user->name} (#{$user->id}) rejected shipment for auction #{$auction->id} (Yahoo ID: {$auction->yahoo_auction_id}).",
-            'subject_id' => $auction->id,
-            'subject_type' => Auction::class,
-            'properties' => ['old_status' => 'pending', 'new_status' => 'bidder_rejected'],
+            'actor_user_id' => $user->id,
+            'guard' => 'user',
+            'event' => 'shipment_rejected',
+            'meta' => [
+                'description' => "User {$user->name} (#{$user->id}) rejected shipment for auction #{$auction->id} (Yahoo ID: {$auction->yahoo_auction_id}).",
+                'subject_id' => $auction->id,
+                'subject_type' => Auction::class,
+                'old_status' => 'pending',
+                'new_status' => 'bidder_rejected',
+            ],
         ]);
 
         // Notify admins
